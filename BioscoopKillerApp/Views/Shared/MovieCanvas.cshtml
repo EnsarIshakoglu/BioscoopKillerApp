@@ -1,6 +1,6 @@
 ﻿@model Models.Movie
 
-@*<div class="col-lg-4 col-md-6 mb-4">
+<div class="col-lg-4 col-md-6 mb-4">
     <div class="card h-100">
         <a href="@Url.Action("MovieDetails", "Movie", @Model)"><img class="card-img-top" img src="~/Thumbnails/Avengers.jpg" alt=""></a>
         <div class="card-body">
@@ -9,22 +9,5 @@
             </h4>
             <p class="card-text"> @string.Join(", ", @Model.Genre)</p>
         </div>
-        <div class="card-footer">
-            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-        </div>
-    </div>
-</div>*@
-
-<div class="thumbnail-gallery isotope-item col-9 col-sm-6 col-lg-3" data-filter="type-2" style="position: absolute; left: 300px; top: 525px;">
-    <div class="thumbnail-gallery-wrapper">
-        <img src="~/Thumbnails/Avengers.jpg" alt="">
-        <div class="caption-2">
-            <div class="caption-wrapper"><a href="https://youtu.be/20bpjtCbCz0" data-lightgallery="item"><span class="icon icon-white fl-line-ui-play126"></span></a></div>
-        </div>
-    </div>
-    <div class="div text-left">
-        <h6 class="title-block offset-top-20"><a href="movie-details.html">@Model.Title</a></h6>
-        <p class="text-gray">@string.Join(", ", @Model.Genre)</p>
-        <div class="review"><span class="icon fa-star icon-waring-2"></span><span class="icon fa-star icon-waring-2"></span><span class="icon fa-star icon-waring-2"></span><span class="icon fa-star icon-waring-2"></span><span class="icon fa-star icon-waring-2"></span></div>
     </div>
 </div>
