@@ -16,6 +16,7 @@ namespace BioscoopKillerApp.Controllers
         {
             return View(_movieLogic.GetAllMovies());
         }
+
         public IActionResult MovieDetails(Movie movie)
         {
             return View(movie);
