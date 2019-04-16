@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Logic;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -14,6 +15,11 @@ namespace BioscoopKillerApp.Controllers
         public IActionResult Index()
         {
             return View(_movieLogic.GetAllMovies());
+        }
+
+        public IActionResult MovieDetails(Movie movie)
+        {
+            return View(movie);
         }
     }
 }
