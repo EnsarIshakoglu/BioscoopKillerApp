@@ -1,4 +1,5 @@
-﻿@model Models.Movie
+﻿@using BioscoopKillerApp.Controllers
+@model IEnumerable<Models.AiringMovie>
 
 @{
     ViewData["Title"] = "MovieDetails";
@@ -94,15 +95,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="col-md-9 reviews-grids">
                         <div class="review">
                             <div class="movie-pic">
-                                <a><img src=@Model.Poster alt=""></a>
+                                <a><img src=@Model.First().Movie.Poster alt=""></a>
                             </div>
                             <div class="review-info">
-                                <a class="span">@Model.Title</a>
+                                <a class="span">@Model.First().Movie.Title</a>
                                 <div class="clearfix"></div>
                                 <div class="clearfix"></div>
-                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Cast)</p>
-                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Genres)</p>
-                                <p class="info">DURATION:&nbsp; @Model.Runtime</p>
+                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.First().Movie.Cast)</p>
+                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.First().Movie.Genres)</p>
+                                <p class="info">DURATION:&nbsp; @Model.First().Movie.Runtime</p>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -113,13 +114,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
                         <div class="story-review">
                             <h4>SYNOPSIS:</h4>
-                            <p>@Model.Plot</p>
+                            <p>@Model.First().Movie.Plot</p>
                         </div>
                         <div class="story-review" style="border-top: 0;">
                             <h4>AVAILABLE TIMES:</h4>
-                            <p><button type="button" style="margin: 5px;" class="btn btn-danger">24-02-2018 14:30-16:30</button></p>
-                            <p><button type="button" style="margin: 5px;" class="btn btn-danger">24-02-2018 14:30-16:30</button></p>
-                            <p><button type="button" style="margin: 5px;" class="btn btn-danger">24-02-2018 14:30-16:30</button></p>
+                            @foreach (var airingMovie in Model)
+                            {
+                                <p><button type="button" style="margin: 5px;" class="btn btn-danger">@airingMovie.AiringTime.Date.ToString() @airingMovie.AiringTime.TimeOfDay.ToString()</button></p>
+                            }
                         </div>
                         <!-- comments-section-starts -->
                         <!---728x90--->
@@ -166,7 +168,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
             <!---728x90--->
 
-            
+
         </div>
         <div class="clearfix"></div>
     </div>
