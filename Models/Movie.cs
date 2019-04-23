@@ -12,6 +12,7 @@ namespace Models
         }
 
         public int Id { get; set; }
+        public string Runtime { get; set; }
         public List<string> Genres { get; set; }
         public int PublishedYear { get; set; }
         public string Title { get; set; }

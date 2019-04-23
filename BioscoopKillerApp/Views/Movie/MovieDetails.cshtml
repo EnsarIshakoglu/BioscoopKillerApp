@@ -100,9 +100,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <a class="span">@Model.Title</a>
                                 <div class="clearfix"></div>
                                 <div class="clearfix"></div>
-                                <p class="info">Cast: @string.Join(", ", @Model.Cast)</p>
-                                <p class="info">Genres: @string.Join(", ", @Model.Genres)</p>
-                                <p class="info">DURATION:&nbsp;&nbsp;&nbsp; &nbsp; 1 hour 45 minutes</p>
+                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Cast)</p>
+                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Genres)</p>
+                                <p class="info">DURATION:&nbsp; @Model.Runtime</p>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -132,7 +132,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <div class="clearfix"></div>
                             </div>
                             <div class="comments-section-grids">
-                                @*MET foreach*@
+                                @*MET foreach--------------------------------------------------------------------------------------------------------------------------------------*@
                                 @for (int x = 0; x < 2; x++)
                                 {
                                     @Html.Partial("Comment");

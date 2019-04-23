@@ -67,6 +67,7 @@ namespace DAL.Contexts
                         movie.Poster = apiDataMovie.Poster;
                         movie.Plot = apiDataMovie.Plot;
                         movie.Title = apiDataMovie.Title;
+                        movie.Runtime = apiDataMovie.Runtime;
                     }
                 }
             
