@@ -588,7 +588,7 @@ i.book {
 
 .footer {
     background: #f3f3f3;
-    padding: 4em 3em;
+    padding: 1em 1em;
 }
 
     .footer h6 {
@@ -789,7 +789,7 @@ h3.head {
 }
 
 .review {
-    margin-top: 4em;
+    margin-top: 2em;
 }
 
 a.span {
@@ -1347,7 +1347,7 @@ a.b-home {
         font-weight: 600;
         font-style: italic;
         font-size: 20px;
-        color: #dfb636;
+        color: #d43f3a;
         text-decoration: none;
     }
 
@@ -1419,7 +1419,7 @@ a.b-home {
 }
 
     .blog-form input[type="button"]:hover {
-        background: #dfb636;
+        background: #d43f3a;
     }
 /*-- responsive-design starts-here --*/
 
@@ -1608,7 +1608,7 @@ a.b-home {
 
 @media screen and (max-width: 1280px) {
     .footer {
-        padding: 3em 2em;
+        padding: 2em 2em;
     }
 
     .news-left-grid h2 {
@@ -1930,7 +1930,7 @@ a.b-home {
     }
 
     .main {
-        border-left: 70px solid #383838;
+        /*border-left: 70px solid #383838;*/
     }
 
     .menu ul li a {
@@ -2156,11 +2156,11 @@ a.b-home {
     }
 
     .full {
-        border-left: 1px solid #2b2b2b;
+        /*border-left: 1px solid #2b2b2b;*/
     }
 
     .main {
-        border-left: 61px solid #383838;
+        /*border-left: 61px solid #383838;*/
     }
 
     .menu {

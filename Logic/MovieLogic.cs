@@ -23,7 +23,7 @@ namespace Logic
 
             foreach (Movie movie in movies)
             {
-                if (movie.Genre.Intersect(categories).Count() == categories.Count())
+                if (movie.Genres.Intersect(categories).Count() == categories.Count())
                     sortedMovies.Add(movie);
             }
 
