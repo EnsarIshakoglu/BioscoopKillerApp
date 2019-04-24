@@ -18,9 +18,9 @@
         }
     </style>
     <title>Cinema A Entertainment Category Flat Bootstrap Responsive Website Template | Single :: w3layouts</title>
-    <link href="~/lib/bootstrap/dist/css/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">
     <!-- Custom Theme files -->
-    <link href="~/lib/bootstrap/dist/css/movie-detail-style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-style.css" rel="stylesheet" type="text/css" media="all">
     <!-- Custom Theme files -->
     <script async="" src="//www.google-analytics.com/analytics.js"></script>
     <script src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
@@ -120,7 +120,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <h4>AVAILABLE TIMES:</h4>
                             @foreach (var airingMovie in @Model.AiringMovies)
                             {
-                                <p><button type="button" style="margin: 5px;" class="btn btn-danger">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString()</button></p>
+                                <p><button type="button" style="margin: 5px;" class="btn btn-danger" onclick="location.href='@Url.Action("Index", "Transaction")'">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString() </button></p>
                             }
 
                         </div>
