@@ -1,5 +1,5 @@
 ﻿@using BioscoopKillerApp.Controllers
-@model IEnumerable<Models.AiringMovie>
+@model MovieDetailViewModel
 
 @{
     ViewData["Title"] = "MovieDetails";
@@ -95,15 +95,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="col-md-9 reviews-grids">
                         <div class="review">
                             <div class="movie-pic">
-                                <a><img src=@Model.First().Movie.Poster alt=""></a>
+                                <a><img src=@Model.Movie.Poster alt=""></a>
                             </div>
                             <div class="review-info">
-                                <a class="span">@Model.First().Movie.Title</a>
+                                <a class="span">@Model.Movie.Title</a>
                                 <div class="clearfix"></div>
                                 <div class="clearfix"></div>
-                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.First().Movie.Cast)</p>
-                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.First().Movie.Genres)</p>
-                                <p class="info">DURATION:&nbsp; @Model.First().Movie.Runtime</p>
+                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Movie.Cast)</p>
+                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Movie.Genres)</p>
+                                <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -114,14 +114,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
                         <div class="story-review">
                             <h4>SYNOPSIS:</h4>
-                            <p>@Model.First().Movie.Plot</p>
+                            <p>@Model.Movie.Plot</p>
                         </div>
                         <div class="story-review" style="border-top: 0;">
                             <h4>AVAILABLE TIMES:</h4>
-                            @foreach (var airingMovie in Model)
+                            @foreach (var airingMovie in @Model.AiringMovies)
                             {
-                                <p><button type="button" style="margin: 5px;" class="btn btn-danger">@airingMovie.AiringTime.Date.ToString() @airingMovie.AiringTime.TimeOfDay.ToString()</button></p>
+                                <p><button type="button" style="margin: 5px;" class="btn btn-danger">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString()</button></p>
                             }
+
                         </div>
                         <!-- comments-section-starts -->
                         <!---728x90--->

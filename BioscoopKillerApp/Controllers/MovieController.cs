@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BioscoopKillerApp.Models;
 using Logic;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -19,9 +20,13 @@ namespace BioscoopKillerApp.Controllers
 
         public IActionResult MovieDetails(Movie movie)
         {
-            var airingMovies = _movieLogic.GetAiringMovies(movie);
-
-            return View(airingMovies);
+            MovieDetailViewModel movieDetails = new MovieDetailViewModel
+            {
+                AiringMovies = _movieLogic.GetAiringMovies(movie),
+                Movie = movie
+            };
+            
+            return View(movieDetails);
         }
     }
 }

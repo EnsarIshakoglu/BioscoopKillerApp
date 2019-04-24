@@ -18,7 +18,7 @@ namespace DAL.Contexts
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select AiringTime, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType from Planning " +
+                var sqlCommand = new SqlCommand($"select AiringTime, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, (t.RoomPrice + m.MoviePrice) as Price from Planning " +
                                                 $"inner join Room r on r.ID = Planning.RoomID " +
                                                 $"inner join Movie m on m.ID = Planning.MovieID " +
                                                 $"inner join TypeRoom t on t.ID = r.TypeRoomID " +
@@ -37,7 +37,8 @@ namespace DAL.Contexts
                             RoomNumber = (int)reader["RoomNumber"],
                             RoomType = reader["RoomType"]?.ToString(),
                             SeatCount = (int)reader["AvailablePlaces"]
-                        }
+                        },
+                        Price = (int)reader["Price"]
                     });
                 }
 
