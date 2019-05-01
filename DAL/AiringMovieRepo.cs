@@ -19,5 +19,10 @@ namespace DAL
         {
             return _context.GetAiringMovies(movie);
         }
+
+        public AiringMovie GetAiringMovieById(int id)
+        {
+            return _context.GetAiringMovieById(id);
+        }
     }
 }

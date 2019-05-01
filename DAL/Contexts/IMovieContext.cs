@@ -8,5 +8,6 @@ namespace DAL.Contexts
     public interface IMovieContext
     {
         IEnumerable<Movie> GetAllMovies();
+        Movie GetMovieById(int movieId);
     }
 }

@@ -14,5 +14,10 @@ namespace Logic
         {
             return _repo.GetAiringMovies(movie);
         }
+
+        public AiringMovie GetAiringMovieById(int id)
+        {
+            return _repo.GetAiringMovieById(id);
+        }
     }
 }

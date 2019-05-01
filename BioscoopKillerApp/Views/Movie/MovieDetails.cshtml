@@ -120,7 +120,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <h4>AVAILABLE TIMES:</h4>
                             @foreach (var airingMovie in @Model.AiringMovies)
                             {
-                                <p><button type="button" style="margin: 5px;" class="btn btn-danger" onclick="location.href='@Url.Action("Index", "Transaction")'">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString() </button></p>
+                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = @Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString() </button></p>
                             }
 
                         </div>
@@ -180,3 +180,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <script id="_vdo_ads_frame_5654_" src="https://vdo.ai/core/w3layouts//adframe.js?k=44"></script>
 </body>
 </html>
+
+<script>
+    $(function () {
+        $('.btn').on('click', function () {
+            window.location.href = '@Url.Action("Index","Transaction",new{chosenMovie = @Model.AiringMovies.First()})';
+
+        });
+</script>

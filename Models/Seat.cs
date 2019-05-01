@@ -6,6 +6,7 @@ namespace Models
 {
     public class Seat
     {
-
+        public User User { get; set; }
+        public int SeatNumber { get; set; }
     }
 }

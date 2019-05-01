@@ -25,7 +25,12 @@ namespace BioscoopKillerApp.Controllers
                 AiringMovies = _movieLogic.GetAiringMovies(movie),
                 Movie = movie
             };
-            
+
+            foreach (var airingMovie in movieDetails.AiringMovies)
+            {
+                airingMovie.Movie = movie;
+            }
+
             return View(movieDetails);
         }
     }

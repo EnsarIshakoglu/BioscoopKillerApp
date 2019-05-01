@@ -47,5 +47,10 @@ namespace Logic
 
             return _airingMovieLogic.GetAiringMovies(movie);
         }
+
+        public Movie GetMovieById(int movieId)
+        {
+            return _movieRepo.GetMovieById(movieId);
+        }
     }
 }

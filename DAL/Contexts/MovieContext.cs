@@ -40,58 +40,52 @@ namespace DAL.Contexts
                 connection.Close();
             }
 
-            AddCategories(movies);
-            AddCast(movies);
-
             foreach (var movie in movies)
             {
+                AddCategories(movie);
+                AddCast(movie);
                 AddAPIData(movie).Wait();
             }
-            
 
             return movies;
         }
 
         private async Task AddAPIData(Movie movie)
         {
-                string movieTitleForApi = movie.Title.Replace(" ", "%3A");
-                string url = $"http://www.omdbapi.com/?apikey={ apiKey}&t={ movieTitleForApi}&y={ movie.PublishedYear}";
+            string movieTitleForApi = movie.Title.Replace(" ", "%3A");
+            string url = $"http://www.omdbapi.com/?apikey={ apiKey}&t={ movieTitleForApi}&y={ movie.PublishedYear}";
 
-                HttpClient client = new HttpClient();
+            HttpClient client = new HttpClient();
 
-                using (HttpResponseMessage response = await client.GetAsync(url))
+            using (HttpResponseMessage response = await client.GetAsync(url))
+            {
+                if (response.IsSuccessStatusCode)
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        Movie apiDataMovie = await response.Content.ReadAsAsync<Movie>();
-                        movie.Poster = apiDataMovie.Poster;
-                        movie.Plot = apiDataMovie.Plot;
-                        movie.Title = apiDataMovie.Title;
-                        movie.Runtime = apiDataMovie.Runtime;
-                    }
+                    Movie apiDataMovie = await response.Content.ReadAsAsync<Movie>();
+                    movie.Poster = apiDataMovie.Poster;
+                    movie.Plot = apiDataMovie.Plot;
+                    movie.Title = apiDataMovie.Title;
+                    movie.Runtime = apiDataMovie.Runtime;
                 }
-            
+            }
+
         }
 
-        private void AddCategories(List<Movie> movies)
+        private void AddCategories(Movie movie)
         {
             using (SqlConnection connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
+                var sqlCommand = new SqlCommand(
+                    $"select distinct Movie.ID, Movie.Name as Name, Category.Name as Category\r\n" +
+                    $"From Movie_Category\r\nInner join Movie on Movie_Category.MovieID = Movie.ID\r\ninner join Category on Movie_Category.CategoryID = Category.ID where Movie.ID = '{movie.Id}'",
+                    connection);
 
-                foreach (var movie in movies)
+                using (var reader = sqlCommand.ExecuteReader())
                 {
-                    var sqlCommand = new SqlCommand(
-                        $"select distinct Movie.ID, Movie.Name as Name, Category.Name as Category\r\n" +
-                        $"From Movie_Category\r\nInner join Movie on Movie_Category.MovieID = Movie.ID\r\ninner join Category on Movie_Category.CategoryID = Category.ID where Movie.ID = '{movie.Id}'",
-                        connection);
-
-                    using (var reader = sqlCommand.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            movie.Genres.Add(reader["Category"].ToString());
-                        }
+                        movie.Genres.Add(reader["Category"].ToString());
                     }
                 }
 
@@ -100,14 +94,11 @@ namespace DAL.Contexts
 
         }
 
-        private void AddCast(List<Movie> movies)
+        private void AddCast(Movie movie)
         {
             using (SqlConnection connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
-
-                foreach (var movie in movies)
-                {
                     var sqlCommand =
                         new SqlCommand(
                             $"select distinct Movie.ID, Movie.Name as Name, Actor.Name as Actor\r\n" +
@@ -121,11 +112,42 @@ namespace DAL.Contexts
                             movie.Cast.Add(reader["Actor"].ToString());
                         }
                     }
+
+                connection.Close();
+            }
+
+        }
+
+        public Movie GetMovieById(int movieId)
+        {
+            Movie movie = new Movie();
+
+            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand = new SqlCommand($"SELECT * FROM dbo.Movie WHERE Movie.ID = {movieId}", connection);
+                var reader = sqlCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    movie = new Movie
+                    {
+                        Id = (int)reader["ID"],
+                        Title = reader["Name"]?.ToString(),
+                        PublishedYear = (int)reader["PublishedYear"]
+                    };
                 }
 
                 connection.Close();
             }
 
+            AddCategories(movie);
+            AddCast(movie);
+            AddAPIData(movie).Wait();
+
+
+            return movie;
         }
     }
 }

@@ -18,5 +18,10 @@ namespace DAL
         {
             return _movieContext.GetAllMovies();
         }
+
+        public Movie GetMovieById(int movieId)
+        {
+            return _movieContext.GetMovieById(movieId);
+        }
     }
 }
