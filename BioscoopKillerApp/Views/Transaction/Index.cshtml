@@ -109,25 +109,27 @@
     <script>
 
         @{
-    var seatingValue = new List<string>();
-    int seatPosition = 0;
-    string toAddString = "";
+            var seatingValue = new List<string>();
+            int seatPosition = 0;
+            string toAddString = "";
 
-    foreach (var seat in Model.Room.Seats)
-    {
-        toAddString = "<div class='seat available'></div>";
-        seatingValue.Add(toAddString);
+            foreach (var seat in Model.Room.Seats)
+            {
+                toAddString = "<div class='seat available'></div>";
+                seatingValue.Add(toAddString);
 
-        if (seatPosition == @Model.Room.SeatsPerRow - 1)
-        {
-            toAddString = "<div class='clearfix'></div>";
-            seatingValue.Add(toAddString);
-            seatPosition = 0;
-        }
+                seatPosition++;
 
-        seatPosition++;
-    }
-    string htmlCode = string.Join(" ", seatingValue);
+                if (seatPosition == @Model.Room.SeatsPerRow)
+                {
+                    toAddString = "<div class='clearfix'></div>";
+                    seatingValue.Add(toAddString);
+                    seatPosition = 0;
+                }
+
+
+            }
+            string htmlCode = string.Join(" ", seatingValue);
 
 }
         //Note:In js the outer loop runs first then the inner loop runs completely so it goes o.l. then i.l. i.l .i.l .i.l. i.l etc and repeat
