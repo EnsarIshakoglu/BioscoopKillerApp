@@ -11,7 +11,7 @@ namespace DAL.Contexts
 {
     class MovieContext : IMovieContext
     {
-        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB; Integrated Security = True";
+        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
         private readonly string apiKey = "883e4889";
 
         public IEnumerable<Movie> GetAllMovies()

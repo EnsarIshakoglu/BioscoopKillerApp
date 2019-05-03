@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL.Contexts;
+using Models;
 
 namespace DAL
 {
@@ -12,6 +13,11 @@ namespace DAL
         public TransactionRepo()
         {
             _context = new TransactionContext();
+        }
+
+        public void AddOccupiedSeats(AiringMovie airingMovie)
+        {
+            _context.AddOccupiedSeats(airingMovie);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace DAL.Contexts
 {
     public class AiringMovieContext : IAiringMovieContext
     {
-        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB; Integrated Security = True";
+        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
 
         public IEnumerable<AiringMovie> GetAiringMovies(Movie movie)
         {

@@ -111,11 +111,12 @@
         @{
             var seatingValue = new List<string>();
             int seatPosition = 0;
+            int seatNumber = 1;
             string toAddString = "";
 
             foreach (var seat in Model.Room.Seats)
             {
-                toAddString = "<div class='seat available'></div>";
+                toAddString = seat.IsOccupied ? "<div class='seat unavailable'></div>" : "<div class='seat available'></div>";
                 seatingValue.Add(toAddString);
 
                 seatPosition++;

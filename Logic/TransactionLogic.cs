@@ -14,7 +14,10 @@ namespace Logic
 
         public AiringMovie GetAiringMovieById(int id)
         {
-            return _airingMovieLogic.GetAiringMovieById(id);
+            var airingMovie = _airingMovieLogic.GetAiringMovieById(id);
+            _transactionRepo.AddOccupiedSeats(airingMovie);
+
+            return airingMovie;
         }
 
         public Movie GetMovieById(int movieId)

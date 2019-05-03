@@ -21,7 +21,10 @@ namespace Models
 
             for (int x = 0; x < SeatCount; x++)
             {
-                Seats.Add(new Seat());
+                Seats.Add(new Seat
+                {
+                    SeatNumber = x+1
+                });
             }
 
             int a = 5;

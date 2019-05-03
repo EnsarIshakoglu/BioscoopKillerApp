@@ -6,7 +6,7 @@ namespace Models
 {
     public class Seat
     {
-        public User User { get; set; }
         public int SeatNumber { get; set; }
+        public bool IsOccupied { get; set; } = false;
     }
 }
