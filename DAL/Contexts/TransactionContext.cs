@@ -19,18 +19,40 @@ namespace DAL.Contexts
 
                 var sqlCommand =
                     new SqlCommand(
-                        $"SELECT UserID, SeatNumber FROM dbo.OccupiedSeats WHERE AiringMovieID = {airingMovie.Id}",
+                        $"SELECT SeatNumber FROM dbo.Reservation WHERE AiringMovieID = {airingMovie.Id}",
                         connection);
 
                 var reader = sqlCommand.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    airingMovie.Room.Seats.First(s => s.SeatNumber == (int) reader["SeatNumber"]).IsOccupied =
+                    airingMovie.Room.Seats.First(s => s.SeatNumber == (int)reader["SeatNumber"]).IsOccupied =
                         true;
                 }
 
                 connection.Close();
+            }
+        }
+
+        public void SaveReservation(Reservation reservation)
+        {
+            foreach (var number in reservation.SeatNumbers)
+            {
+                using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+                {
+                    connection.Open();
+
+                    var sqlCommand =
+                        new SqlCommand(
+                            $"INSERT INTO dbo.Reservation (SeatNumber, AiringMovieID) VALUES (@SeatNumber, @AiringMovieID)",
+                            connection);
+                    sqlCommand.Parameters.AddWithValue("@SeatNumber", Convert.ToInt32(number));
+                    sqlCommand.Parameters.AddWithValue("@AiringMovieID", Convert.ToInt32(reservation.AiringMovieId));
+                    sqlCommand.ExecuteNonQuery();
+
+
+                    connection.Close();
+                }
             }
         }
     }

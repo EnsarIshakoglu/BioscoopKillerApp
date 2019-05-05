@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Logic;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json.Linq;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -18,6 +19,12 @@ namespace BioscoopKillerApp.Controllers
             airingMovie.Movie = _transactionLogic.GetMovieById(movieId);
 
             return View(airingMovie);
+        }
+
+        [HttpPost]
+        public void SaveReservation([FromBody]Reservation reservation)
+        {
+            _transactionLogic.SaveReservation(reservation);
         }
     }
 }

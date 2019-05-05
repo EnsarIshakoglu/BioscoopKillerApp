@@ -19,5 +19,10 @@ namespace DAL
         {
             _context.AddOccupiedSeats(airingMovie);
         }
+
+        public void SaveReservation(Reservation reservation)
+        {
+            _context.SaveReservation(reservation);
+        }
     }
 }

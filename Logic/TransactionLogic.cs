@@ -24,5 +24,10 @@ namespace Logic
         {
             return _movieLogic.GetMovieById(movieId);
         }
+
+        public void SaveReservation(Reservation reservation)
+        {
+            _transactionRepo.SaveReservation(reservation);
+        }
     }
 }
