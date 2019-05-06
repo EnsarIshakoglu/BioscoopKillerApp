@@ -27,6 +27,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <form class="form-inline my-2 my-lg-0">
+                        <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
+                    </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -37,7 +40,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">Movies</a>
                         </li>
+                        
                     </ul>
+                    
                 </div>
             </div>
         </nav>

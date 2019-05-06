@@ -1,6 +1,9 @@
-﻿@model Models.AiringMovie
+﻿@using Microsoft.EntityFrameworkCore
+@model Models.AiringMovie
 
+@{
 
+}
 
 <html lang="en">
 <head>
@@ -25,76 +28,79 @@
 
 <body class="bg-light">
 
-<div class="container">
+    <div class="container">
 
 
-    <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-            <div class="movie-pic" style="width: 65%">
-                <a><img src=@Model.Movie.Poster alt=""></a>
+        <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+                <div class="movie-pic" style="width: 65%">
+                    <a><img src=@Model.Movie.Poster alt=""></a>
+                </div>
+                <div class="review-info">
+                    <a class="span">@Model.Movie.Title</a>
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                    <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Movie.Cast)</p>
+                    <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Movie.Genres)</p>
+                    <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
+                </div>
             </div>
-            <div class="review-info">
-                <a class="span">@Model.Movie.Title</a>
-                <div class="clearfix"></div>
-                <div class="clearfix"></div>
-                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Movie.Cast)</p>
-                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Movie.Genres)</p>
-                <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
-            </div>
-        </div>
-        <div class="col-md-8 order-md-1">
-            @*plaats kiezen*@
-            <body>
+            <div class="col-md-8 order-md-1">
+                @*plaats kiezen*@
+                <body>
                 <div id="messagePanel" class="messagePanel">
 
                 </div>
-                <label>Email Address:</label>
-                <input id="EmailAddress" />
-                <button id="saveSelection" onclick="location.href='@Url.Action("Index", "Movie")'" style="margin: 5px;">Pay!</button>
-            </body>
+                <div>
+                    <label>Email Address:</label>
+                    <input id="EmailAddress" />
+                    <p id="validationText" style="color: red">Invalid email address</p>
+                </div>
+                    <button id="saveSelection" onclick="location.href = '@Url.Action("Index", "Movie")'" style="margin: 5px;">Pay!</button>
+                </body>
+            </div>
         </div>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">© 2017-2018 Company Name</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
     </div>
 
-    <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2018 Company Name</p>
-        <ul class="list-inline">
-            <li class="list-inline-item"><a href="#">Privacy</a></li>
-            <li class="list-inline-item"><a href="#">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Support</a></li>
-        </ul>
-    </footer>
-</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="~/lib/bootstrap/dist/js/Transaction/popper.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/Transaction/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/Transaction/holder.min.js"></script>
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="~/lib/bootstrap/dist/js/Transaction/popper.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/Transaction/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/Transaction/holder.min.js"></script>
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
 
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
-</script>
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
 
 
 </body>
@@ -106,7 +112,7 @@
 <head>
     <link href="~/lib/bootstrap/dist/css/Transaction/bootstrap-transaction.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+    <script src="~/js/regexEmailValidation.js"></script>
 
 
     <script>
@@ -145,6 +151,7 @@
         window.onload = function () {
             createseating("@Html.Raw(htmlCode)");
             $('#saveSelection').prop('disabled', true);
+            document.getElementById('validationText').hidden = true;
         };
 
         function getAllSelectedSeats() {
@@ -165,7 +172,7 @@
             }
             if (confirm('Are you sure your e-mail address is ' +
                 document.getElementById("EmailAddress").value +
-                ' . Press OK to continue.')) {
+                ' . Press OK to continue, press CANCEL to cancel your reservation.')) {
                 $.ajax({
                     url: controllerPath,
                     data: JSON.stringify(reservation),
@@ -180,29 +187,11 @@
                     }
                 });
             }
-            
+
         }
 
         function createseating(htmlCode) {
 
-
-            /*var seatingValue = [];
-            for (var i = 0; i < ; i++) {
-
-                for (var j = 0; j < 10; j++) {
-                    var seatingStyle = "<div class='seat available'></div>";
-                    seatingValue.push(seatingStyle);
-
-                    if (j === 9) {
-                        console.log("hi");
-                        var seatingStyle = "<div class='clearfix'></div>";
-                        seatingValue.push(seatingStyle);
-
-
-
-                    }
-                }
-            }*/
             $('#messagePanel').html(htmlCode);
 
             $(function () {
@@ -221,6 +210,7 @@
                         $('#saveSelection').prop('disabled', false);
                         console.log("seat selected, button enabled");
                         console.log(document.getElementsByClassName("seat selected").length);
+                        document.getElementById('validationText').hidden = true;
                     } else {
                         $('#saveSelection').prop('disabled', true);
                         console.log("no seats selected, button disabled");
@@ -242,37 +232,27 @@
             });
 
             $(function () {
-                $('#EmailAddress').change(
-                    function () {
+                $('#EmailAddress').on('input', function () {
+
                         var mailAddress = document.getElementById("EmailAddress").value;
                         console.log('1 ' + mailAddress);
 
-                        if (document.getElementsByClassName("seat selected").length > 0 && validateEmail(mailAddress)) {
+                    if (validateEmail(mailAddress)) {
+
+                        if (document.getElementsByClassName("seat selected").length > 0) {
                             $('#saveSelection').prop('disabled', false);
                             console.log("seat selected, button enabled");
-                            console.log(document.getElementsByClassName("seat selected").length);
                         }
+                            document.getElementById('validationText').hidden = true;
+                    }
+                    else
+                    {
+                            $('#saveSelection').prop('disabled', true);
+                            console.log("no seats selected, button disabled");
+                            document.getElementById('validationText').hidden = false;
+                    }
                     });
             });
-
-            function validateEmail(inputText)
-            {
-
-                var mailformat = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                console.log(mailformat);
-                if(inputText.value.match(mailformat))
-                {
-                    document.form1.text1.focus();
-                    return true;
-                }
-                else
-                {
-                    alert("You have entered an invalid email address!");
-                    document.form1.text1.focus();
-                    return false;
-                }
-            }
-
         };
 
     </script>

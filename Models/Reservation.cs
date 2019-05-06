@@ -9,6 +9,7 @@ namespace Models
 {
     public class Reservation
     {
+        [EmailAddress(ErrorMessage = "Invalid Email address.")]
         public string MailAddress { get; set; }
         public string[] SeatNumbers { get; set; }
         public int AiringMovieId { get; set; }
