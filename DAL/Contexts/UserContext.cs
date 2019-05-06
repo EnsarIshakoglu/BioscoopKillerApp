@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using Models;
+using Models.Enums;
 
 namespace DAL.Contexts
 {
@@ -39,7 +40,7 @@ namespace DAL.Contexts
             {
                 conn.Open();
 
-                SqlCommand command = new SqlCommand($"select U.[E-mail], R.RoleName from dbo.User_Roles UR\r\ninner join [User] U on UR.UserID = U.ID\r\ninner join Roles R on UR.RolesID = R.ID\r\nwhere U.[E-mail] = '{user.Email}'", conn);
+                SqlCommand command = new SqlCommand($"select U.[E-mail], R.RoleName from dbo.User_Roles UR\r\ninner join [User] U on UR.UserID = U.ID\r\ninner join Roles R on UR.RoleID = R.ID\r\nwhere U.[E-mail] = '{user.Email}'", conn);
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -81,7 +82,11 @@ namespace DAL.Contexts
                 //loggen
                 isAccountCreationSuccessful = false;
             }
-            
+
+            if (isAccountCreationSuccessful)
+            {
+                AddRole(user, Roles.AccountHolder.ToString());
+            }
 
             return isAccountCreationSuccessful;
         }
@@ -106,6 +111,32 @@ namespace DAL.Contexts
             }
 
             return emailInUse;
+        }
+
+        private void AddRole(User user, string roleName)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+                {
+                    connection.Open();
+
+                    var sqlCommand =
+                        new SqlCommand(
+                            $"INSERT INTO dbo.User_Roles (UserID, RoleID) VALUES ((select u.ID from [user] u where u.[E-mail] = @Email), (select r.ID from Roles r where r.RoleName = @RoleName))",
+                            connection);
+
+                    sqlCommand.Parameters.AddWithValue("@Email", user.Email);
+                    sqlCommand.Parameters.AddWithValue("@RoleName", roleName);
+                    sqlCommand.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            catch (Exception exception)
+            {
+                //loggen
+            }
         }
     }
 }
