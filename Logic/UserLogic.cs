@@ -14,5 +14,20 @@ namespace Logic
         {
             return _userRepo.Login(user);
         }
+
+        public IEnumerable<string> GetUserRoles(User user)
+        {
+            return _userRepo.GetUserRoles(user);
+        }
+
+        public bool CreateAccount(User user)
+        {
+            return _userRepo.CreateAccount(user);
+        }
+
+        public bool IsEmailInUse(User user)
+        {
+            return _userRepo.IsEmailInUse(user);
+        }
     }
 }

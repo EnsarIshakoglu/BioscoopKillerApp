@@ -19,5 +19,20 @@ namespace DAL
         {
             return _context.Login(user);
         }
+
+        public IEnumerable<string> GetUserRoles(User user)
+        {
+            return _context.GetUserRoles(user);
+        }
+
+        public bool CreateAccount(User user)
+        {
+            return _context.CreateAccount(user);
+        }
+
+        public bool IsEmailInUse(User user)
+        {
+            return _context.IsEmailInUse(user);
+        }
     }
 }

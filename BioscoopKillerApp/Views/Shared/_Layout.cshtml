@@ -28,7 +28,14 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <form class="form-inline my-2 my-lg-0">
-                        <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogOut">Log Out</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
+                        }
                     </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -40,7 +47,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">Movies</a>
                         </li>
-                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">AAAAAA</a>
+                            </li>
+                        }
+
                     </ul>
                     
                 </div>

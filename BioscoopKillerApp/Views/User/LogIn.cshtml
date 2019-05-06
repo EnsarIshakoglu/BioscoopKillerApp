@@ -3,6 +3,12 @@
     ViewData["Title"] = "LogIn";
 }
 
+@if (null != TempData["alertMessage"])
+{
+    <script type="text/javascript">
+    alert('@TempData["alertMessage"]');
+    </script>
+}
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="~/lib/bootstrap/dist/css/User/user-login-bootstrap.css" rel="stylesheet" />
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -17,7 +23,7 @@
                 <h3>Login</h3>
 
                 <div class="form-group">
-                    <input type="text" class="form-control" asp-for="Username" name="Username" placeholder="Username" value="" />
+                    <input type="text" class="form-control" asp-for="Email" name="Email" placeholder="Email" value="" />
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" asp-for="Password" name="Password" placeholder="Password" value="" />
@@ -26,7 +32,7 @@
                     <input type="submit" class="btnSubmitLogin" value="Login" />
                 </div>
                 <div class="form-group">
-                    <a href="#" class="btnForgetPwd">Forget Password?</a>
+                    <a href="#" class="btnForgetPwd">Forgot Password?</a>
                 </div>
             </form>
         </div>
@@ -35,19 +41,24 @@
             <div class="login-logo">
                 <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
             </div>
-            <h3>Don't have an account?</h3>
-            <div class="form-group">
-                <input type="text" class="form-control" asp-for="Email" placeholder="Email" value="" />
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" asp-for="Username" placeholder="Username" value="" />
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" asp-for="Password" placeholder="Password" value="" />
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btnSubmitCreateAccount" value="Create Account" />
-            </div>
+            <form asp-action="CreateAccount">
+                <h3>Don't have an account?</h3>
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="Email" placeholder="Email" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="Name" placeholder="Name" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="SurName" placeholder="SurName" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Password" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btnSubmitCreateAccount" value="Create Account" />
+                </div>
+            </form>
         </div>
     </div>
 
