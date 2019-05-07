@@ -1663,7 +1663,7 @@ Expr = Sizzle.selectors = {
 				}
 
 				// numeric x and y parameters for Expr.filter.CHILD
-				// remember that false/true cast respectively to 0/1
+				// remember that false/true Actors respectively to 0/1
 				match[4] = +( match[4] ? match[5] + (match[6] || 1) : 2 * ( match[3] === "even" || match[3] === "odd" ) );
 				match[5] = +( ( match[7] + match[8] ) || match[3] === "odd" );
 
@@ -2159,7 +2159,7 @@ tokenize = Sizzle.tokenize = function( selector, parseOnly ) {
 			matched = match.shift();
 			tokens.push({
 				value: matched,
-				// Cast descendant combinators to space
+				// Actors descendant combinators to space
 				type: match[0].replace( rtrim, " " )
 			});
 			soFar = soFar.slice( matched.length );
@@ -3440,7 +3440,7 @@ function adoptValue( value, resolve, reject, noValue ) {
 		// Other non-thenables
 		} else {
 
-			// Control `resolve` arguments by letting Array#slice cast boolean `noValue` to integer:
+			// Control `resolve` arguments by letting Array#slice Actors boolean `noValue` to integer:
 			// * false: [ value ].slice( 0 ) => resolve( value )
 			// * true: [ value ].slice( 1 ) => resolve()
 			resolve.apply( undefined, [ value ].slice( noValue ) );
@@ -10299,7 +10299,7 @@ jQuery.isNumeric = function( obj ) {
 	var type = jQuery.type( obj );
 	return ( type === "number" || type === "string" ) &&
 
-		// parseFloat NaNs numeric-cast false positives ("")
+		// parseFloat NaNs numeric-Actors false positives ("")
 		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
 		// subtraction forces infinities to NaN
 		!isNaN( obj - parseFloat( obj ) );

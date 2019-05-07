@@ -19,7 +19,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="~/lib/bootstrap/dist/css/Transaction/bootstrap-transaction-min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">
+    @*<link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">*@
     <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-style.css" rel="stylesheet" type="text/css" media="all">
 
     <!-- Custom styles for this template -->
@@ -32,7 +32,7 @@
 
 
         <div class="row">
-            <div class="col-md-4 order-md-2 mb-4">
+            <div class="col-md-3 order-md-2 mb-4">
                 <div class="movie-pic" style="width: 65%">
                     <a><img src=@Model.Movie.Poster alt=""></a>
                 </div>
@@ -40,12 +40,12 @@
                     <a class="span">@Model.Movie.Title</a>
                     <div class="clearfix"></div>
                     <div class="clearfix"></div>
-                    <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Movie.Cast)</p>
-                    <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Movie.Genres)</p>
+                    <p class="info">Actors:&nbsp;@string.Join(", ", @Model.Movie.Actors)</p>
+                    <p class="info">Genre:&nbsp;@string.Join(", ", @Model.Movie.Genre)</p>
                     <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
                 </div>
             </div>
-            <div class="col-md-8 order-md-1">
+            <div class="col-md-9 order-md-1">
                 @*plaats kiezen*@
                 <body>
                 <div id="messagePanel" class="messagePanel">
@@ -60,15 +60,6 @@
                 </body>
             </div>
         </div>
-
-        <footer class="my-5 pt-5 text-muted text-center text-small">
-            <p class="mb-1">© 2017-2018 Company Name</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Privacy</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Support</a></li>
-            </ul>
-        </footer>
     </div>
 
     <!-- Bootstrap core JavaScript

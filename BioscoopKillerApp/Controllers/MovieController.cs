@@ -33,5 +33,10 @@ namespace BioscoopKillerApp.Controllers
 
             return View(movieDetails);
         }
+
+        public IActionResult AddPage()
+        {
+            return View();
+        }
     }
 }

@@ -358,7 +358,7 @@ $.validator.addMethod( "creditcard", function( value, element ) {
 	return ( nCheck % 10 ) === 0;
 }, "Please enter a valid credit card number." );
 
-/* NOTICE: Modified version of Castle.Components.Validator.CreditCardValidator
+/* NOTICE: Modified version of Actorsle.Components.Validator.CreditCardValidator
  * Redistributed under the the Apache License 2.0 at http://www.apache.org/licenses/LICENSE-2.0
  * Valid Types: mastercard, visa, amex, dinersclub, enroute, discover, jcb, unknown, all (overrides all other settings)
  */

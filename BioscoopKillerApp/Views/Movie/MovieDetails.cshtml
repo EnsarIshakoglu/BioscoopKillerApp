@@ -18,7 +18,7 @@
         }
     </style>
     <title>Cinema A Entertainment Category Flat Bootstrap Responsive Website Template | Single :: w3layouts</title>
-    <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">
+    @*<link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">*@
     <!-- Custom Theme files -->
     <link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-style.css" rel="stylesheet" type="text/css" media="all">
     <!-- Custom Theme files -->
@@ -101,8 +101,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <a class="span">@Model.Movie.Title</a>
                                 <div class="clearfix"></div>
                                 <div class="clearfix"></div>
-                                <p class="info">Cast:&nbsp;@string.Join(", ", @Model.Movie.Cast)</p>
-                                <p class="info">Genres:&nbsp;@string.Join(", ", @Model.Movie.Genres)</p>
+                                <p class="info">Actors:&nbsp;@string.Join(", ", @Model.Movie.Actors)</p>
+                                <p class="info">Genre:&nbsp;@string.Join(", ", @Model.Movie.Genre)</p>
                                 <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
                             </div>
                             <div class="clearfix"></div>

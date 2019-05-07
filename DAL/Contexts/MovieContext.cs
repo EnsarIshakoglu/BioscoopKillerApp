@@ -42,8 +42,6 @@ namespace DAL.Contexts
 
             foreach (var movie in movies)
             {
-                AddCategories(movie);
-                AddCast(movie);
                 AddAPIData(movie).Wait();
             }
 
@@ -66,54 +64,9 @@ namespace DAL.Contexts
                     movie.Plot = apiDataMovie.Plot;
                     movie.Title = apiDataMovie.Title;
                     movie.Runtime = apiDataMovie.Runtime;
+                    movie.Actors = apiDataMovie.Actors;
+                    movie.Genre = apiDataMovie.Genre;
                 }
-            }
-
-        }
-
-        private void AddCategories(Movie movie)
-        {
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
-            {
-                connection.Open();
-                var sqlCommand = new SqlCommand(
-                    $"select distinct Movie.ID, Movie.Name as Name, Category.Name as Category\r\n" +
-                    $"From Movie_Category\r\nInner join Movie on Movie_Category.MovieID = Movie.ID\r\ninner join Category on Movie_Category.CategoryID = Category.ID where Movie.ID = '{movie.Id}'",
-                    connection);
-
-                using (var reader = sqlCommand.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        movie.Genres.Add(reader["Category"].ToString());
-                    }
-                }
-
-                connection.Close();
-            }
-
-        }
-
-        private void AddCast(Movie movie)
-        {
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
-            {
-                connection.Open();
-                    var sqlCommand =
-                        new SqlCommand(
-                            $"select distinct Movie.ID, Movie.Name as Name, Actor.Name as Actor\r\n" +
-                            $"From Movie_Actor\r\nInner join Movie on Movie_Actor.MovieID = Movie.ID\r\ninner join Actor on Movie_Actor.ActorID = Actor.ID \r\nwhere Movie.ID = {movie.Id}",
-                            connection);
-
-                    using (var reader = sqlCommand.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            movie.Cast.Add(reader["Actor"].ToString());
-                        }
-                    }
-
-                connection.Close();
             }
 
         }
@@ -142,8 +95,6 @@ namespace DAL.Contexts
                 connection.Close();
             }
 
-            AddCategories(movie);
-            AddCast(movie);
             AddAPIData(movie).Wait();
 
 

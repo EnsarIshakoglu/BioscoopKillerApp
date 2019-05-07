@@ -47,17 +47,17 @@ namespace BioscoopKillerApp.Controllers
         {
             if (_userLogic.IsEmailInUse(user))
             {
-                TempData["alertMessage"] = "Email is already in use, please choose another one.";
+                TempData["alertMessageRegister"] = "Email is already in use, please choose another one.";
             }
             else
             {
                 if (_userLogic.CreateAccount(user))
                 {
-                    TempData["alertMessage"] = "Account has been created! You can log in now.";
+                    TempData["alertMessageRegister"] = "Account has been created! You can log in now.";
                 }
                 else
                 {
-                    TempData["alertMessage"] = "Could not create account, please try again later or ask for help.";
+                    TempData["alertMessageRegister"] = "Could not create account, please try again later or ask for help.";
                 }
             }
 

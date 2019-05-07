@@ -32,11 +32,11 @@ namespace Logic
 
             List<Movie> sortedMovies = new List<Movie>();
 
-            foreach (Movie movie in movies)
+            /*foreach (Movie movie in movies)
             {
-                if (movie.Genres.Intersect(categories).Count() == categories.Count())
+                if (movie.Genre.Intersect(categories).Count() == categories.Count())
                     sortedMovies.Add(movie);
-            }
+            }*/
 
             return sortedMovies;
         }

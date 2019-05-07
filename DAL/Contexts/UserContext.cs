@@ -135,7 +135,7 @@ namespace DAL.Contexts
             }
             catch (Exception exception)
             {
-                //loggen
+                //loggen --> try catch moet eigenlijk in de controller!!!!!!!
             }
         }
     }

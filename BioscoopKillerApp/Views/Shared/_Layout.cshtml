@@ -51,7 +51,7 @@
                         @if (User.IsInRole(Roles.Admin.ToString()))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">Admin</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddPage">Add</a>
                             </li>
                         }
                         @if (User.IsInRole(Roles.AccountHolder.ToString()))
@@ -75,9 +75,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
             &copy; 2019 - BioscoopKillerApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
     </footer>
 
     <environment include="Development">
