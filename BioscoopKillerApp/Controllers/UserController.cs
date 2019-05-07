@@ -65,7 +65,7 @@ namespace BioscoopKillerApp.Controllers
         }
 
         private async void InitUser(User user)
-        {
+        { 
             var roles = _userLogic.GetUserRoles(user);
 
             var claims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
