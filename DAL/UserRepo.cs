@@ -34,5 +34,10 @@ namespace DAL
         {
             return _context.IsEmailInUse(user);
         }
+
+        public int GetUserId(User user)
+        {
+            return _context.GetUserId(user);
+        }
     }
 }

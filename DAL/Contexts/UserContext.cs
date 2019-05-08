@@ -113,6 +113,28 @@ namespace DAL.Contexts
             return emailInUse;
         }
 
+        public int GetUserId(User user)
+        {
+            var userId = -1;
+
+            using (SqlConnection conn = new SqlConnection(_dbConnectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand($"select Id from [user] where [E-mail] ='{user.Email}'", conn);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    userId = (int)reader["Id"];
+                }
+                reader.Close();
+                conn.Close();
+            }
+
+            return userId;
+        }
+
         private void AddRole(User user, string roleName)
         {
             try

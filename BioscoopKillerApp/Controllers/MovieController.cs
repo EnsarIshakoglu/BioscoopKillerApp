@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using BioscoopKillerApp.Models;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Models;
+using Models.Enums;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -41,15 +46,22 @@ namespace BioscoopKillerApp.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                _movieLogic.AddMovie(movie);
+                if (_movieLogic.CheckIfMovieExists(movie))
+                {
+                    _movieLogic.AddMovie(movie);
+                }
+                else
+                {
+                    TempData["alertMessage"] = "Movie does not exist!";
+                }
+                
             }
 
-            return RedirectToAction("AddPage");
+            return View("AddPage");
         }
     }
 }

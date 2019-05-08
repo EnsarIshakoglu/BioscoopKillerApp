@@ -6,7 +6,7 @@
     <div class="col-xl-7 order-xl-2 ">
     </div>
     <div class="col-xl-5 order-xl-3 inputField">
-        <form asp-action="AddMovie" >
+        <form asp-action="AddMovie">
             <h3 class="register-heading">Add movie</h3>
             <p></p>
             <div class="form-group">
@@ -18,10 +18,26 @@
                 @Html.ValidationMessageFor(model => model.PublishedYear)
             </div>
             <div class="form-group ">
-                <input type="email" asp-for="MoviePrice" name="MoviePrice" class="form-control" placeholder="Movie price" value="" />
+                <input type="text" asp-for="MoviePrice" name="MoviePrice" class="form-control" placeholder="Movie price" value="" />
                 @Html.ValidationMessageFor(model => model.MoviePrice)
             </div>
+            <div id="errorTextAddMovie">
+
+            </div>
             <input type="submit" class="col-md-7 btn btn-secondary" value="Add" style="float: left; margin: 5px;" />
+
         </form>
     </div>
 </div>
+
+@if (null != TempData["alertMessage"])
+{
+    <script type="text/javascript">
+
+        var div = document.createElement('div');
+        div.innerHTML = '@TempData["alertMessage"]';
+        console.log(div.innerHTML);
+
+        document.getElementById('errorTextAddMovie').appendChild(div);
+    </script>
+}

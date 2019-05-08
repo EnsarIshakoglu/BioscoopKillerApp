@@ -32,7 +32,11 @@ namespace BioscoopKillerApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddSession(options =>
+            {
+                //sessie verloopt na 30 minuten
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -54,7 +58,7 @@ namespace BioscoopKillerApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

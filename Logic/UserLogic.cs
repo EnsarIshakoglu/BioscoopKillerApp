@@ -29,5 +29,10 @@ namespace Logic
         {
             return _userRepo.IsEmailInUse(user);
         }
+
+        public int GetUserId(User user)
+        {
+            return _userRepo.GetUserId(user);
+        }
     }
 }

@@ -28,5 +28,10 @@ namespace DAL
         {
             _movieContext.AddMovie(movie);
         }
+
+        public bool CheckIfMovieExists(Movie movie)
+        {
+            return _movieContext.CheckIfMovieExists(movie);
+        }
     }
 }

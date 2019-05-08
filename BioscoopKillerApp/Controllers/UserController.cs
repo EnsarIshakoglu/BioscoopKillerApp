@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Logic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Models;
+using Models.Enums;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -42,7 +47,9 @@ namespace BioscoopKillerApp.Controllers
 
         public IActionResult LogOut()
         {
-            RemoveCookies();
+            //RemoveCookies();
+            RemoveSessionData();
+
 
             return RedirectToAction("Index", "Movie");
         }
@@ -74,24 +81,42 @@ namespace BioscoopKillerApp.Controllers
             return View("LogIn", user);
         }
 
-        private async void InitUser(User user)
-        { 
+        private void InitUser(User user)
+        {
+            var userId = _userLogic.GetUserId(user);
             var roles = _userLogic.GetUserRoles(user);
+            var roleIds = new List<Roles>();
 
-            var claims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
-            var authProp = new AuthenticationProperties
+            foreach (var role in roles)
             {
-                IsPersistent = false
-            };
+                Enum.TryParse(role, out Roles userRole);
 
-            await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProp);
+                roleIds.Add(userRole);
+            }
+
+            
+            this.HttpContext.Session.Set("roles", ConvertListToByteArray(roleIds));
+            this.HttpContext.Session.SetInt32("userId", userId);
         }
 
-        private async void RemoveCookies()
+        private byte[] ConvertListToByteArray<T>(List<T> listToConvert)
         {
-            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var binFormatter = new BinaryFormatter();
+            var mStream = new MemoryStream();
+            binFormatter.Serialize(mStream, listToConvert);
+
+            return mStream.ToArray();
+        }
+
+        private void RemoveSessionData()
+        {
+            var keys = this.HttpContext.Session.Keys;
+
+            for (int x = 0; x < keys.Count(); x++)
+            {
+                this.HttpContext.Session.Remove(keys.ElementAt(x));
+            }
         }
     }
 }

@@ -1,41 +1,26 @@
-﻿@using Models.Enums
+﻿@using System.IO
+@using System.Runtime.Serialization.Formatters.Binary
+@using Microsoft.AspNetCore.Http
+@using Models.Enums
+
+@{ 
+    var roles = Context.Session.Get("roles");
+    var userRoles = new List<Roles>();
+
+    if (roles != null)
+    {
+
+        var mStream = new MemoryStream();
+        var binFormatter = new BinaryFormatter();
+
+        mStream.Write(roles, 0, roles.Length);
+        mStream.Position = 0;
+
+        userRoles = binFormatter.Deserialize(mStream) as List<Roles>;
+    }
+}
 <!DOCTYPE html>
 
-<style>
-
-    /* The container <div> - needed to position the dropdown content */
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    /* Dropdown Content (Hidden by Default) */
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-    /* Links inside the dropdown */
-    .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
-
-    /* Change color of dropdown links on hover */
-    .dropdown-content a:hover {background-color: #ddd;}
-
-    /* Show the dropdown menu on hover */
-    .dropdown:hover .dropdown-content {display: block;}
-
-    /* Change the background color of the dropdown button when the dropdown content is shown */
-    .dropdown:hover .dropbtn {background-color: #3e8e41;}
-</style>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -65,7 +50,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <form class="form-inline my-2 my-lg-0">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (userRoles.Contains(Roles.Admin))
                         {
                             <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogOut">Log Out</button>
                         }
@@ -84,13 +69,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">Movies</a>
                         </li>
-                        @if (User.IsInRole(Roles.Admin.ToString()))
+                        @if (userRoles.Contains(Roles.Admin))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddPage">Add</a>
                         </li>
                         }
-                        @if (User.IsInRole(Roles.AccountHolder.ToString()))
+                        @if (userRoles.Contains(Roles.AccountHolder))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">AccountHolder</a>

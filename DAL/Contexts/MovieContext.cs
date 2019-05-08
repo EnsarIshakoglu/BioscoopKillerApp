@@ -120,5 +120,19 @@ namespace DAL.Contexts
                 connection.Close();
             }
         }
+
+        public bool CheckIfMovieExists(Movie movie)
+        {
+            var movieExists = false;
+
+            AddAPIData(movie).Wait();
+
+            if (movie.Poster != null)
+            {
+                movieExists = true;
+            }
+
+            return movieExists;
+        }
     }
 }

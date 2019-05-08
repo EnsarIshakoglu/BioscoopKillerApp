@@ -57,5 +57,10 @@ namespace Logic
         {
             _movieRepo.AddMovie(movie);
         }
+
+        public bool CheckIfMovieExists(Movie movie)
+        {
+            return _movieRepo.CheckIfMovieExists(movie);
+        }
     }
 }
