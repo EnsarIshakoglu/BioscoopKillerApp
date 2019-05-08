@@ -3,12 +3,7 @@
     ViewData["Title"] = "LogIn";
 }
 
-@if (null != TempData["alertMessage"])
-{
-    <script type="text/javascript">
-    alert('@TempData["alertMessage"]');
-    </script>
-}
+
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="~/lib/bootstrap/dist/css/User/user-login-bootstrap.css" rel="stylesheet" />
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -29,7 +24,11 @@
                     <input type="password" class="form-control" asp-for="Password" name="Password" placeholder="Password" value="" />
                 </div>
                 <div class="form-group">
+                    <div id="errorTextLogin" style="color: white">
+
+                    </div>
                     <input type="submit" class="btnSubmitLogin" value="Login" />
+
                 </div>
                 <div class="form-group">
                     <a href="#" class="btnForgetPwd">Forgot Password?</a>
@@ -50,12 +49,15 @@
                     <input type="text" class="form-control" asp-for="Name" placeholder="Name" value="" />
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" asp-for="SurName" placeholder="SurName" value="" />
+                    <input type="text" class="form-control" asp-for="SurName" placeholder="Surname" value="" />
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" asp-for="Password" placeholder="Password" value="" />
                 </div>
                 <div class="form-group">
+                    <div id="errorTextRegister" style="color: white">
+
+                    </div>
                     <input type="submit" class="btnSubmitCreateAccount" value="Create Account" />
                 </div>
             </form>
@@ -63,4 +65,27 @@
     </div>
 
 </div>
+
+@if (null != TempData["alertMessage"])
+{
+    <script type="text/javascript">
+
+        var div = document.createElement('div');
+        div.innerHTML = '@TempData["alertMessage"]';
+        console.log(div.innerHTML);
+
+        document.getElementById('errorTextLogin').appendChild(div);
+    </script>
+}
+@if (null != TempData["alertMessageRegister"])
+{
+    <script type="text/javascript">
+
+        var div = document.createElement('div');
+        div.innerHTML = '@TempData["alertMessageRegister"]';
+        console.log(div.innerHTML);
+
+        document.getElementById('errorTextRegister').appendChild(div);
+    </script>
+}
 
