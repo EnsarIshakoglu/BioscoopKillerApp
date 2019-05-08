@@ -1,4 +1,22 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Models.Movie
+
+<link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+
+<div class="row register-form">
+    <div class="col-xl-7 order-xl-2 ">
+    </div>
+    <div class="col-xl-5 order-xl-3 inputField">
+        <h3 class="register-heading">Add movie</h3>
+        <p></p>
+        <div class="form-group">
+            <input type="text" asp-for="Title" name="Title" class="form-control" placeholder="Title" value="" />
+        </div>
+        <div class="form-group ">
+            <input type="text" asp-for="PublishedYear" name="PublishedYear" class="form-control" placeholder="Published year" value="" />
+        </div>
+        <div class="form-group ">
+            <input type="email" asp-for="MoviePrice" name="MoviePrice" class="form-control" placeholder="Movie price" value="" />
+        </div>
+        <input type="submit" class="col-md-7 btn btn-secondary" value="Add" style="float: left; margin: 5px;" />
+    </div>
+</div>

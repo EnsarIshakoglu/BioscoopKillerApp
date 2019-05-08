@@ -35,13 +35,6 @@ namespace BioscoopKillerApp.Controllers
             }
         }
 
-        public IActionResult LogOut()
-        {
-            RemoveCookies();
-
-            return RedirectToAction("Index", "Movie");
-        }
-
         [HttpPost]
         public IActionResult CreateAccount([Bind("Password, Name, SurName, Email")] User user)
         {
@@ -62,6 +55,13 @@ namespace BioscoopKillerApp.Controllers
             }
 
             return View("LogIn", user);
+        }
+
+        public IActionResult LogOut()
+        {
+            RemoveCookies();
+
+            return RedirectToAction("Index", "Movie");
         }
 
         private async void InitUser(User user)
