@@ -9,5 +9,6 @@ namespace DAL.Contexts
     {
         IEnumerable<Movie> GetAllMovies();
         Movie GetMovieById(int movieId);
+        void AddMovie(Movie movie);
     }
 }

@@ -11,6 +11,7 @@ namespace Models
         [Required(ErrorMessage = "Email field is required!")]
         public string Email{get; set; }
         [Required(ErrorMessage = "Password field is required!")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required(ErrorMessage = "Name field is required!")]
         public string Name { get; set; }

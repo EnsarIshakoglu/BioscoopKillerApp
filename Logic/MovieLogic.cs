@@ -52,5 +52,10 @@ namespace Logic
         {
             return _movieRepo.GetMovieById(movieId);
         }
+
+        public void AddMovie(Movie movie)
+        {
+            _movieRepo.AddMovie(movie);
+        }
     }
 }

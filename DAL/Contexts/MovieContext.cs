@@ -100,5 +100,25 @@ namespace DAL.Contexts
 
             return movie;
         }
+
+        public void AddMovie(Movie movie)
+        {
+            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand =
+                    new SqlCommand(
+                        $"INSERT INTO dbo.Movie (Name, PublishedYear, MoviePrice) VALUES (@Name, @PublishedYear, @MoviePrice)",
+                        connection);
+
+                sqlCommand.Parameters.AddWithValue("@Name", movie.Title);
+                sqlCommand.Parameters.AddWithValue("@PublishedYear", movie.PublishedYear);
+                sqlCommand.Parameters.AddWithValue("@MoviePrice", movie.MoviePrice);
+                sqlCommand.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
     }
 }

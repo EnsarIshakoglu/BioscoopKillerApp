@@ -23,5 +23,10 @@ namespace DAL
         {
             return _movieContext.GetMovieById(movieId);
         }
+
+        public void AddMovie(Movie movie)
+        {
+            _movieContext.AddMovie(movie);
+        }
     }
 }

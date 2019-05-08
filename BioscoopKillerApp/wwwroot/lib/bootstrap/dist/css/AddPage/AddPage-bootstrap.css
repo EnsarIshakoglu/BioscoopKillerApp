@@ -1,5 +1,4 @@
-body {
+body, html {
     background-image: url('../../../../../thumbnails/07042152_avatar-wallpaper-1920x1080-5.jpg');
-    -webkit-filter: blur(5px);
-    filter: blur(5px);
+    min-height: 100%
 }

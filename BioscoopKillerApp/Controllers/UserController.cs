@@ -23,6 +23,11 @@ namespace BioscoopKillerApp.Controllers
         [HttpPost]
         public IActionResult LogIn([Bind("Password, Email")] User user)
         {
+            if (!ModelState.ContainsKey("Password") && !ModelState.ContainsKey("Username"))
+            {
+                TempData["alertMessage"] = "Please fill in all the fields!";
+                return View("LogIn");
+            }
             if (_userLogic.Login(user))
             {
                 InitUser(user);
@@ -45,6 +50,11 @@ namespace BioscoopKillerApp.Controllers
         [HttpPost]
         public IActionResult CreateAccount([Bind("Password, Name, SurName, Email")] User user)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["alertMessage"] = "Please fill in all the fields!";
+                return View("LogIn");
+            }
             if (_userLogic.IsEmailInUse(user))
             {
                 TempData["alertMessageRegister"] = "Email is already in use, please choose another one.";
