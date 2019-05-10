@@ -34,6 +34,9 @@ namespace BioscoopKillerApp
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
+                options.Cookie.HttpOnly = true;                                         //--> https://dotnetcoretutorials.com/2017/01/15/httponly-cookies-asp-net-core/ (cookies zijn alleen bechikbaar voor http (niet beschikbaar voor js dus en geen xss attacks))
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;                //--> https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#Secure_and_HttpOnly_cookies (cookies worden mbv https verstuurd (encrypted dus))
+                options.Cookie.SameSite = SameSiteMode.Lax;                             //--> https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#SameSite_cookies (cookies mogen niet naar andere sites worden verstuurd)
                 options.Cookie.Name = "CinemaApp.Cookies";
                 options.LoginPath = "/User/LogIn";
                 options.LogoutPath = "/User/LogOut";

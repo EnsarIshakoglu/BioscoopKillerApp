@@ -4,10 +4,15 @@
     <div class="card h-100">
         <a href="@Url.Action("MovieDetails", "Movie", @Model)"><img class="card-img-top" img src=@Model.Poster alt=""></a>
         <div class="card-body">
-            <h5 class="card-title">
-                    <a href="@Url.Action("MovieDetails", "Movie", @Model)">@Model.Title</a>
-            </h5>
+            <p class="card-title" style="font-size: 20px;">
+                <a href="@Url.Action("MovieDetails", "Movie", @Model)">@Model.Title</a>
+            </p>
             <p class="card-text"> @string.Join(", ", @Model.Genre)</p>
         </div>
     </div>
 </div>
+
+<script>
+    var text = @Model.Title;
+    text.truncate()
+</script>
