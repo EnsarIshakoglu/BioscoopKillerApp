@@ -23,6 +23,10 @@ namespace BioscoopKillerApp.Controllers
         {
             return View(_movieLogic.GetAllMovies());
         }
+        public IActionResult AllMovies()
+        {
+            return View(_movieLogic.GetAllMovies());
+        }
 
         public IActionResult MovieDetails(Movie movie)
         {
@@ -39,12 +43,12 @@ namespace BioscoopKillerApp.Controllers
 
             return View(movieDetails);
         }
-
+        [Authorize(Roles= "Admin")]
         public IActionResult AddPage()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
         {

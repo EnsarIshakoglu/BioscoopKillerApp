@@ -47,10 +47,8 @@ namespace BioscoopKillerApp.Controllers
 
         public IActionResult LogOut()
         {
-            //RemoveCookies();
-            RemoveSessionData();
-
-
+            RemoveCookies();
+            
             return RedirectToAction("Index", "Movie");
         }
 
@@ -81,42 +79,24 @@ namespace BioscoopKillerApp.Controllers
             return View("LogIn", user);
         }
 
-        private void InitUser(User user)
+        private async void InitUser(User user)
         {
             var userId = _userLogic.GetUserId(user);
             var roles = _userLogic.GetUserRoles(user);
-            var roleIds = new List<Roles>();
 
+            var claims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
 
-            foreach (var role in roles)
-            {
-                Enum.TryParse(role, out Roles userRole);
+            claims.Add(new Claim("userId", userId.ToString()));
 
-                roleIds.Add(userRole);
-            }
+            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+            var authProp = new AuthenticationProperties();
 
-            
-            this.HttpContext.Session.Set("roles", ConvertListToByteArray(roleIds));
-            this.HttpContext.Session.SetInt32("userId", userId);
+            await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProp);
         }
 
-        private byte[] ConvertListToByteArray<T>(List<T> listToConvert)
+        private async void RemoveCookies()
         {
-            var binFormatter = new BinaryFormatter();
-            var mStream = new MemoryStream();
-            binFormatter.Serialize(mStream, listToConvert);
-
-            return mStream.ToArray();
-        }
-
-        private void RemoveSessionData()
-        {
-            var keys = this.HttpContext.Session.Keys;
-
-            for (int x = 0; x < keys.Count(); x++)
-            {
-                this.HttpContext.Session.Remove(keys.ElementAt(x));
-            }
+            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

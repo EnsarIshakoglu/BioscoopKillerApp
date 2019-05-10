@@ -32,11 +32,14 @@ namespace BioscoopKillerApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSession(options =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                //sessie verloopt na 30 minuten
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.Name = "CinemaApp.Cookies";
+                options.LoginPath = "/User/LogIn";
+                options.LogoutPath = "/User/LogOut";
             });
+
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -58,13 +61,13 @@ namespace BioscoopKillerApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Movie}/{action=Index}/{id?}");
             });
         }
     }

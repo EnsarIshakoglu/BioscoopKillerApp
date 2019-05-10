@@ -2,23 +2,6 @@
 @using System.Runtime.Serialization.Formatters.Binary
 @using Microsoft.AspNetCore.Http
 @using Models.Enums
-
-@{ 
-    var roles = Context.Session.Get("roles");
-    var userRoles = new List<Roles>();
-
-    if (roles != null)
-    {
-
-        var mStream = new MemoryStream();
-        var binFormatter = new BinaryFormatter();
-
-        mStream.Write(roles, 0, roles.Length);
-        mStream.Position = 0;
-
-        userRoles = binFormatter.Deserialize(mStream) as List<Roles>;
-    }
-}
 <!DOCTYPE html>
 
 <html>
@@ -43,14 +26,14 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BioscoopKillerApp</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Movie" asp-action="Index">BioscoopKillerApp</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <form class="form-inline my-2 my-lg-0">
-                        @if (userRoles.Contains(Roles.Admin))
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogOut">Log Out</button>
                         }
@@ -61,21 +44,15 @@
                     </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AllMovies">Movies</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">Movies</a>
-                        </li>
-                        @if (userRoles.Contains(Roles.Admin))
+                        @if (User.IsInRole(Roles.Admin.ToString()))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddPage">Add</a>
                         </li>
                         }
-                        @if (userRoles.Contains(Roles.AccountHolder))
+                        @if (User.IsInRole(Roles.AccountHolder.ToString()))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">AccountHolder</a>
