@@ -5,7 +5,8 @@ namespace DAL.Contexts
 {
     public interface IAiringMovieContext
     {
-        IEnumerable<AiringMovie> GetAiringMovies(Movie movie);
+        IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie);
         AiringMovie GetAiringMovieById(int id);
+        IEnumerable<AiringMovie> GetAllAiringMovies(Movie movie);
     }
 }

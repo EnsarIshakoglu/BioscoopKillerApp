@@ -13,7 +13,7 @@ namespace DAL.Contexts
 
         public bool Login(User user)
         {
-            bool loginSuccesfull = false;
+            var loginSuccessful = false;
 
             using (SqlConnection conn = new SqlConnection(_dbConnectionString))
             {
@@ -24,12 +24,12 @@ namespace DAL.Contexts
 
                 while (reader.Read())
                 {
-                    loginSuccesfull = true;
+                    loginSuccessful = true;
                 }
                 reader.Close();
                 conn.Close();
             }
-            return loginSuccesfull;
+            return loginSuccessful;
         }
 
         public IEnumerable<string> GetUserRoles(User user)

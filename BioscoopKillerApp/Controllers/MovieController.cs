@@ -32,7 +32,7 @@ namespace BioscoopKillerApp.Controllers
         {
             MovieDetailViewModel movieDetails = new MovieDetailViewModel
             {
-                AiringMovies = _movieLogic.GetAiringMovies(movie),
+                AiringMovies = _movieLogic.GetAiringMoviesFromMovie(movie),
                 Movie = movie
             };
 
@@ -48,6 +48,7 @@ namespace BioscoopKillerApp.Controllers
         {
             return View();
         }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
@@ -63,6 +64,21 @@ namespace BioscoopKillerApp.Controllers
                     TempData["alertMessage"] = "Movie does not exist!";
                 }
                 
+            }
+
+            return View("AddPage");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult AddAiringMovie([Bind("Movie, RoomType")] AiringMovie airingMovie, int amountOfTimes)
+        {
+            if (ModelState.IsValid)
+            {
+                for (var x = 0; x < amountOfTimes; x++)
+                {
+                    _movieLogic.AddAiringMovie(airingMovie);
+                }
             }
 
             return View("AddPage");

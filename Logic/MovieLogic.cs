@@ -9,6 +9,7 @@ namespace Logic
     public class MovieLogic
     {
         private readonly MovieRepo _movieRepo = new MovieRepo();
+        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
 
         public IEnumerable<Movie> GetAllMovies()
         {
@@ -41,11 +42,9 @@ namespace Logic
             return sortedMovies;
         }
 
-        public IEnumerable<AiringMovie> GetAiringMovies(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
-            AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
-
-            return _airingMovieLogic.GetAiringMovies(movie);
+            return _airingMovieLogic.GetAiringMoviesFromMovie(movie);
         }
 
         public Movie GetMovieById(int movieId)
@@ -61,6 +60,11 @@ namespace Logic
         public bool CheckIfMovieExists(Movie movie)
         {
             return _movieRepo.CheckIfMovieExists(movie);
+        }
+
+        public void AddAiringMovie(AiringMovie airingMovie)
+        {
+            _airingMovieLogic.AddAiringMovie(airingMovie);
         }
     }
 }

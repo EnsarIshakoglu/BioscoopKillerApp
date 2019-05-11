@@ -15,14 +15,19 @@ namespace DAL
             _context = new AiringMovieContext();
         }
 
-        public IEnumerable<AiringMovie> GetAiringMovies(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
-            return _context.GetAiringMovies(movie);
+            return _context.GetAiringMoviesFromMovie(movie);
         }
 
         public AiringMovie GetAiringMovieById(int id)
         {
             return _context.GetAiringMovieById(id);
+        }
+
+        public IEnumerable<AiringMovie> GetAllAiringMovies(Movie movie)
+        {
+            return _context.GetAllAiringMovies(movie);
         }
     }
 }

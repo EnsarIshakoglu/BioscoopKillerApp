@@ -10,14 +10,24 @@ namespace Logic
     {
         private readonly AiringMovieRepo _repo = new AiringMovieRepo();
 
-        public IEnumerable<AiringMovie> GetAiringMovies(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
-            return _repo.GetAiringMovies(movie);
+            return _repo.GetAiringMoviesFromMovie(movie);
+        }
+
+        public IEnumerable<AiringMovie> GetAllAiringMovies(Movie movie)
+        {
+            return _repo.GetAllAiringMovies(movie);
         }
 
         public AiringMovie GetAiringMovieById(int id)
         {
             return _repo.GetAiringMovieById(id);
+        }
+
+        public void AddAiringMovie(AiringMovie airingMovie)
+        {
+            var airingMovies = 
         }
     }
 }
