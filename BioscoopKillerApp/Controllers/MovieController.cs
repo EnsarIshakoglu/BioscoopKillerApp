@@ -83,7 +83,7 @@ namespace BioscoopKillerApp.Controllers
                 }
             }
 
-            TempData["alertMessage"] = a;
+            TempData["alertMessage"] = a; //add airing movie
 
             return View("AddPage");
         }

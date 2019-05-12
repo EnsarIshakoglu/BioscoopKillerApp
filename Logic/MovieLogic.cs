@@ -15,14 +15,14 @@ namespace Logic
         {
             List<Movie> movies = _movieRepo.GetAllMovies().ToList();
 
-            foreach (var movie in movies)
+            /*foreach (var movie in movies)
             {
                 int totalMinutes = Convert.ToInt32(movie.Runtime.Substring(0, movie.Runtime.IndexOf(" ", StringComparison.Ordinal)));
                 int hours = totalMinutes / 60;
                 int minutes = totalMinutes % 60;
 
                 movie.Runtime = $"{hours} h {minutes} m";
-            }
+            }*/
 
             return movies;
         }
@@ -69,7 +69,9 @@ namespace Logic
 
         public string AddAiringMovie(AiringMovie airingMovie, DateTime date)
         {
-            return _airingMovieLogic.AddAiringMovie(airingMovie, date);
+            var allMovies = GetAllMovies();
+
+            return _airingMovieLogic.AddAiringMovie(airingMovie, date, allMovies);
         }
     }
 }

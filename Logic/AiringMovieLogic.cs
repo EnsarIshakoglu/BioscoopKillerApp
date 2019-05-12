@@ -28,14 +28,15 @@ namespace Logic
             return _repo.GetAiringMovieById(id);
         }
 
-        public string AddAiringMovie(AiringMovie airingMovie, DateTime date)
+        public string AddAiringMovie(AiringMovie airingMovie, DateTime date, IEnumerable<Movie> allMovies)
         {
             var toReturnString = "";
+
             var airingMovies = GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.Date.DayOfWeek.Equals(date.DayOfWeek));
 
             foreach (var airing in airingMovies)
             {
-                airing.Movie = _movieLogic.GetMovieById(airing.Movie.Id);
+                airing.Movie = allMovies.First(m => m.Title.Equals(airing.Movie.Title));
             }
 
             var airingRooms = airingMovies.GroupBy(movie => movie.Room.Number);
@@ -57,20 +58,21 @@ namespace Logic
 
             for (var x = 0; x < sortedMovies.Count; x++)
             {
-                var runTimeCurrentMovie = GetRunTimeFromMovie(sortedMovies[x].Movie); //geeft error omdat deze movie zijn tijd niet correct wordt ingevuld
+                var runTimeCurrentMovie = GetRunTimeFromMovie(sortedMovies[x].Movie);
                 var runTimeToAddMovie = GetRunTimeFromMovie(airingMovie.Movie);
-                var startTimeNextMovie = sortedMovies[x + 1].AiringTime.TimeOfDay;
 
                 var timeCurrentAiringDone = sortedMovies[x].AiringTime.AddMinutes(runTimeCurrentMovie);
                 var timeAiringDone = timeCurrentAiringDone.AddMinutes(60 + runTimeToAddMovie + 60).TimeOfDay;
 
                 if (x != lastMovieIndex)
                 {
+                    var startTimeNextMovie = sortedMovies[x + 1].AiringTime.TimeOfDay;
+
                     if (startTimeNextMovie <= lastPossibleAiringTime)
                     {
                         if (timeAiringDone > startTimeNextMovie) continue;
-                        _repo.AddAiringMovie(airingMovie, timeCurrentAiringDone.AddMinutes(60));
-                        return "";
+                        //_repo.AddAiringMovie(airingMovie, timeCurrentAiringDone.AddMinutes(60));
+                        return $"AiringMovie created for {timeCurrentAiringDone.AddMinutes(60).ToString("f", CultureInfo.GetCultureInfo("en-US"))}";
                     }
                     else
                     {
@@ -82,8 +84,8 @@ namespace Logic
                 {
                     if (timeCurrentAiringDone.TimeOfDay <= lastPossibleAiringTime)
                     {
-                        _repo.AddAiringMovie(airingMovie, timeCurrentAiringDone.AddMinutes(60));
-                        return "";
+                        //_repo.AddAiringMovie(airingMovie, timeCurrentAiringDone.AddMinutes(60));
+                        return $"AiringMovie created for {timeCurrentAiringDone.AddMinutes(60).ToString("f", CultureInfo.GetCultureInfo("en-US"))}";
                     }
                     else
                     {
