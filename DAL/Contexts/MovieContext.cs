@@ -97,7 +97,6 @@ namespace DAL.Contexts
 
             AddAPIData(movie).Wait();
 
-
             return movie;
         }
 

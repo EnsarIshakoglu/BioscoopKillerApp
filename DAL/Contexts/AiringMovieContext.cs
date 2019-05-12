@@ -34,7 +34,7 @@ namespace DAL.Contexts
                         Id = (int)reader["AiringID"],
                         AiringTime = (DateTime)reader["AiringTime"],
                         Movie = movie,
-                        Room = new Room((int)reader["RoomNumber"], (RoomTypes)reader["RoomType"], (int)reader["AvailablePlaces"],(int)reader["SeatsPerRow"]),
+                        Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"],(int)reader["SeatsPerRow"]),
                         Price = (int)reader["Price"]
                     });
                 }
@@ -63,11 +63,11 @@ namespace DAL.Contexts
 
                 while (reader.Read())
                 {
-                     airingMovie = new AiringMovie
+                    airingMovie = new AiringMovie
                     {
                         Id = (int)reader["AiringID"],
                         AiringTime = (DateTime)reader["AiringTime"],
-                        Room = new Room((int)reader["RoomNumber"], (RoomTypes)reader["RoomType"], (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
+                        Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
                         Price = (int)reader["Price"]
                     };
                 }
@@ -78,18 +78,21 @@ namespace DAL.Contexts
             return airingMovie;
         }
 
-        public IEnumerable<AiringMovie> GetAllAiringMovies()
+        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
         {
             var airingMovies = new List<AiringMovie>();
+            var query =
+                $"select Planning.ID as AiringID, AiringTime, [m].[ID] as MovieId, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, [t].SeatsPerRow, ([t].RoomPrice + m.MoviePrice) as Price from Planning " +
+                $"inner join Room r on r.ID = Planning.RoomID " +
+                $"inner join Movie m on m.ID = Planning.MovieID " +
+                $"inner join TypeRoom [t] on [t].[ID] = r.TypeRoomID " +
+                $"where [t].[Name] = '{roomType}'";
 
             using (SqlConnection connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select Planning.ID as AiringID, AiringTime, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, t.SeatsPerRow, (t.RoomPrice + m.MoviePrice) as Price from Planning " +
-                                                $"inner join Room r on r.ID = Planning.RoomID " +
-                                                $"inner join Movie m on m.ID = Planning.MovieID " +
-                                                $"inner join TypeRoom t on t.ID = r.TypeRoomID", connection);
+                var sqlCommand = new SqlCommand(query, connection);
 
                 var reader = sqlCommand.ExecuteReader();
 
@@ -99,10 +102,16 @@ namespace DAL.Contexts
                     {
                         Id = (int)reader["AiringID"],
                         AiringTime = (DateTime)reader["AiringTime"],
-                        Movie = movie,
-                        Room = new Room((int)reader["RoomNumber"], (RoomTypes)reader["RoomType"], (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
+                        Movie = new Movie
+                        {
+                            Title = reader["Name"]?.ToString(),
+                            Id = (int)reader["MovieId"]
+                        },
+                        Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
                         Price = (int)reader["Price"]
                     });
+
+                    
                 }
 
                 connection.Close();

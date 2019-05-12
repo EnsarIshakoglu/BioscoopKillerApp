@@ -52,6 +52,11 @@ namespace Logic
             return _movieRepo.GetMovieById(movieId);
         }
 
+        public AiringMovie GetAiringMovieById(int airingMovieId)
+        {
+            return _airingMovieLogic.GetAiringMovieById(airingMovieId);
+        }
+
         public void AddMovie(Movie movie)
         {
             _movieRepo.AddMovie(movie);
@@ -62,9 +67,9 @@ namespace Logic
             return _movieRepo.CheckIfMovieExists(movie);
         }
 
-        public void AddAiringMovie(AiringMovie airingMovie)
+        public string AddAiringMovie(AiringMovie airingMovie, DateTime date)
         {
-            _airingMovieLogic.AddAiringMovie(airingMovie);
+            return _airingMovieLogic.AddAiringMovie(airingMovie, date);
         }
     }
 }

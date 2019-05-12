@@ -46,6 +46,9 @@ namespace BioscoopKillerApp.Controllers
         [Authorize(Roles= "Admin")]
         public IActionResult AddPage()
         {
+            /*var date = new DateTime(2018, 4, 28, 21, 30, 0);
+            AddAiringMovie(_movieLogic.GetAiringMovieById(1), 1, date);*/
+
             return View();
         }
 
@@ -71,15 +74,20 @@ namespace BioscoopKillerApp.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult AddAiringMovie([Bind("Movie, RoomType")] AiringMovie airingMovie, int amountOfTimes)
+        public IActionResult AddAiringMovie([Bind("Movie, RoomType")] AiringMovie airingMovie, int amountOfTimes, DateTime date)
         {
+            string a = "";
+            airingMovie.Movie = _movieLogic.GetMovieById(5);
+
             if (ModelState.IsValid)
             {
                 for (var x = 0; x < amountOfTimes; x++)
                 {
-                    _movieLogic.AddAiringMovie(airingMovie);
+                    a = _movieLogic.AddAiringMovie(airingMovie, date);
                 }
             }
+
+            TempData["alertMessage"] = a;
 
             return View("AddPage");
         }

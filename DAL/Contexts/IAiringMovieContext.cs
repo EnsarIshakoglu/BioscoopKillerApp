@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Models;
+using Models.Enums;
 
 namespace DAL.Contexts
 {
@@ -7,6 +8,6 @@ namespace DAL.Contexts
     {
         IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie);
         AiringMovie GetAiringMovieById(int id);
-        IEnumerable<AiringMovie> GetAllAiringMovies(Movie movie);
+        IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType);
     }
 }

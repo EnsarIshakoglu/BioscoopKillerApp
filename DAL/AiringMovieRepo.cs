@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using DAL.Contexts;
 using Models;
+using Models.Enums;
 
 namespace DAL
 {
@@ -25,9 +26,14 @@ namespace DAL
             return _context.GetAiringMovieById(id);
         }
 
-        public IEnumerable<AiringMovie> GetAllAiringMovies(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
         {
-            return _context.GetAllAiringMovies(movie);
+            return _context.GetAiringMoviesByRoomType(roomType);
+        }
+
+        public void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,12 +11,12 @@ namespace Models
         {
             
         }
-        public Room(int roomNumber, RoomTypes roomType, int seatCount, int seatsPerRow)
+        public Room(int number, string type, int seatCount, int seatsPerRow)
         {
             Seats = new List<Seat>();
             
-            RoomNumber = roomNumber;
-            RoomType = roomType;
+            Number = number;
+            Type = type;
             SeatCount = seatCount;
             SeatsPerRow = seatsPerRow;
 
@@ -32,8 +32,8 @@ namespace Models
         }
 
         public List<Seat> Seats { get; set; }
-        public int RoomNumber { get; set; }
-        public RoomTypes RoomType { get; set; }
+        public int Number { get; set; }
+        public string Type { get; set; }
         public int SeatCount { get; set; }
         public int SeatsPerRow { get; set; }
     }
