@@ -25,7 +25,6 @@ namespace DAL
         {
             return _context.GetAiringMovieById(id);
         }
-
         public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
         {
             return _context.GetAiringMoviesByRoomType(roomType);

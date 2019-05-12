@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
 using BioscoopKillerApp.Models;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
 using Models;
-using Models.Enums;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -26,6 +18,7 @@ namespace BioscoopKillerApp.Controllers
         public IActionResult AllMovies()
         {
             return View(_movieLogic.GetAllMovies());
+
         }
 
         public IActionResult MovieDetails(Movie movie)
@@ -42,14 +35,16 @@ namespace BioscoopKillerApp.Controllers
             }
 
             return View(movieDetails);
+
         }
-        [Authorize(Roles= "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddPage()
         {
-            /*var date = new DateTime(2018, 4, 28, 21, 30, 0);
-            AddAiringMovie(_movieLogic.GetAiringMovieById(1), 1, date);*/
+            var date = new DateTime(2018, 4, 28, 21, 30, 0);
+            AddAiringMovie(_movieLogic.GetAiringMovieById(1), 1, date);
 
             return View();
+
         }
 
         [Authorize(Roles = "Admin")]
@@ -66,10 +61,11 @@ namespace BioscoopKillerApp.Controllers
                 {
                     TempData["alertMessage"] = "Movie does not exist!";
                 }
-                
+
             }
 
             return View("AddPage");
+
         }
 
         [Authorize(Roles = "Admin")]

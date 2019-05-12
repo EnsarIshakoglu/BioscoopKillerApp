@@ -36,7 +36,7 @@ namespace BioscoopKillerApp.Controllers
             if (_userLogic.Login(user))
             {
                 InitUser(user);
-                return RedirectToAction("Index", "Movie");
+                return RedirectToAction("Index", "Home");
             }
             else
             {

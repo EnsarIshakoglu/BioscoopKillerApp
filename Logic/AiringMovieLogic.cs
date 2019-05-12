@@ -12,7 +12,6 @@ namespace Logic
     public class AiringMovieLogic
     {
         private readonly AiringMovieRepo _repo = new AiringMovieRepo();
-        private readonly MovieLogic _movieLogic = new MovieLogic();
 
         public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
