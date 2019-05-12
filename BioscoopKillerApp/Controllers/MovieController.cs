@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BioscoopKillerApp.Models;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
@@ -72,7 +73,7 @@ namespace BioscoopKillerApp.Controllers
         public IActionResult AddAiringMovie([Bind("Movie, RoomType")] AiringMovie airingMovie, int amountOfTimes, DateTime date)
         {
             string a = "";
-            airingMovie.Movie = _movieLogic.GetMovieById(5);
+            airingMovie.Movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(airingMovie.Movie.Title));
 
             if (ModelState.IsValid)
             {

@@ -128,7 +128,7 @@ namespace DAL.Contexts
 
                 var sqlCommand =
                     new SqlCommand(
-                        $"INSERT INTO dbo.Movie (RoomID, MovieID, AiringTime) VALUES (@RoomID, @MovieID, @AiringTime)",
+                        $"INSERT INTO dbo.Planning (RoomID, MovieID, AiringTime) VALUES (@RoomID, @MovieID, @AiringTime)",
                         connection);
 
                 sqlCommand.Parameters.AddWithValue("@RoomID", airingMovie.Room.Number);
