@@ -119,5 +119,25 @@ namespace DAL.Contexts
 
             return airingMovies;
         }
+
+        public void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie)
+        {
+            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand =
+                    new SqlCommand(
+                        $"INSERT INTO dbo.Movie (RoomID, MovieID, AiringTime) VALUES (@RoomID, @MovieID, @AiringTime)",
+                        connection);
+
+                sqlCommand.Parameters.AddWithValue("@RoomID", airingMovie.Room.Number);
+                sqlCommand.Parameters.AddWithValue("@MovieID", airingMovie.Movie.Id);
+                sqlCommand.Parameters.AddWithValue("@AiringTime", startTimeMovie);
+                sqlCommand.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
     }
 }

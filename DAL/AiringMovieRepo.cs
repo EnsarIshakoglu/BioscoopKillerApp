@@ -32,7 +32,7 @@ namespace DAL
 
         public void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie)
         {
-            throw new NotImplementedException();
+            _context.AddAiringMovie(airingMovie, startTimeMovie);
         }
     }
 }

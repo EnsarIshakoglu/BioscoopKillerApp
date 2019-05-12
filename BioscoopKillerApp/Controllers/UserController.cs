@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Logic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Session;
@@ -44,7 +45,7 @@ namespace BioscoopKillerApp.Controllers
                 return View("LogIn");
             }
         }
-
+        [Authorize]
         public IActionResult LogOut()
         {
             RemoveCookies();

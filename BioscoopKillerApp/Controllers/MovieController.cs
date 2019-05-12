@@ -44,7 +44,6 @@ namespace BioscoopKillerApp.Controllers
             AddAiringMovie(_movieLogic.GetAiringMovieById(1), 1, date);
 
             return View();
-
         }
 
         [Authorize(Roles = "Admin")]
