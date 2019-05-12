@@ -1,7 +1,19 @@
-﻿
+﻿@using Models
+@model object
+
 <link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
 <div class="row">
-    <div class="col-xl-12 mb-4">
-        @Html.Partial("AddMovie")
-    </div>
+    @if (Model.GetType() == typeof(Movie))
+    {
+        <div class="col-xl-12 mb-4">
+            @Html.Partial("AddMovie")
+        </div>
+    }
+    else if (Model.GetType() == typeof(AddAiringMovieViewModel))
+    {
+        <div class="col-xl-12 mb-4">
+            @Html.Partial("AddAiringMovie", Model)
+        </div>
+    }
+
 </div>

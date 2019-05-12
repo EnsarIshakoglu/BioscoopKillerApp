@@ -10,6 +10,7 @@ namespace Logic
     {
         private readonly MovieRepo _movieRepo = new MovieRepo();
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly RoomLogic _roomLogic = new RoomLogic();
 
         public IEnumerable<Movie> GetAllMovies()
         {
@@ -31,6 +32,11 @@ namespace Logic
             }*/
 
             return sortedMovies;
+        }
+
+        public IEnumerable<string> GetAllRoomTypes()
+        {
+            return _roomLogic.GetAllRoomTypes();
         }
 
         public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)

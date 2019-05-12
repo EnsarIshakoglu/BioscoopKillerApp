@@ -38,16 +38,24 @@ namespace BioscoopKillerApp.Controllers
             return View(movieDetails);
 
         }
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddPage()
+        [HttpGet]
+        public IActionResult AddMovie()
         {
-            var date = new DateTime(2018, 4, 28, 21, 30, 0);
-            AddAiringMovie(_movieLogic.GetAiringMovieById(1), 1, date);
-
-            return View();
+            return View("AddPage", new Movie());
         }
 
-        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult AddAiringMovieView()
+        {
+            var movies = _movieLogic.GetAllMovies();
+            var roomTypes = _movieLogic.GetAllRoomTypes();
+
+            var returnModel = new AddAiringMovieViewModel(movies, roomTypes);
+
+            return View("AddPage", returnModel);
+        }
+
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
         {
@@ -64,20 +72,23 @@ namespace BioscoopKillerApp.Controllers
 
             }
 
-            return View("AddPage");
-
+            return RedirectToAction("AddMovie");
         }
-
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost]
-        public IActionResult AddAiringMovie([Bind("Movie, RoomType")] AiringMovie airingMovie, int amountOfTimes, DateTime date)
+        public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel airingMovieViewModel)
         {
             string a = "";
-            airingMovie.Movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(airingMovie.Movie.Title));
+
+            var airingMovie = new AiringMovie();
+
+            airingMovie.Movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(airingMovieViewModel.SelectedMovie));
+            airingMovie.Room.Type = airingMovieViewModel.SelectedRoomType;
+            DateTime.TryParse(airingMovieViewModel.SelectedDate, out DateTime date);
 
             if (ModelState.IsValid)
             {
-                for (var x = 0; x < amountOfTimes; x++)
+                for (var x = 0; x < Convert.ToInt32(airingMovieViewModel.AmountOfTimes); x++)
                 {
                     a = _movieLogic.AddAiringMovie(airingMovie, date);
                 }
@@ -85,7 +96,7 @@ namespace BioscoopKillerApp.Controllers
 
             TempData["alertMessage"] = a; //add airing movie
 
-            return View("AddPage");
+            return RedirectToAction("AddAiringMovie");
         }
     }
 }
