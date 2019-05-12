@@ -18,5 +18,10 @@ namespace DAL
         {
             return _context.GetAllRoomTypes();
         }
+
+        public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
+        {
+            return _context.GetRoomIdsByRoomType(roomType);
+        }
     }
 }

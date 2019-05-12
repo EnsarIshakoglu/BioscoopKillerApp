@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +19,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -48,13 +49,13 @@
                         </li>
                         @if (User.IsInRole(Roles.Admin.ToString()))
                         {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropbtn" >Add</a>
-                            <div class="dropdown-content">
-                                <a asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
-                                <a asp-area="" asp-controller="Movie" asp-action="AddAiringMovieView">Add Airing</a>
-                            </div>
-                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropbtn">Add</a>
+                                <div class="dropdown-content">
+                                    <a asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
+                                    <a asp-area="" asp-controller="Movie" asp-action="AddAiringMovieView">Add Airing</a>
+                                </div>
+                            </li>
                         }
                         @if (User.IsInRole(Roles.AccountHolder.ToString()))
                         {
@@ -64,20 +65,20 @@
                         }
 
                     </ul>
-                    
+
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
     </div>
 
     <footer class="border-top footer text-muted">
-            &copy; 2019 - BioscoopKillerApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2019 - BioscoopKillerApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </footer>
 
     <environment include="Development">

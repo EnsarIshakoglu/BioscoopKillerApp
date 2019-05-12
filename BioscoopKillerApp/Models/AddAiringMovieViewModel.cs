@@ -18,6 +18,11 @@ namespace BioscoopKillerApp.Models
             RoomTypes = temporaryRoomTypeList;
         }
 
+        public AddAiringMovieViewModel()
+        {
+            
+        }
+
         public List<SelectListItem> Movies { get; set; }
         public IEnumerable<SelectListItem> RoomTypes { get; set; }
 

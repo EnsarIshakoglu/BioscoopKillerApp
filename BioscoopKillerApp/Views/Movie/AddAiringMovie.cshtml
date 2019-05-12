@@ -1,4 +1,5 @@
 ﻿@model AddAiringMovieViewModel
+@Html.AntiForgeryToken()
 
 <link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
 <meta charset="utf-8">
@@ -72,7 +73,6 @@
         </div>
         <button id="saveAiringMovie" class="btn btn-secondary" style="margin: 5px;">Add!</button>
     </div>
-    @*onclick="location.href = '@Url.Action("Index", "Movie")'"*@
 </div>
 
 @if (null != TempData["alertMessage"])
@@ -110,23 +110,29 @@
         var amountOfTimesSelection = document.getElementById("AmountOfTimes");
         var amountOfTimesSelectionValue = amountOfTimesSelection.value;
 
-        var controllerPath = '@Url.Action("AddAiringMovie", "Movie")';
+        var controllerPath = "@Url.Action("AddAiringMovie", "Movie")";
+
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
 
         var airingMovieViewModel = {
             "SelectedMovie": movieSelectionText,
             "SelectedRoomType": roomTypeSelectionText,
             "SelectedDate": dateSelectionText,
-            "AmountOfTimes" : amountOfTimesSelectionValue
-        }
+            "AmountOfTimes": amountOfTimesSelectionValue
+        };
+
         console.log(JSON.stringify(airingMovieViewModel));
         $.ajax({
             url: controllerPath,
             data: JSON.stringify(airingMovieViewModel),
             type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function() {
-                console.log('Succes!');
+                console.log('Success!');
             },
             error: function() {
                 console.log('Error');
@@ -135,3 +141,4 @@
 
     }
 </script>
+

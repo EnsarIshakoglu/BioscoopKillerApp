@@ -31,5 +31,29 @@ namespace DAL.Contexts
 
             return roomTypes;
         }
+
+        public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
+        {
+            var roomIds = new List<int>();
+
+            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand = new SqlCommand($"select r.ID from Room r " +
+                                                $"inner join TypeRoom tr on r.TypeRoomID = tr.ID " +
+                                                $"where tr.[Name] = '{roomType}'", connection);
+                var reader = sqlCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    roomIds.Add((int)reader["ID"]);
+                }
+
+                connection.Close();
+            }
+
+            return roomIds;
+        }
     }
 }

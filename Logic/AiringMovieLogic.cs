@@ -12,6 +12,7 @@ namespace Logic
     public class AiringMovieLogic
     {
         private readonly AiringMovieRepo _repo = new AiringMovieRepo();
+        private readonly RoomLogic _roomLogic = new RoomLogic();
 
         public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
@@ -57,6 +58,9 @@ namespace Logic
         private string FirstAiringOfTheDay(AiringMovie airingMovie, DateTime date)
         {
             var earliestPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 11, 0, 0);
+            var firstRoomId = _roomLogic.GetRoomIdsByRoomType(airingMovie.Room.Type).First();
+
+            airingMovie.Room.Number = firstRoomId;
 
             _repo.AddAiringMovie(airingMovie, earliestPossibleAiringTime);
 

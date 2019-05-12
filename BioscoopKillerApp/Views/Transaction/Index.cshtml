@@ -1,5 +1,5 @@
-﻿@using Microsoft.EntityFrameworkCore
-@model Models.AiringMovie
+﻿@model Models.AiringMovie
+@Html.AntiForgeryToken()
 
 @{
 
@@ -48,15 +48,16 @@
             <div class="col-md-9 order-md-1">
                 @*plaats kiezen*@
                 <body>
-                <div id="messagePanel" class="messagePanel">
+                    <div id="messagePanel" class="messagePanel">
 
-                </div>
-                <div>
-                    <label>Email Address:</label>
-                    <input id="EmailAddress" />
-                    <p id="validationText" style="color: red">Invalid email address</p>
-                </div>
-                    <button id="saveSelection" onclick="location.href = '@Url.Action("Index", "Movie")'" style="margin: 5px;">Pay!</button>
+                    </div>
+                    <div>
+                        <label>Email Address:</label>
+                        <input id="EmailAddress" />
+                        <p id="validationText" style="color: red">Invalid email address</p>
+                    </div>
+                    <button id="saveSelection" style="margin: 5px;">Pay!</button>
+                    @*onclick="location.href = '@Url.Action("Index", "Movie")'"*@
                 </body>
             </div>
         </div>
@@ -157,6 +158,8 @@
             console.log(JSON.stringify(ids));
             var controllerPath = '@Url.Action("SaveReservation", "Transaction")';
 
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
             var reservation = {
                 "SeatNumbers": ids,
                 "AiringMovieId": @Model.Id
@@ -168,6 +171,9 @@
                     url: controllerPath,
                     data: JSON.stringify(reservation),
                     type: "POST",
+                    headers: {
+                        "RequestVerificationToken": verificationToken
+                    },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function() {

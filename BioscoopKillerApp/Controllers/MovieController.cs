@@ -76,19 +76,23 @@ namespace BioscoopKillerApp.Controllers
         }
         
         [HttpPost]
-        public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel airingMovieViewModel)
+        [ValidateAntiForgeryToken]
+        public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel addAiringMovieViewModel)
         {
-            string a = "";
+            var a = "";
 
-            var airingMovie = new AiringMovie();
+            var airingMovie = new AiringMovie
+            {
+                Movie =
+                    _movieLogic.GetAllMovies().First(m => m.Title.Equals(addAiringMovieViewModel.SelectedMovie)),
+                Room = new Room{Type = addAiringMovieViewModel.SelectedRoomType}
+            };
 
-            airingMovie.Movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(airingMovieViewModel.SelectedMovie));
-            airingMovie.Room.Type = airingMovieViewModel.SelectedRoomType;
-            DateTime.TryParse(airingMovieViewModel.SelectedDate, out DateTime date);
+            DateTime.TryParse(addAiringMovieViewModel.SelectedDate, out var date);
 
             if (ModelState.IsValid)
             {
-                for (var x = 0; x < Convert.ToInt32(airingMovieViewModel.AmountOfTimes); x++)
+                for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
                     a = _movieLogic.AddAiringMovie(airingMovie, date);
                 }
@@ -96,7 +100,7 @@ namespace BioscoopKillerApp.Controllers
 
             TempData["alertMessage"] = a; //add airing movie
 
-            return RedirectToAction("AddAiringMovie");
+            return View("AddAiringMovie");
         }
     }
 }

@@ -13,5 +13,10 @@ namespace Logic
         {
             return _repo.GetAllRoomTypes();
         }
+
+        public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
+        {
+            return _repo.GetRoomIdsByRoomType(roomType);
+        }
     }
 }
