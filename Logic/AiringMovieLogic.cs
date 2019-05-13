@@ -18,44 +18,45 @@ namespace Logic
         {
             return _repo.GetAiringMoviesFromMovie(movie);
         }
-
-        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
-        {
-            return _repo.GetAiringMoviesByRoomType(roomType);
-        }
-
         public AiringMovie GetAiringMovieById(int id)
         {
             return _repo.GetAiringMovieById(id);
         }
 
-        public string AddAiringMovie(AiringMovie airingMovie, DateTime date, IEnumerable<Movie> allMovies)
+        public bool AddAiringMovie(AiringMovie airingMovie, DateTime date, IEnumerable<Movie> allMovies)
         {
-            var toReturnString = "";
-
-            var airingMovies = GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.Date.DayOfWeek.Equals(date.DayOfWeek)).ToList();
+            var airingMovies = _roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.HasValue && m.AiringTime.Value.Date.DayOfWeek.Equals(date.DayOfWeek)).ToList();
+            airingMovies.AddRange(_roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => !m.AiringTime.HasValue).ToList());
 
             if (airingMovies.Count == 0)
             {
                 return FirstAiringOfTheDay(airingMovie, date);
             }
 
-            foreach (var airing in airingMovies)
+            foreach (var airing in airingMovies.Where(m => m.AiringTime.HasValue))
             {
                 airing.Movie = allMovies.First(m => m.Title.Equals(airing.Movie.Title));
             }
 
-            var airingRooms = airingMovies.GroupBy(movie => movie.Room.Number);
+            var airingRooms = airingMovies.GroupBy(movie => movie.Room.Number).ToList();
 
-            foreach (var airingRoom in airingRooms)
+            foreach (var room in airingRooms)
             {
-                toReturnString = GetAvailableTime(airingMovie, airingRoom, date);
+                if (room.Any(airing => !airing.AiringTime.HasValue))
+                {
+                    return FirstAiringOfTheDay(airingMovie, date);
+                }
+
+                if (GetAvailableTime(airingMovie, room, date))
+                {
+                    return true;
+                }
             }
 
-            return toReturnString;
+            return false;
         }
 
-        private string FirstAiringOfTheDay(AiringMovie airingMovie, DateTime date)
+        private bool FirstAiringOfTheDay(AiringMovie airingMovie, DateTime date)
         {
             var earliestPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 11, 0, 0);
             var firstRoomId = _roomLogic.GetRoomIdsByRoomType(airingMovie.Room.Type).First();
@@ -64,29 +65,28 @@ namespace Logic
 
             _repo.AddAiringMovie(airingMovie, earliestPossibleAiringTime);
 
-            return $"AiringMovie created for {earliestPossibleAiringTime.ToString("f", CultureInfo.GetCultureInfo("en-US"))}";
+            return true;
         }
 
-        private string GetAvailableTime(AiringMovie airingMovie, IEnumerable<AiringMovie> airingMovies, DateTime date)
+        private bool GetAvailableTime(AiringMovie airingMovie, IEnumerable<AiringMovie> airingMovies, DateTime date)
         {
-            var sortedMovies = airingMovies.OrderBy(m => m.AiringTime.Date).ToList();
+            var sortedMovies = airingMovies.OrderBy(m => m.AiringTime.Value.Date).ToList();
             var lastAiringMovieIndex = sortedMovies.Count - 1;
             const int timeForCleaningInMinutes = 60;
 
-            var lastPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59)
-                .TimeOfDay;
+            var lastPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
             var runTimeToAddAiring = GetRunTimeFromMovie(airingMovie.Movie);
 
             for (var x = 0; x < sortedMovies.Count; x++)
             {
                 var runTimeCurrentAiring = GetRunTimeFromMovie(sortedMovies[x].Movie);
 
-                var timeCurrentAiringDone = sortedMovies[x].AiringTime.AddMinutes(runTimeCurrentAiring);
-                var timeToAddAiringDone = timeCurrentAiringDone.AddMinutes(timeForCleaningInMinutes + runTimeToAddAiring + timeForCleaningInMinutes).TimeOfDay;
+                var timeCurrentAiringDone = sortedMovies[x].AiringTime.Value.AddMinutes(runTimeCurrentAiring);
+                var timeToAddAiringDone = timeCurrentAiringDone.AddMinutes(timeForCleaningInMinutes + runTimeToAddAiring + timeForCleaningInMinutes);
 
                 if (x != lastAiringMovieIndex)
                 {
-                    var startTimeNextAiring = sortedMovies[x + 1].AiringTime.TimeOfDay;
+                    var startTimeNextAiring = sortedMovies[x + 1].AiringTime;
 
                     if (startTimeNextAiring <= lastPossibleAiringTime && timeToAddAiringDone <= startTimeNextAiring)
                     {
@@ -95,17 +95,17 @@ namespace Logic
                 }
                 else
                 {
-                    if (timeCurrentAiringDone.TimeOfDay <= lastPossibleAiringTime)
+                    if (timeToAddAiringDone <= lastPossibleAiringTime)
                     {
                         return AiringMovieCreationSuccessful(airingMovie, date, timeCurrentAiringDone);
                     }
                 }
             }
 
-            return AiringMovieCreationUnSuccessful(date);
+            return AiringMovieCreationUnSuccessful();
         }
 
-        private string AiringMovieCreationSuccessful(AiringMovie airingMovie, DateTime date, DateTime airingDonePreviousMovie)
+        private bool AiringMovieCreationSuccessful(AiringMovie airingMovie, DateTime date, DateTime airingDonePreviousMovie)
         {
             const int timeForCleaningInMinutes = 60;
             var startTimeAiring = new DateTime(date.Year, date.Month, date.Day, airingDonePreviousMovie.Hour, airingDonePreviousMovie.Minute, airingDonePreviousMovie.Second);
@@ -113,12 +113,14 @@ namespace Logic
 
             _repo.AddAiringMovie(airingMovie, startTimeAiring);
 
-            return $"AiringMovie created for {startTimeAiring.ToString("f", CultureInfo.GetCultureInfo("en-US"))}";
+            //return $"AiringMovie created for {startTimeAiring.ToString("f", CultureInfo.GetCultureInfo("en-US"))}";
+            return true;
         }
 
-        private string AiringMovieCreationUnSuccessful(DateTime date)
+        private bool AiringMovieCreationUnSuccessful()
         {
-            return $"There are no free places left for {date.ToString("dddd, MMMM d, yyyy", CultureInfo.GetCultureInfo("en-US"))}";
+            //return $"There are no free places left for {date.ToString("dddd, MMMM d, yyyy", CultureInfo.GetCultureInfo("en-US"))}";
+            return false;
         }
 
         private static double GetRunTimeFromMovie(Movie movie)

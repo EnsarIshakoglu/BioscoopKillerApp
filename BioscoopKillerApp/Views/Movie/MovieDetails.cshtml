@@ -120,7 +120,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <h4>AVAILABLE TIMES:</h4>
                             @foreach (var airingMovie in @Model.AiringMovies)
                             {
-                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = @Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.Date.ToShortDateString() @airingMovie.AiringTime.ToShortTimeString() </button></p>
+                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = @Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.Value.Date.ToShortDateString() @airingMovie.AiringTime.Value.ToShortTimeString() </button></p>
                             }
 
                         </div>

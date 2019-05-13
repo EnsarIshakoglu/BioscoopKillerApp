@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using Models;
 
 namespace Logic
 {
@@ -17,6 +18,11 @@ namespace Logic
         public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
         {
             return _repo.GetRoomIdsByRoomType(roomType);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
+        {
+            return _repo.GetAiringMoviesByRoomType(roomType);
         }
     }
 }

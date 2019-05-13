@@ -32,7 +32,7 @@ namespace Models
         }
 
         public List<Seat> Seats { get; set; }
-        public int Number { get; set; }
+        public int? Number { get; set; }
         public string Type { get; set; }
         public int SeatCount { get; set; }
         public int SeatsPerRow { get; set; }

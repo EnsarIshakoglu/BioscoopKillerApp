@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL.Contexts;
+using Models;
 
 namespace DAL
 {
@@ -22,6 +23,11 @@ namespace DAL
         public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
         {
             return _context.GetRoomIdsByRoomType(roomType);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
+        {
+            return _context.GetAiringMoviesByRoomType(roomType);
         }
     }
 }

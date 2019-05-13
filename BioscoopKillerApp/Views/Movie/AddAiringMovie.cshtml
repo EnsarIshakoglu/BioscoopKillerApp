@@ -68,22 +68,22 @@
                 </div>
             </div>
         </div>
-        <div id="errorTextAddMovie">
+        <div id="errorTextAddAiring">
 
         </div>
         <button id="saveAiringMovie" class="btn btn-secondary" style="margin: 5px;">Add!</button>
     </div>
 </div>
 
-@if (null != TempData["alertMessage"])
+@if (null != TempData["addedAiringsText"])
 {
     <script type="text/javascript">
 
         var div = document.createElement('div');
-        div.innerHTML = '@TempData["alertMessage"]';
+        div.innerHTML = '@TempData["addedAiringsText"]';
         console.log(div.innerHTML);
 
-        document.getElementById('errorTextAddMovie').appendChild(div);
+        document.getElementById('errorTextAddAiring').appendChild(div);
     </script>
 }
 <script>

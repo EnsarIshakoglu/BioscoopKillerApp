@@ -55,7 +55,7 @@ namespace BioscoopKillerApp.Controllers
             return View("AddPage", returnModel);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
         {
@@ -79,8 +79,6 @@ namespace BioscoopKillerApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel addAiringMovieViewModel)
         {
-            var a = "";
-
             var airingMovie = new AiringMovie
             {
                 Movie =
@@ -92,15 +90,16 @@ namespace BioscoopKillerApp.Controllers
 
             if (ModelState.IsValid)
             {
+                int addedAiringMovies = 0;
                 for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
-                    a = _movieLogic.AddAiringMovie(airingMovie, date);
+                    var a = _movieLogic.AddAiringMovie(airingMovie, date);
+                    if (a) addedAiringMovies++;
                 }
+                TempData["addedAiringsText"] = $"Added {addedAiringMovies} airings for {airingMovie.Movie.Title}!"; //add airing movie
             }
 
-            TempData["alertMessage"] = a; //add airing movie
-
-            return View("AddAiringMovie");
+            return RedirectToAction("AddAiringMovieView");
         }
     }
 }

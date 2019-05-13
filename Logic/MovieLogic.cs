@@ -64,7 +64,7 @@ namespace Logic
             return _movieRepo.CheckIfMovieExists(movie);
         }
 
-        public string AddAiringMovie(AiringMovie airingMovie, DateTime date)
+        public bool AddAiringMovie(AiringMovie airingMovie, DateTime date)
         {
             var allMovies = GetAllMovies();
 
