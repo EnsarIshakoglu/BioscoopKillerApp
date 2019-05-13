@@ -23,12 +23,45 @@ namespace Logic
             return _repo.GetAiringMovieById(id);
         }
 
-        public bool AddAiringMovie(AiringMovie airingMovie, DateTime date, IEnumerable<Movie> allMovies)
+        public bool AddAiringMovie(AiringMovie chosenAiring, DateTime date, IEnumerable<Movie> allMovies)
         {
-            var airingMovies = _roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.HasValue && m.AiringTime.Value.Date.DayOfWeek.Equals(date.DayOfWeek)).ToList();
-            airingMovies.AddRange(_roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => !m.AiringTime.HasValue).ToList());
+            var airingMovie = chosenAiring;//----------------------------------------------FF TESTEN
+            var airingMovies = _roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.HasValue && m.AiringTime.Value.Date.DayOfWeek.Equals(date.DayOfWeek)).ToList();/*
+            airingMovies.AddRange(_roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => !m.AiringTime.HasValue).ToList());*/
 
-            if (airingMovies.Count == 0)
+            var roomIds = _roomLogic.GetRoomIdsByRoomType(airingMovie.Room.Type);
+            var airingRooms = new Dictionary<Room, IEnumerable<AiringMovie>>();
+
+            foreach (var roomId in roomIds)
+            {
+                airingRooms.Add(new Room
+                {
+                    Number = roomId
+                }, airingMovies.Where(m => m.Room.Number.Equals(roomId)));
+            }
+
+            foreach (var airingRoom in airingRooms.Where(m => m.Value.Any()))
+            {
+                foreach (var airing in airingRoom.Value)
+                {
+                    airing.Movie = allMovies.First(m => m.Title.Equals(airing.Movie.Title));
+                }
+            }
+
+            foreach (var airingRoom in airingRooms)
+            {
+                if (!airingRoom.Value.Any())
+                {
+                    return FirstAiringOfTheDay(airingMovie, date, airingRoom.Key);
+                }
+
+                if (GetAvailableTime(airingMovie, airingRoom.Value, date))
+                {
+                    return true;
+                }
+            }
+
+            /*if (airingMovies.Count == 0)
             {
                 return FirstAiringOfTheDay(airingMovie, date);
             }
@@ -38,30 +71,30 @@ namespace Logic
                 airing.Movie = allMovies.First(m => m.Title.Equals(airing.Movie.Title));
             }
 
-            var airingRooms = airingMovies.GroupBy(movie => movie.Room.Number).ToList();
+            //var airingRooms = airingMovies.GroupBy(movie => movie.Room.Number).ToList();
 
             foreach (var room in airingRooms)
             {
                 if (room.Any(airing => !airing.AiringTime.HasValue))
                 {
-                    return FirstAiringOfTheDay(airingMovie, date);
+                    //dictionary maken met <Room, AiringMovie>
+                    var index = airingRooms.FindIndex(room);
+                    return FirstAiringOfTheDay(airingMovie, room.ElementAt(), date);
                 }
 
                 if (GetAvailableTime(airingMovie, room, date))
                 {
                     return true;
                 }
-            }
+            }*/
 
             return false;
         }
 
-        private bool FirstAiringOfTheDay(AiringMovie airingMovie, DateTime date)
+        private bool FirstAiringOfTheDay(AiringMovie airingMovie,  DateTime date, Room room)
         {
+            airingMovie.Room = room;
             var earliestPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 11, 0, 0);
-            var firstRoomId = _roomLogic.GetRoomIdsByRoomType(airingMovie.Room.Type).First();
-
-            airingMovie.Room.Number = firstRoomId;
 
             _repo.AddAiringMovie(airingMovie, earliestPossibleAiringTime);
 

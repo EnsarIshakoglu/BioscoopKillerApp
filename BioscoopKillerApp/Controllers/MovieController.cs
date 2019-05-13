@@ -38,12 +38,13 @@ namespace BioscoopKillerApp.Controllers
             return View(movieDetails);
 
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddMovie()
         {
             return View("AddPage", new Movie());
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddAiringMovieView()
         {
@@ -54,8 +55,7 @@ namespace BioscoopKillerApp.Controllers
 
             return View("AddPage", returnModel);
         }
-
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost]
         public IActionResult AddMovie([Bind("Title, PublishedYear, MoviePrice")] Movie movie)
         {
@@ -75,8 +75,8 @@ namespace BioscoopKillerApp.Controllers
             return RedirectToAction("AddMovie");
         }
         
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]/*
+        [ValidateAntiForgeryToken]*/
         public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel addAiringMovieViewModel)
         {
             var airingMovie = new AiringMovie
