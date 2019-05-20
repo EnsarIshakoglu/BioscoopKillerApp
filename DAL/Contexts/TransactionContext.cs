@@ -44,10 +44,11 @@ namespace DAL.Contexts
 
                     var sqlCommand =
                         new SqlCommand(
-                            $"INSERT INTO dbo.Reservation (SeatNumber, AiringMovieID) VALUES (@SeatNumber, @AiringMovieID)",
+                            $"INSERT INTO dbo.Reservation (SeatNumber, AiringMovieID, [E-mail]) VALUES (@SeatNumber, @AiringMovieID, @Email)",
                             connection);
                     sqlCommand.Parameters.AddWithValue("@SeatNumber", Convert.ToInt32(number));
                     sqlCommand.Parameters.AddWithValue("@AiringMovieID", Convert.ToInt32(reservation.AiringMovieId));
+                    sqlCommand.Parameters.AddWithValue("@Email", reservation.MailAddress);
                     sqlCommand.ExecuteNonQuery();
 
 

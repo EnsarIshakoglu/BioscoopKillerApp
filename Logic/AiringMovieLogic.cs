@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using DAL;
+using DAL.Contexts;
 using Models;
 using Models.Enums;
 
@@ -11,8 +12,9 @@ namespace Logic
 {
     public class AiringMovieLogic
     {
-        private readonly AiringMovieRepo _repo = new AiringMovieRepo();
+        private readonly AiringMovieRepo _repo = new AiringMovieRepo(new AiringMovieContext());
         private readonly RoomLogic _roomLogic = new RoomLogic();
+        private readonly MovieLogic _movieLogic = new MovieLogic();
 
         public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
         {
@@ -23,8 +25,9 @@ namespace Logic
             return _repo.GetAiringMovieById(id);
         }
 
-        public bool AddAiringMovie(AiringMovie chosenAiring, DateTime date, IEnumerable<Movie> allMovies)
+        public bool AddAiringMovie(AiringMovie chosenAiring, DateTime date)
         {
+            var allMovies = _movieLogic.GetAllMovies();
             var airingMovie = chosenAiring;//----------------------------------------------FF TESTEN
             var airingMovies = _roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => m.AiringTime.HasValue && m.AiringTime.Value.Date.DayOfWeek.Equals(date.DayOfWeek)).ToList();/*
             airingMovies.AddRange(_roomLogic.GetAiringMoviesByRoomType(airingMovie.Room.Type).Where(m => !m.AiringTime.HasValue).ToList());*/
@@ -52,7 +55,7 @@ namespace Logic
             {
                 if (!airingRoom.Value.Any())
                 {
-                    return FirstAiringOfTheDay(airingMovie, date, airingRoom.Key);
+                    return AddAiringAsFirstAiringOfTheDay(airingMovie, date, airingRoom.Key);
                 }
 
                 if (GetAvailableTime(airingMovie, airingRoom.Value, date))
@@ -63,7 +66,7 @@ namespace Logic
 
             /*if (airingMovies.Count == 0)
             {
-                return FirstAiringOfTheDay(airingMovie, date);
+                return AddAiringAsFirstAiringOfTheDay(airingMovie, date);
             }
 
             foreach (var airing in airingMovies.Where(m => m.AiringTime.HasValue))
@@ -79,7 +82,7 @@ namespace Logic
                 {
                     //dictionary maken met <Room, AiringMovie>
                     var index = airingRooms.FindIndex(room);
-                    return FirstAiringOfTheDay(airingMovie, room.ElementAt(), date);
+                    return AddAiringAsFirstAiringOfTheDay(airingMovie, room.ElementAt(), date);
                 }
 
                 if (GetAvailableTime(airingMovie, room, date))
@@ -91,7 +94,7 @@ namespace Logic
             return false;
         }
 
-        private bool FirstAiringOfTheDay(AiringMovie airingMovie,  DateTime date, Room room)
+        private bool AddAiringAsFirstAiringOfTheDay(AiringMovie airingMovie,  DateTime date, Room room)
         {
             airingMovie.Room = room;
             var earliestPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 11, 0, 0);

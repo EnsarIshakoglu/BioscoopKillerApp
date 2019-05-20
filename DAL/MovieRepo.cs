@@ -9,9 +9,9 @@ namespace DAL
     {
         private readonly IMovieContext _movieContext;
 
-        public MovieRepo()
+        public MovieRepo(IMovieContext context)
         {
-            _movieContext = new MovieContext();
+            _movieContext = context;
         }
 
         public IEnumerable<Movie> GetAllMovies()

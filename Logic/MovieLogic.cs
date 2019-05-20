@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
+using DAL.Contexts;
 using Models;
 
 namespace Logic
 {
     public class MovieLogic
     {
-        private readonly MovieRepo _movieRepo = new MovieRepo();
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly MovieRepo _movieRepo = new MovieRepo(new MovieContext());
         private readonly RoomLogic _roomLogic = new RoomLogic();
 
         public IEnumerable<Movie> GetAllMovies()
@@ -39,19 +39,9 @@ namespace Logic
             return _roomLogic.GetAllRoomTypes();
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
-        {
-            return _airingMovieLogic.GetAiringMoviesFromMovie(movie);
-        }
-
         public Movie GetMovieById(int movieId)
         {
             return _movieRepo.GetMovieById(movieId);
-        }
-
-        public AiringMovie GetAiringMovieById(int airingMovieId)
-        {
-            return _airingMovieLogic.GetAiringMovieById(airingMovieId);
         }
 
         public void AddMovie(Movie movie)
@@ -62,13 +52,6 @@ namespace Logic
         public bool CheckIfMovieExists(Movie movie)
         {
             return _movieRepo.CheckIfMovieExists(movie);
-        }
-
-        public bool AddAiringMovie(AiringMovie airingMovie, DateTime date)
-        {
-            var allMovies = GetAllMovies();
-
-            return _airingMovieLogic.AddAiringMovie(airingMovie, date, allMovies);
         }
     }
 }

@@ -148,6 +148,7 @@
 
         function getAllSelectedSeats() {
             var selectedSeats = document.getElementsByClassName("seat selected");
+            var mailAddress = document.getElementById("EmailAddress").value;
             var ids = [];
             console.log(selectedSeats[0]);
 
@@ -162,7 +163,8 @@
 
             var reservation = {
                 "SeatNumbers": ids,
-                "AiringMovieId": @Model.Id
+                "AiringMovieId": @Model.Id,
+                "MailAddress": mailAddress
             }
             if (confirm('Are you sure your e-mail address is ' +
                 document.getElementById("EmailAddress").value +

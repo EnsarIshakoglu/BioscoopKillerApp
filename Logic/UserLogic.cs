@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.Contexts;
 using Models;
 
 namespace Logic
 {
     public class UserLogic
     {
-        private readonly UserRepo _userRepo = new UserRepo();
+        private readonly UserRepo _userRepo = new UserRepo(new UserContext());
 
         public bool Login(User user)
         {

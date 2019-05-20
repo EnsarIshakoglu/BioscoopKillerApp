@@ -11,9 +11,9 @@ namespace DAL
     {
         private readonly IAiringMovieContext _context;
 
-        public AiringMovieRepo()
+        public AiringMovieRepo(IAiringMovieContext context)
         {
-            _context = new AiringMovieContext();
+            _context = context;
         }
 
         public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)

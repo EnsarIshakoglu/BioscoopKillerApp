@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.Contexts;
 using Models;
 
 namespace Logic
 {
     public class TransactionLogic
     {
-        private readonly TransactionRepo _transactionRepo = new TransactionRepo();
+        private readonly TransactionRepo _transactionRepo = new TransactionRepo(new TransactionContext());
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
         private readonly MovieLogic _movieLogic = new MovieLogic();
 

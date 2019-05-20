@@ -10,9 +10,9 @@ namespace DAL
     {
         private readonly ITransactionContext _context;
 
-        public TransactionRepo()
+        public TransactionRepo(ITransactionContext context)
         {
-            _context = new TransactionContext();
+            _context = context;
         }
 
         public void AddOccupiedSeats(AiringMovie airingMovie)

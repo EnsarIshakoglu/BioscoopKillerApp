@@ -89,7 +89,7 @@ namespace BioscoopKillerApp.Controllers
 
             claims.Add(new Claim("userId", userId.ToString()));
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
             var authProp = new AuthenticationProperties();
 
             await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProp);

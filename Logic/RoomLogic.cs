@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.Contexts;
 using Models;
 
 namespace Logic
 {
     public class RoomLogic
     {
-        private readonly RoomRepo _repo = new RoomRepo();
+        private readonly RoomRepo _repo = new RoomRepo(new RoomContext());
 
         public IEnumerable<string> GetAllRoomTypes()
         {

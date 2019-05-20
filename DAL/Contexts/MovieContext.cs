@@ -9,16 +9,16 @@ using Models;
 
 namespace DAL.Contexts
 {
-    class MovieContext : IMovieContext
+    public class MovieContext : IMovieContext
     {
-        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog=CinemaDB_2;Integrated Security=True";
-        private readonly string apiKey = "883e4889";
+        private const string DbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog=CinemaDB_2;Integrated Security=True";
+        private readonly ApiHelper _apiHelper = new ApiHelper();
 
         public IEnumerable<Movie> GetAllMovies()
         {
             var movies = new List<Movie>();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(DbConnectionString))
             {
                 connection.Open();
 
@@ -42,40 +42,19 @@ namespace DAL.Contexts
 
             foreach (var movie in movies)
             {
-                AddAPIData(movie).Wait();
+                _apiHelper.AddApiDataToMovie(movie).Wait();
             }
 
             return movies;
         }
 
-        private async Task AddAPIData(Movie movie)
-        {
-            string movieTitleForApi = movie.Title.Replace(" ", "%3A");
-            string url = $"http://www.omdbapi.com/?apikey={ apiKey}&t={ movieTitleForApi}&y={ movie.PublishedYear}";
-
-            HttpClient client = new HttpClient();
-
-            using (HttpResponseMessage response = await client.GetAsync(url))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    Movie apiDataMovie = await response.Content.ReadAsAsync<Movie>();
-                    movie.Poster = apiDataMovie.Poster;
-                    movie.Plot = apiDataMovie.Plot;
-                    movie.Title = apiDataMovie.Title;
-                    movie.Runtime = apiDataMovie.Runtime;
-                    movie.Actors = apiDataMovie.Actors;
-                    movie.Genre = apiDataMovie.Genre;
-                }
-            }
-
-        }
+        
 
         public Movie GetMovieById(int movieId)
         {
             Movie movie = new Movie();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(DbConnectionString))
             {
                 connection.Open();
 
@@ -95,14 +74,14 @@ namespace DAL.Contexts
                 connection.Close();
             }
 
-            AddAPIData(movie).Wait();
+            _apiHelper.AddApiDataToMovie(movie).Wait();
 
             return movie;
         }
 
         public void AddMovie(Movie movie)
         {
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(DbConnectionString))
             {
                 connection.Open();
 
@@ -124,7 +103,7 @@ namespace DAL.Contexts
         {
             var movieExists = false;
 
-            AddAPIData(movie).Wait();
+            _apiHelper.AddApiDataToMovie(movie).Wait();
 
             if (movie.Poster != null)
             {

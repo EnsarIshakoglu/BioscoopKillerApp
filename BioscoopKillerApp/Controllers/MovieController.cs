@@ -11,6 +11,7 @@ namespace BioscoopKillerApp.Controllers
     public class MovieController : Controller
     {
         private readonly MovieLogic _movieLogic = new MovieLogic();
+        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
 
         public IActionResult Index()
         {
@@ -26,7 +27,7 @@ namespace BioscoopKillerApp.Controllers
         {
             MovieDetailViewModel movieDetails = new MovieDetailViewModel
             {
-                AiringMovies = _movieLogic.GetAiringMoviesFromMovie(movie),
+                AiringMovies = _airingMovieLogic.GetAiringMoviesFromMovie(movie),
                 Movie = movie
             };
 
@@ -75,8 +76,7 @@ namespace BioscoopKillerApp.Controllers
             return RedirectToAction("AddMovie");
         }
         
-        [HttpPost]/*
-        [ValidateAntiForgeryToken]*/
+        [HttpPost]
         public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel addAiringMovieViewModel)
         {
             var airingMovie = new AiringMovie
@@ -93,7 +93,7 @@ namespace BioscoopKillerApp.Controllers
                 int addedAiringMovies = 0;
                 for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
-                    var a = _movieLogic.AddAiringMovie(airingMovie, date);
+                    var a = _airingMovieLogic.AddAiringMovie(airingMovie, date);
                     if (a) addedAiringMovies++;
                 }
                 TempData["addedAiringsText"] = $"Added {addedAiringMovies} airings for {airingMovie.Movie.Title}!"; //add airing movie

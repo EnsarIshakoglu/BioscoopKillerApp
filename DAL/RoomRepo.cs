@@ -10,9 +10,9 @@ namespace DAL
     {
         private readonly IRoomContext _context;
 
-        public RoomRepo()
+        public RoomRepo(IRoomContext context)
         {
-            _context = new RoomContext();
+            _context = context;
         }
 
         public IEnumerable<string> GetAllRoomTypes()

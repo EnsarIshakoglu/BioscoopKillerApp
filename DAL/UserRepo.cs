@@ -10,9 +10,9 @@ namespace DAL
     {
         private readonly IUserContext _context;
 
-        public UserRepo()
+        public UserRepo(IUserContext context)
         {
-            _context = new UserContext();
+            _context = context;
         }
 
         public bool Login(User user)

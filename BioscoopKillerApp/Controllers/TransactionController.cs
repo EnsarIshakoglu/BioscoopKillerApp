@@ -29,7 +29,7 @@ namespace BioscoopKillerApp.Controllers
             _transactionLogic.SaveReservation(reservation);
         }
 
-        public bool IsValidEmail(string email)
+        public bool CheckIfValidEmail(string email)
         {
             Regex rx = new Regex(
                 @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$");
