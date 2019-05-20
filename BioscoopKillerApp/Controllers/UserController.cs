@@ -82,12 +82,11 @@ namespace BioscoopKillerApp.Controllers
 
         private async void InitUser(User user)
         {
-            var userId = _userLogic.GetUserId(user);
-            var roles = _userLogic.GetUserRoles(user);
+            _userLogic.InitUser(user);
 
-            var claims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+            var claims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())).ToList();
 
-            claims.Add(new Claim("userId", userId.ToString()));
+            claims.Add(new Claim("userId", user.Id.ToString()));
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
             var authProp = new AuthenticationProperties();
