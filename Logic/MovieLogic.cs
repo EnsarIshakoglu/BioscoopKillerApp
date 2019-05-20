@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
-using DAL.Contexts;
+using Logic.Repositories;
 using Models;
 
 namespace Logic

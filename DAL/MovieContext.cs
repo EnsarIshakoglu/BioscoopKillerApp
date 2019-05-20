@@ -5,9 +5,11 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using API;
+using Interfaces;
 using Models;
 
-namespace DAL.Contexts
+namespace DAL
 {
     public class MovieContext : IMovieContext
     {

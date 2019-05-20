@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using Interfaces;
 using Models;
 
-namespace DAL.Contexts
+namespace DAL
 {
     public class RoomContext : IRoomContext
     {

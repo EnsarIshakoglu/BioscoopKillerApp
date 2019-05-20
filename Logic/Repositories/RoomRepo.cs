@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DAL.Contexts;
+using Interfaces;
 using Models;
 
-namespace DAL
+namespace Logic.Repositories
 {
     public class RoomRepo
     {

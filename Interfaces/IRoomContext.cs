@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Models;
 
-namespace DAL.Contexts
+namespace Interfaces
 {
     public interface IRoomContext
     {

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using Interfaces;
 using Models;
 using Models.Enums;
 
-namespace DAL.Contexts
+namespace DAL
 {
     public class UserContext : IUserContext
     {

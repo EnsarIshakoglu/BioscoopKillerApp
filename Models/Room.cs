@@ -27,8 +27,6 @@ namespace Models
                     SeatNumber = x+1
                 });
             }
-
-            int a = 5;
         }
 
         public List<Seat> Seats { get; set; }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Models;
 
-namespace Models
+namespace API
 {
     public class ApiHelper
     {

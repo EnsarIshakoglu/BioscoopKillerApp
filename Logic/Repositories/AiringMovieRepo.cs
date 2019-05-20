@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DAL.Contexts;
+using Interfaces;
 using Models;
 using Models.Enums;
 
-namespace DAL
+namespace Logic.Repositories
 {
     public class AiringMovieRepo
     {

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Interfaces;
 using Models;
 
-namespace DAL.Contexts
+namespace DAL
 {
     public class TransactionContext : ITransactionContext
     {
