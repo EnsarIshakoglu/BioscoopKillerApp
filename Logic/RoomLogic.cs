@@ -16,9 +16,9 @@ namespace Logic
             return _repo.GetAllRoomTypes();
         }
 
-        public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
+        public IEnumerable<Room> GetRoomsByRoomType(string roomType)
         {
-            return _repo.GetRoomIdsByRoomType(roomType);
+            return _repo.GetRoomsByRoomType(roomType);
         }
 
         public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)

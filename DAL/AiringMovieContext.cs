@@ -121,7 +121,7 @@ namespace DAL
             return airingMovies;
         }
 
-        public void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie)
+        public void AddAiringMovie(AiringMovie airingMovie)
         {
             using (SqlConnection connection = new SqlConnection(_dbConnectionString))
             {
@@ -134,11 +134,57 @@ namespace DAL
 
                 sqlCommand.Parameters.AddWithValue("@RoomID", airingMovie.Room.Number);
                 sqlCommand.Parameters.AddWithValue("@MovieID", airingMovie.Movie.Id);
-                sqlCommand.Parameters.AddWithValue("@AiringTime", startTimeMovie);
+                sqlCommand.Parameters.AddWithValue("@AiringTime", airingMovie.AiringTime);
                 sqlCommand.ExecuteNonQuery();
 
                 connection.Close();
             }
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room)
+        {
+            var airingMovies = new List<AiringMovie>();
+
+            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand =
+                    new SqlCommand(
+                        $"select p.ID as AiringMovieId, r.ID as RoomId, m.ID as MovieId, m.Name as MovieName, tr.Name as RoomType, p.AiringTime from planning p " +
+                        $"inner join Movie m on p.MovieID = m.ID " +
+                        $"inner join Room r on p.RoomID = r.ID " +
+                        $"inner join TypeRoom tr on r.TypeRoomID = tr.ID " +
+                        $"where RoomID = @roomId",
+                        connection);
+
+                sqlCommand.Parameters.AddWithValue("@roomId", room.Number);
+
+                var reader = sqlCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    airingMovies.Add(new AiringMovie
+                    {
+                        Id = (int)reader["AiringMovieId"],
+                        AiringTime = (DateTime)reader["AiringTime"],
+                        Movie = new Movie
+                        {
+                            Title = reader["MovieName"]?.ToString(),
+                            Id = (int)reader["MovieId"]
+                        },
+                        Room = new Room
+                        {
+                            Number = (int)reader["RoomId"],
+                            Type = reader["RoomType"].ToString()
+                        }
+                    });
+                }
+                connection.Close();
+
+            }
+
+            return airingMovies;
         }
     }
 }

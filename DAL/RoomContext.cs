@@ -33,9 +33,9 @@ namespace DAL
             return roomTypes;
         }
 
-        public IEnumerable<int> GetRoomIdsByRoomType(string roomType)
+        public IEnumerable<Room> GetRoomsByRoomType(string roomType)
         {
-            var roomIds = new List<int>();
+            var rooms = new List<Room>();
 
             using (SqlConnection connection = new SqlConnection(_dbConnectionString))
             {
@@ -48,13 +48,16 @@ namespace DAL
 
                 while (reader.Read())
                 {
-                    roomIds.Add((int)reader["ID"]);
+                    rooms.Add(new Room
+                    {
+                        Number = (int)reader["ID"]
+                    });
                 }
 
                 connection.Close();
             }
 
-            return roomIds;
+            return rooms;
         }
         public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
         {

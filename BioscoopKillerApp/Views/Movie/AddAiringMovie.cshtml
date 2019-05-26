@@ -54,7 +54,7 @@
                     <label>Amount of times:</label>
                 </div>
                 <div class="col-xl-6">
-                    <input id="AmountOfTimes" type="number" asp-for="AmountOfTimes" name="Title" class="form-control" value="" />
+                    <input id="AmountOfTimes" type="number" min="0" asp-for="AmountOfTimes" name="Title" class="form-control" value="" />
                 </div>
             </div>
         </div>
@@ -75,17 +75,6 @@
     </div>
 </div>
 
-@if (null != TempData["addedAiringsText"])
-{
-    <script type="text/javascript">
-
-        var div = document.createElement('div');
-        div.innerHTML = '@TempData["addedAiringsText"]';
-        console.log(div.innerHTML);
-
-        document.getElementById('errorTextAddAiring').appendChild(div);
-    </script>
-}
 <script>
     $(function () {
         $('#saveAiringMovie').on('click', saveAiring);
@@ -131,8 +120,8 @@
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function() {
-                console.log('Success!');
+            function(data) {
+                window.location.href = data;
             },
             error: function() {
                 console.log('Error');
@@ -141,4 +130,18 @@
 
     }
 </script>
+
+@if (null != TempData["alertMessageAiringMovie"])
+{
+    <script type="text/javascript">
+        console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+        var div = document.createElement('div');
+        console.log("Hieronder");
+        div.innerHTML = '@TempData["alertMessageAiringMovie"]';
+        console.log("Hierboven");
+        console.log(div.innerHTML);
+
+        document.getElementById('errorTextAddAiring').appendChild(div);
+    </script>
+}
 

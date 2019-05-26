@@ -10,6 +10,7 @@ namespace Interfaces
         IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie);
         AiringMovie GetAiringMovieById(int id);
         IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType);
-        void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie);
+        void AddAiringMovie(AiringMovie airingMovie);
+        IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room);
     }
 }

@@ -30,9 +30,14 @@ namespace Logic.Repositories
             return _context.GetAiringMoviesByRoomType(roomType);
         }
 
-        public void AddAiringMovie(AiringMovie airingMovie, DateTime startTimeMovie)
+        public void AddAiringMovie(AiringMovie airingMovie)
         {
-            _context.AddAiringMovie(airingMovie, startTimeMovie);
+            _context.AddAiringMovie(airingMovie);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room)
+        {
+            return _context.GetAiringMoviesFromRoom(room);
         }
     }
 }
