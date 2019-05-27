@@ -12,5 +12,6 @@ namespace Interfaces
         IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType);
         void AddAiringMovie(AiringMovie airingMovie);
         IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room);
+        IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date);
     }
 }

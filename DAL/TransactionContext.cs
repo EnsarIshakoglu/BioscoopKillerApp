@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -12,18 +13,17 @@ namespace DAL
     {
         private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
 
-        public void AddOccupiedSeats(AiringMovie airingMovie)
+        public void GetOccupiedSeats(AiringMovie airingMovie)
         {
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand =
-                    new SqlCommand(
-                        $"SELECT SeatNumber FROM dbo.Reservation WHERE AiringMovieID = {airingMovie.Id}",
-                        connection);
+                var cmd = new SqlCommand("GetOccupiedSeats", connection) { CommandType = CommandType.StoredProcedure };
 
-                var reader = sqlCommand.ExecuteReader();
+                cmd.Parameters.Add(new SqlParameter("@AiringMovieId", airingMovie.Id));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -39,19 +39,17 @@ namespace DAL
         {
             foreach (var number in reservation.SeatNumbers)
             {
-                using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
                     connection.Open();
 
-                    var sqlCommand =
-                        new SqlCommand(
-                            $"INSERT INTO dbo.Reservation (SeatNumber, AiringMovieID, [E-mail]) VALUES (@SeatNumber, @AiringMovieID, @Email)",
-                            connection);
-                    sqlCommand.Parameters.AddWithValue("@SeatNumber", Convert.ToInt32(number));
-                    sqlCommand.Parameters.AddWithValue("@AiringMovieID", Convert.ToInt32(reservation.AiringMovieId));
-                    sqlCommand.Parameters.AddWithValue("@Email", reservation.MailAddress);
-                    sqlCommand.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand("SaveReservation", connection) { CommandType = CommandType.StoredProcedure };
 
+                    cmd.Parameters.AddWithValue("@SeatNumber", Convert.ToInt32(number));
+                    cmd.Parameters.AddWithValue("@AiringMovieID", Convert.ToInt32(reservation.AiringMovieId));
+                    cmd.Parameters.AddWithValue("@Email", reservation.MailAddress);
+
+                    cmd.ExecuteNonQuery();
 
                     connection.Close();
                 }

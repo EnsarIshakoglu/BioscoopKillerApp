@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Net;
 using System.Net.Http;
@@ -20,12 +21,13 @@ namespace DAL
         {
             var movies = new List<Movie>();
 
-            using (SqlConnection connection = new SqlConnection(DbConnectionString))
+            using (var connection = new SqlConnection(DbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"SELECT * FROM dbo.Movie", connection);
-                var reader = sqlCommand.ExecuteReader();
+                var cmd = new SqlCommand("GetAllMovies", connection) { CommandType = CommandType.StoredProcedure };
+                
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -56,12 +58,15 @@ namespace DAL
         {
             Movie movie = new Movie();
 
-            using (SqlConnection connection = new SqlConnection(DbConnectionString))
+            using (var connection = new SqlConnection(DbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"SELECT * FROM dbo.Movie WHERE Movie.ID = {movieId}", connection);
-                var reader = sqlCommand.ExecuteReader();
+                var cmd = new SqlCommand("GetMovieById", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@MovieId", movieId));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -87,10 +92,7 @@ namespace DAL
             {
                 connection.Open();
 
-                var sqlCommand =
-                    new SqlCommand(
-                        $"INSERT INTO dbo.Movie (Name, PublishedYear, MoviePrice) VALUES (@Name, @PublishedYear, @MoviePrice)",
-                        connection);
+                var sqlCommand = new SqlCommand($"AddMovie", connection) { CommandType = CommandType.StoredProcedure };
 
                 sqlCommand.Parameters.AddWithValue("@Name", movie.Title);
                 sqlCommand.Parameters.AddWithValue("@PublishedYear", movie.PublishedYear);

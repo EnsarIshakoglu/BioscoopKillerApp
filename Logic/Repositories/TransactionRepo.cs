@@ -17,7 +17,7 @@ namespace Logic.Repositories
 
         public void AddOccupiedSeats(AiringMovie airingMovie)
         {
-            _context.AddOccupiedSeats(airingMovie);
+            _context.GetOccupiedSeats(airingMovie);
         }
 
         public void SaveReservation(Reservation reservation)

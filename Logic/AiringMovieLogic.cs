@@ -91,8 +91,7 @@ namespace Logic
 
         private IEnumerable<AiringMovie> GetAiringsFromRoomByDate(Room room, DateTime date)
         {
-            var airingMoviesFromRoom = _repo.GetAiringMoviesFromRoom(room);
-            var airingMoviesFromRoomByDate = airingMoviesFromRoom.Where(m => m.AiringTime.GetValueOrDefault().DayOfWeek.Equals(date.DayOfWeek)); //todo eigen query van maken en GROUP BY gebruiken (GetAiringsFromRoomByDate)
+            var airingMoviesFromRoomByDate = _repo.GetAiringMoviesFromRoomByDate(room, date).ToList();
 
             foreach (var airingMovie in airingMoviesFromRoomByDate)
             {

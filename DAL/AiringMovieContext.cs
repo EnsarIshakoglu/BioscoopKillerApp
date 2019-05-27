@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Interfaces;
@@ -20,13 +21,11 @@ namespace DAL
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select Planning.ID as AiringID, AiringTime, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, t.SeatsPerRow, (t.RoomPrice + m.MoviePrice) as Price from Planning " +
-                                                $"inner join Room r on r.ID = Planning.RoomID " +
-                                                $"inner join Movie m on m.ID = Planning.MovieID " +
-                                                $"inner join TypeRoom t on t.ID = r.TypeRoomID " +
-                                                $"where m.ID = {movie.Id}", connection);
+                var cmd = new SqlCommand($"GetAiringsFromMovie", connection) { CommandType = CommandType.StoredProcedure };
 
-                var reader = sqlCommand.ExecuteReader();
+                cmd.Parameters.Add(new SqlParameter("@MovieId", movie.Id));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -36,7 +35,7 @@ namespace DAL
                         AiringTime = (DateTime)reader["AiringTime"],
                         Movie = movie,
                         Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"],(int)reader["SeatsPerRow"]),
-                        Price = (int)reader["Price"]
+                        Price = (decimal)reader["Price"]
                     });
                 }
 
@@ -48,19 +47,17 @@ namespace DAL
 
         public AiringMovie GetAiringMovieById(int id)
         {
-            AiringMovie airingMovie = new AiringMovie();
+            var airingMovie = new AiringMovie();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select Planning.ID as AiringID, AiringTime, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, t.SeatsPerRow, (t.RoomPrice + m.MoviePrice) as Price from Planning " +
-                                                $"inner join Room r on r.ID = Planning.RoomID " +
-                                                $"inner join Movie m on m.ID = Planning.MovieID " +
-                                                $"inner join TypeRoom t on t.ID = r.TypeRoomID " +
-                                                $"where Planning.ID = {id}", connection);
+                var cmd = new SqlCommand("GetAiringById", connection) { CommandType = CommandType.StoredProcedure };
 
-                var reader = sqlCommand.ExecuteReader();
+                cmd.Parameters.Add(new SqlParameter("@PlanningId", id));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -69,7 +66,7 @@ namespace DAL
                         Id = (int)reader["AiringID"],
                         AiringTime = (DateTime)reader["AiringTime"],
                         Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
-                        Price = (int)reader["Price"]
+                        Price = (decimal)reader["Price"]
                     };
                 }
 
@@ -82,20 +79,16 @@ namespace DAL
         public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
         {
             var airingMovies = new List<AiringMovie>();
-            var query =
-                $"select Planning.ID as AiringID, AiringTime, [m].[ID] as MovieId, [m].[Name], r.AvailablePlaces, r.ID as RoomNumber, [t].[Name] as RoomType, [t].SeatsPerRow, ([t].RoomPrice + m.MoviePrice) as Price from Planning " +
-                $"inner join Room r on r.ID = Planning.RoomID " +
-                $"inner join Movie m on m.ID = Planning.MovieID " +
-                $"inner join TypeRoom [t] on [t].[ID] = r.TypeRoomID " +
-                $"where [t].[Name] = '{roomType}'";
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand(query, connection);
+                var cmd = new SqlCommand("GetAiringsByRoomType", connection) { CommandType = CommandType.StoredProcedure };
 
-                var reader = sqlCommand.ExecuteReader();
+                cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -109,9 +102,8 @@ namespace DAL
                             Id = (int)reader["MovieId"]
                         },
                         Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
-                        Price = (int)reader["Price"]
+                        Price = (decimal)reader["Price"]
                     });
-
                     
                 }
 
@@ -123,19 +115,17 @@ namespace DAL
 
         public void AddAiringMovie(AiringMovie airingMovie)
         {
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand =
-                    new SqlCommand(
-                        $"INSERT INTO dbo.Planning (RoomID, MovieID, AiringTime) VALUES (@RoomID, @MovieID, @AiringTime)",
-                        connection);
+                SqlCommand cmd = new SqlCommand("AddAiring", connection) { CommandType = CommandType.StoredProcedure };
 
-                sqlCommand.Parameters.AddWithValue("@RoomID", airingMovie.Room.Number);
-                sqlCommand.Parameters.AddWithValue("@MovieID", airingMovie.Movie.Id);
-                sqlCommand.Parameters.AddWithValue("@AiringTime", airingMovie.AiringTime);
-                sqlCommand.ExecuteNonQuery();
+                cmd.Parameters.Add(new SqlParameter("@RoomId", airingMovie.Room.Number));
+                cmd.Parameters.Add(new SqlParameter("@AiringTime", airingMovie.AiringTime));
+                cmd.Parameters.Add(new SqlParameter("@MovieId", airingMovie.Movie.Id));
+
+                cmd.ExecuteNonQuery();
 
                 connection.Close();
             }
@@ -145,22 +135,15 @@ namespace DAL
         {
             var airingMovies = new List<AiringMovie>();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand =
-                    new SqlCommand(
-                        $"select p.ID as AiringMovieId, r.ID as RoomId, m.ID as MovieId, m.Name as MovieName, tr.Name as RoomType, p.AiringTime from planning p " +
-                        $"inner join Movie m on p.MovieID = m.ID " +
-                        $"inner join Room r on p.RoomID = r.ID " +
-                        $"inner join TypeRoom tr on r.TypeRoomID = tr.ID " +
-                        $"where RoomID = @roomId",
-                        connection);
+                var cmd = new SqlCommand("GetAiringsFromRoom", connection) { CommandType = CommandType.StoredProcedure };
 
-                sqlCommand.Parameters.AddWithValue("@roomId", room.Number);
+                cmd.Parameters.Add(new SqlParameter("@RoomId", room.Number));
 
-                var reader = sqlCommand.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -180,8 +163,48 @@ namespace DAL
                         }
                     });
                 }
-                connection.Close();
 
+                connection.Close();
+            }
+
+            return airingMovies;
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date)
+        {
+            var airingMovies = new List<AiringMovie>();
+
+            using (var connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetAiringsFromRoomByDate", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@RoomId", room.Number));
+                cmd.Parameters.Add(new SqlParameter("@Date", date.Date));
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    airingMovies.Add(new AiringMovie
+                    {
+                        Id = (int)reader["AiringMovieId"],
+                        AiringTime = (DateTime)reader["AiringTime"],
+                        Movie = new Movie
+                        {
+                            Title = reader["MovieName"]?.ToString(),
+                            Id = (int)reader["MovieId"]
+                        },
+                        Room = new Room
+                        {
+                            Number = (int)reader["RoomId"],
+                            Type = reader["RoomType"].ToString()
+                        }
+                    });
+                }
+
+                connection.Close();
             }
 
             return airingMovies;

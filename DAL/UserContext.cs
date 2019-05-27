@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Interfaces;
@@ -12,24 +13,29 @@ namespace DAL
     {
         private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
 
-        public bool Login(User user)
+        public bool CheckLogin(User user)
         {
             var loginSuccessful = false;
 
-            using (SqlConnection conn = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                conn.Open();
+                connection.Open();
 
-                SqlCommand command = new SqlCommand($"SELECT TOP 1 Id, [E-mail],Password from dbo.[User] WHERE [E-mail] = '{user.Email}' and Password = '{user.Password}'", conn);
-                SqlDataReader reader = command.ExecuteReader();
+                var cmd = new SqlCommand("CheckLogin", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+                cmd.Parameters.Add(new SqlParameter("@Password", user.Password));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     loginSuccessful = true;
                 }
-                reader.Close();
-                conn.Close();
+
+                connection.Close();
             }
+
             return loginSuccessful;
         }
 
@@ -37,19 +43,22 @@ namespace DAL
         {
             var roles = new List<string>();
 
-            using (SqlConnection conn = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                conn.Open();
+                connection.Open();
 
-                SqlCommand command = new SqlCommand($"select U.[E-mail], R.RoleName from dbo.User_Roles UR\r\ninner join [User] U on UR.UserID = U.ID\r\ninner join Roles R on UR.RoleID = R.ID\r\nwhere U.[E-mail] = '{user.Email}'", conn);
-                SqlDataReader reader = command.ExecuteReader();
+                var cmd = new SqlCommand("GetUserRolesFromUser", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     roles.Add(reader["RoleName"].ToString());
                 }
-                reader.Close();
-                conn.Close();
+
+                connection.Close();
             }
 
             return roles;
@@ -57,36 +66,29 @@ namespace DAL
 
         public bool CreateAccount(User user)
         {
-            var isAccountCreationSuccessful = true;
+            var isAccountCreationSuccessful = false;
+            var updated = 0;
 
-            try
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                using (SqlConnection connection = new SqlConnection(_dbConnectionString))
-                {
-                    connection.Open();
+                connection.Open();
 
-                    var sqlCommand =
-                        new SqlCommand(
-                            $"INSERT INTO dbo.[User] ([E-mail], [Password], [Name], [Surname]) VALUES (@Email, @Password, @Name, @Surname)",
-                            connection);
-                    sqlCommand.Parameters.AddWithValue("@Email", user.Email);
-                    sqlCommand.Parameters.AddWithValue("@Password", user.Password);
-                    sqlCommand.Parameters.AddWithValue("@Name", user.Name);
-                    sqlCommand.Parameters.AddWithValue("@Surname", user.SurName);
-                    sqlCommand.ExecuteNonQuery();
+                SqlCommand cmd = new SqlCommand("CreateAccount", connection) { CommandType = CommandType.StoredProcedure };
 
-                    connection.Close();
-                }
-            }
-            catch (Exception exception)
-            {
-                //loggen
-                isAccountCreationSuccessful = false;
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@Password", user.Password);
+                cmd.Parameters.AddWithValue("@Name", user.Name);
+                cmd.Parameters.AddWithValue("@Surname", user.SurName);
+
+                updated = cmd.ExecuteNonQuery();
+
+                connection.Close();
             }
 
-            if (isAccountCreationSuccessful)
+            if (updated != 0)
             {
-                AddRole(user, Roles.AccountHolder.ToString());
+                isAccountCreationSuccessful = true;
+                AddRoleToUser(user, Roles.AccountHolder.ToString());
             }
 
             return isAccountCreationSuccessful;
@@ -96,19 +98,22 @@ namespace DAL
         {
             var emailInUse = false;
 
-            using (SqlConnection conn = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                conn.Open();
+                connection.Open();
 
-                SqlCommand command = new SqlCommand($"select * from [user] u \r\nwhere \r\nu.[E-mail] = \'{user.Email}\'", conn);
-                SqlDataReader reader = command.ExecuteReader();
+                var cmd = new SqlCommand("IsEmailInUse", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     emailInUse = true;
                 }
-                reader.Close();
-                conn.Close();
+
+                connection.Close();
             }
 
             return emailInUse;
@@ -118,47 +123,41 @@ namespace DAL
         {
             var userId = -1;
 
-            using (SqlConnection conn = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                conn.Open();
+                connection.Open();
 
-                SqlCommand command = new SqlCommand($"select Id from [user] where [E-mail] ='{user.Email}'", conn);
-                SqlDataReader reader = command.ExecuteReader();
+                var cmd = new SqlCommand("GetUserId", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     userId = (int)reader["Id"];
                 }
-                reader.Close();
-                conn.Close();
+
+                connection.Close();
             }
 
             return userId;
         }
 
-        private void AddRole(User user, string roleName)
+        private void AddRoleToUser(User user, string roleName)
         {
-            try
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
-                using (SqlConnection connection = new SqlConnection(_dbConnectionString))
-                {
-                    connection.Open();
+                connection.Open();
 
-                    var sqlCommand =
-                        new SqlCommand(
-                            $"INSERT INTO dbo.User_Roles (UserID, RoleID) VALUES ((select u.ID from [user] u where u.[E-mail] = @Email), (select r.ID from Roles r where r.RoleName = @RoleName))",
-                            connection);
+                SqlCommand cmd = new SqlCommand("AddRoleToUser", connection) { CommandType = CommandType.StoredProcedure };
 
-                    sqlCommand.Parameters.AddWithValue("@Email", user.Email);
-                    sqlCommand.Parameters.AddWithValue("@RoleName", roleName);
-                    sqlCommand.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@RoleName", roleName);
 
-                    connection.Close();
-                }
-            }
-            catch (Exception exception)
-            {
-                //loggen --> try catch moet eigenlijk in de controller!!!!!!!
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
             }
         }
     }

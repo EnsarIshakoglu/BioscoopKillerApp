@@ -17,7 +17,7 @@ namespace Logic.Repositories
 
         public bool Login(User user)
         {
-            return _context.Login(user);
+            return _context.CheckLogin(user);
         }
 
         public IEnumerable<string> GetUserRoles(User user)

@@ -29,7 +29,7 @@ namespace BioscoopKillerApp.Controllers
         [HttpPost]
         public IActionResult LogIn([Bind("Password, Email")] User user)
         {
-            if (!ModelState.ContainsKey("Password") && !ModelState.ContainsKey("Username"))
+            if (user.Password == null || user.Email == null)
             {
                 TempData["alertMessage"] = "Please fill in all the fields!";
                 return View("LogIn");
@@ -58,7 +58,7 @@ namespace BioscoopKillerApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["alertMessage"] = "Please fill in all the fields!";
+                TempData["alertMessageRegister"] = "Please fill in all the fields!";
                 return View("LogIn");
             }
             if (_userLogic.IsEmailInUse(user))

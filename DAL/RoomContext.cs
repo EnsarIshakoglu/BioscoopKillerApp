@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Interfaces;
@@ -15,12 +16,13 @@ namespace DAL
         {
             var roomTypes = new List<string>();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select tr.[Name] from TypeRoom tr", connection);
-                var reader = sqlCommand.ExecuteReader();
+                var cmd = new SqlCommand("GetAllRoomTypes", connection) { CommandType = CommandType.StoredProcedure };
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -37,14 +39,15 @@ namespace DAL
         {
             var rooms = new List<Room>();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select r.ID from Room r " +
-                                                $"inner join TypeRoom tr on r.TypeRoomID = tr.ID " +
-                                                $"where tr.[Name] = '{roomType}'", connection);
-                var reader = sqlCommand.ExecuteReader();
+                var cmd = new SqlCommand("GetRoomsByRoomType", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -63,16 +66,15 @@ namespace DAL
         {
             var airingMovies = new List<AiringMovie>();
 
-            using (SqlConnection connection = new SqlConnection(_dbConnectionString))
+            using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var sqlCommand = new SqlCommand($"select tr.[Name] as RoomType, r.ID as RoomId, p.ID as AiringMovieId, m.[Name] as MovieName, m.ID as MovieId, p.AiringTime as AiringTime from TypeRoom tr " +
-                                                $"inner join Room r on r.TypeRoomID = tr.ID " +
-                                                $"left outer join [Planning] p on r.ID = p.RoomID " +
-                                                $"left outer join Movie m on p.MovieID = m.ID " +
-                                                $"where tr.[Name] = '{roomType}'", connection);
-                var reader = sqlCommand.ExecuteReader();
+                var cmd = new SqlCommand("GetAiringsByRoomType2", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
+
+                var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {

@@ -39,5 +39,10 @@ namespace Logic.Repositories
         {
             return _context.GetAiringMoviesFromRoom(room);
         }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date)
+        {
+            return _context.GetAiringMoviesFromRoomByDate(room, date);
+        }
     }
 }

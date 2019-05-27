@@ -5,7 +5,7 @@ namespace Interfaces
 {
     public interface IUserContext
     {
-        bool Login(User user);
+        bool CheckLogin(User user);
         IEnumerable<string> GetUserRoles(User user);
         bool CreateAccount(User user);
         bool IsEmailInUse(User user);
