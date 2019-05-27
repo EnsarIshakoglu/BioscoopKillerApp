@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.Enums;
 
@@ -119,29 +120,36 @@ namespace DAL
             return emailInUse;
         }
 
-        public int GetUserId(User user)
+        public User GetUserByEmail(string email)
         {
-            var userId = -1;
+            User user = new User();
 
             using (var connection = new SqlConnection(_dbConnectionString))
             {
                 connection.Open();
 
-                var cmd = new SqlCommand("GetUserId", connection) { CommandType = CommandType.StoredProcedure };
+                var cmd = new SqlCommand("GetUserByEmail", connection) { CommandType = CommandType.StoredProcedure };
 
-                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+                cmd.Parameters.Add(new SqlParameter("@Email", email));
 
                 var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    userId = (int)reader["Id"];
+                    user = new User
+                    {
+                        Id = (int) reader["Id"],
+                        Password = reader["Password"].ToString(),
+                        Name = reader["Name"].ToString(),
+                        SurName = reader["Surname"].ToString(),
+                        Email = email
+                    };
                 }
 
                 connection.Close();
             }
 
-            return userId;
+            return user;
         }
 
         private void AddRoleToUser(User user, string roleName)

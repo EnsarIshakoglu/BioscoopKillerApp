@@ -80,6 +80,7 @@ namespace BioscoopKillerApp.Controllers
         public IActionResult AddAiringMovie([FromBody]AddAiringMovieViewModel addAiringMovieViewModel)
         {
             var movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(addAiringMovieViewModel.SelectedMovie));
+            var returnMessage = "";
 
             DateTime.TryParse(addAiringMovieViewModel.SelectedDate, out var date);
 
@@ -91,10 +92,10 @@ namespace BioscoopKillerApp.Controllers
                     var a = _airingMovieLogic.AddAiringMovieSuccessful(movie, date, addAiringMovieViewModel.SelectedRoomType);
                     if (a) addedAiringMovies++;
                 }
-                TempData["alertMessageAiringMovie"] = $"Added {addedAiringMovies} airings for {movie.Title}!"; //add airing movie
+                returnMessage = $"Added {addedAiringMovies} airings for {movie.Title}!"; //add airing movie
             }
 
-            return RedirectToAction("AddAiringMovie");
+            return new JsonResult(new {message = returnMessage});
         }
     }
 }

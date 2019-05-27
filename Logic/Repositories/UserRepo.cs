@@ -35,9 +35,9 @@ namespace Logic.Repositories
             return _context.IsEmailInUse(user);
         }
 
-        public int GetUserId(User user)
+        public User GetUserByEmail(string email)
         {
-            return _context.GetUserId(user);
+            return _context.GetUserByEmail(email);
         }
     }
 }

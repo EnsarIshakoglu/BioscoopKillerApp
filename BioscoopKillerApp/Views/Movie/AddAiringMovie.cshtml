@@ -120,28 +120,24 @@
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            function(data) {
-                window.location.href = data;
+            success: function(result) {
+                console.log("Success");
+                var div = document.createElement('div');
+                div.innerHTML = result.message;
+                console.log(div.innerHTML);
+
+                document.getElementById('errorTextAddAiring').appendChild(div);
             },
-            error: function() {
-                console.log('Error');
+            error: function () {
+                console.log("Error");
+                var div = document.createElement('div');
+                div.innerHTML = "Error creating airing, please try again!";
+                console.log(div.innerHTML);
+
+                document.getElementById('errorTextAddAiring').appendChild(div);
             }
         });
 
     }
 </script>
-
-@if (null != TempData["alertMessageAiringMovie"])
-{
-    <script type="text/javascript">
-        console.log("aaaaaaaaaaaaaaaaaaaaaaa");
-        var div = document.createElement('div');
-        console.log("Hieronder");
-        div.innerHTML = '@TempData["alertMessageAiringMovie"]';
-        console.log("Hierboven");
-        console.log(div.innerHTML);
-
-        document.getElementById('errorTextAddAiring').appendChild(div);
-    </script>
-}
 

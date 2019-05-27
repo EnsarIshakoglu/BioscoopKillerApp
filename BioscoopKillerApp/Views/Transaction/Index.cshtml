@@ -56,7 +56,10 @@
                         <input id="EmailAddress" />
                         <p id="validationText" style="color: red">Invalid email address</p>
                     </div>
-                    <button id="saveSelection" style="margin: 5px;">Pay!</button>
+                <button id="saveSelection" style="margin: 5px;">Pay!</button>
+                <div id="saveReservationText">
+
+                </div>
                     @*onclick="location.href = '@Url.Action("Index", "Movie")'"*@
                 </body>
             </div>
@@ -178,15 +181,42 @@
                     },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    success: function() {
-                        console.log('Succes!');
+                    success: function(result) {
+                        console.log("Success");
+
+                        alert(result.message);
+
+                        refreshPage();
                     },
-                    error: function() {
-                        console.log('Error');
+                    error: function () {
+                        console.log("Error");
+                        var div = document.createElement('div');
+                        div.innerHTML = "Error creating reservation, please try again!";
+                        console.log(div.innerHTML);
+
+                        document.getElementById('saveReservationText').appendChild(div);
                     }
                 });
             }
 
+        }
+
+        function refreshPage() {
+            var airingId = @Model.Id;
+            var movieId = @Model.Movie.Id;
+
+            var airing = {
+                Id: airingId,
+                Movie: {
+                    Id: movieId
+                }
+            };
+            @{
+                var movieIdFromModel = Model.Movie.Id.GetValueOrDefault();
+                var airingMovieIdFromModel = Model.Id.GetValueOrDefault();
+            }
+            console.log(airing);
+            window.location.href = '@Url.Action("Index", "Transaction", new { airingMovieId = airingMovieIdFromModel, movieId = movieIdFromModel })';
         }
 
         function createseating(htmlCode) {

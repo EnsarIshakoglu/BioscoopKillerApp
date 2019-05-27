@@ -9,6 +9,6 @@ namespace Interfaces
         IEnumerable<string> GetUserRoles(User user);
         bool CreateAccount(User user);
         bool IsEmailInUse(User user);
-        int GetUserId(User user);
+        User GetUserByEmail(string email);
     }
 }

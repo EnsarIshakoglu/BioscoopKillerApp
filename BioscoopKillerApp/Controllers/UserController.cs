@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Session;
 using Models;
@@ -20,6 +21,7 @@ namespace BioscoopKillerApp.Controllers
     public class UserController : Controller
     {
         private readonly UserLogic _userLogic = new UserLogic();
+        private PasswordHasher<User> _hasher = new PasswordHasher<User>();
 
         public IActionResult LogIn()
         {
@@ -27,35 +29,43 @@ namespace BioscoopKillerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn([Bind("Password, Email")] User user)
+        public IActionResult LogIn([Bind("Password, Email")] User model)
         {
-            if (user.Password == null || user.Email == null)
+            if (model.Password == null || model.Email == null)
             {
                 TempData["alertMessage"] = "Please fill in all the fields!";
                 return View("LogIn");
             }
-            if (_userLogic.Login(user))
-            {
-                InitUser(user);
-                return RedirectToAction("Index", "Home");
-            }
-            else
+
+            var user = _userLogic.GetUserByEmail(model.Email);
+            if (user == null)
             {
                 TempData["alertMessage"] = "Incorrect username or password, please try again!";
                 return View("LogIn");
             }
+
+            if (_hasher.VerifyHashedPassword(user, user.Password, model.Password) == PasswordVerificationResult.Failed)
+            {
+                TempData["alertMessage"] = "Incorrect username or password, please try again!";
+                return View("LogIn");
+            }
+
+            InitUser(user);
+            return RedirectToAction("Index", "Home");
         }
         [Authorize]
         public IActionResult LogOut()
         {
             RemoveCookies();
-            
+
             return RedirectToAction("Index", "Movie");
         }
 
         [HttpPost]
         public IActionResult CreateAccount([Bind("Password, Name, SurName, Email")] User user)
         {
+            user.Password = _hasher.HashPassword(user, user.Password);
+
             if (!ModelState.IsValid)
             {
                 TempData["alertMessageRegister"] = "Please fill in all the fields!";
@@ -82,7 +92,7 @@ namespace BioscoopKillerApp.Controllers
 
         private async void InitUser(User user)
         {
-            _userLogic.InitUser(user);
+            user = _userLogic.InitUser(user);
 
             var claims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())).ToList();
 

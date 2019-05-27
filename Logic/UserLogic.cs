@@ -32,14 +32,15 @@ namespace Logic
             return _userRepo.IsEmailInUse(user);
         }
 
-        public int GetUserId(User user)
+        public User GetUserByEmail(string email)
         {
-            return _userRepo.GetUserId(user);
+            return _userRepo.GetUserByEmail(email);
         }
 
-        public void InitUser(User user)
+        public User InitUser(User user)
         {
-            user.Id = GetUserId(user);
+            var email = user.Email;
+            user = GetUserByEmail(email);
 
             var roles = GetUserRoles(user);
 
@@ -48,6 +49,8 @@ namespace Logic
                 Enum.TryParse(role, out Roles enumRole);
                 user.Roles.Add(enumRole);
             }
+
+            return user;
         }
     }
 }

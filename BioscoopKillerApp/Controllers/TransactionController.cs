@@ -15,6 +15,7 @@ namespace BioscoopKillerApp.Controllers
     {
         private readonly TransactionLogic _transactionLogic = new TransactionLogic();
 
+        [Route("/Transaction/Index/{airingMovieId}/{movieId}")]
         public IActionResult Index(int airingMovieId, int movieId)
         {
             var airingMovie = _transactionLogic.GetAiringMovieById(airingMovieId);
@@ -24,9 +25,11 @@ namespace BioscoopKillerApp.Controllers
         }
 
         [HttpPost]
-        public void SaveReservation([FromBody]Reservation reservation)
+        public IActionResult SaveReservation([FromBody]Reservation reservation)
         {
             _transactionLogic.SaveReservation(reservation);
+
+            return new JsonResult(new { message = $"Created a reservation for {reservation.SeatNumbers.Length} seat(s) with the e-mail address {reservation.MailAddress}!"});
         }
 
         public bool CheckIfValidEmail(string email)
