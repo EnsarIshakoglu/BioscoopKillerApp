@@ -1,8 +1,13 @@
-﻿@using BioscoopKillerApp.Controllers
+﻿@using System.Linq
+@using System.Security.Claims
+@using System.Threading
+@using BioscoopKillerApp.Controllers
 @model MovieDetailViewModel
+@Html.AntiForgeryToken()
 
 @{
     ViewData["Title"] = "MovieDetails";
+    var userId = -1;
 }
 
 <html>
@@ -127,7 +132,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <!-- comments-section-starts -->
                         <!---728x90--->
 
-                        <div class="comments-section">
+                        <div class="comments-section" style="border-bottom: 3px solid #000">
                             <div class="comments-section-head">
                                 <div class="comments-section-head-text">
                                     <h3>Comments</h3>
@@ -135,48 +140,130 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <div class="clearfix"></div>
                             </div>
                             <div class="comments-section-grids">
-                                @*MET foreach--------------------------------------------------------------------------------------------------------------------------------------*@
-                                @for (int x = 0; x < 2; x++)
+                                @foreach (var modelReview in Model.Reviews)
                                 {
-                                    @Html.Partial("Comment");
+                                    @Html.Partial("Comment", modelReview);
                                 }
                             </div>
                         </div>
                         <!-- comments-section-ends -->
                         @*IF USER IS AUTHORIZED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*@
-                        <div class="reply-section">
-                            <div class="reply-section-head">
-                                <div class="reply-section-head-text">
-                                    <h3>Leave Reply</h3>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var sid = User.Claims.First(c => c.Type.Equals(ClaimTypes.Sid)).Value;
+                            int.TryParse(sid, out userId);
+
+                            <div class="reply-section">
+                                <div class="reply-section-head">
+                                    <div class="reply-section-head-text">
+                                        <h3>Leave Reply</h3>
+                                    </div>
+                                </div>
+                                <div class="blog-form">
+                                    <form>
+                                        <input type="text" class="text" value="@User.Identity.Name" disabled="disabled">
+                                        <input type="text" class="text" id="reviewTitle" placeholder="Subject">
+                                        <textarea id="reviewText" placeholder="Review"></textarea>
+                                        <input type="button" id="postReview" value="POST">
+                                    </form>
                                 </div>
                             </div>
-                            <div class="blog-form">
-                                <form>
-                                    <input type="text" class="text" value="Enter Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter Name';}">
-                                    <input type="text" class="text" value="Enter Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter Email';}">
-                                    <input type="text" class="text" value="Subject" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Subject';}">
-                                    <textarea></textarea>
-                                    <input type="button" value="SUBMIT COMMENT">
-                                </form>
+                        }
+                        else
+                        {
+                            <div class="reply-section">
+                                <div class="reply-section-head">
+                                    <div class="reply-section-head-text">
+                                        <a href="@Url.Action("LogIn", "User")"><i>Login to leave a reply</i></a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        }
+
+
+                        <div class="clearfix"></div>
                     </div>
-
-
-                    <div class="clearfix"></div>
                 </div>
+
+                <!---728x90--->
+
+
             </div>
-
-            <!---728x90--->
-
-
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
     </div>
 
     <div id="_vdo_ads_player_ai_"></div>
     <script id="_vdo_ads_deps_5654_" src="https://vdo.ai/core/dependencies_bs/vdo.min.js"></script>
     <script id="_vdo_ads_sdk_5654_" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script id="_vdo_ads_frame_5654_" src="https://vdo.ai/core/w3layouts//adframe.js?k=44"></script>
+    <script id="_vdo_ads_frame_5654_" src="https://vdo.ai/core/w3layouts//adframe.js?k=44">
+    </script>
 </body>
 </html>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            $('#postReview').on('click', postReview);
+        });
+    </script>
+
+    <script>
+    function postReview() {
+        var reviewText = document.getElementById('reviewText').value;
+        var reviewTitle = document.getElementById('reviewTitle').value;
+
+        console.log(reviewText);
+
+        var controllerPath = '@Url.Action("PostReview", "User")';
+
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+        var user = {
+            'Id': @userId
+        };
+
+        var movie = {
+            'Id' : @Model.Movie.Id
+        }
+
+        var review = {
+            'ReviewText': reviewText,
+            'ReviewTitle' : reviewTitle,
+            'Movie': movie,
+            'User' : user
+        };
+
+        $.ajax({
+            url: controllerPath,
+            data: JSON.stringify(review),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                console.log("Success");
+
+                if (result.validationMessage !== "") {
+                    alert(result.validationMessage);
+                }
+
+                refreshPage();
+            },
+            error: function () {
+                console.log("Error");
+
+                alert('Error creating review, please try again!');
+            }
+        });
+    }
+    </script>
+
+    <script>
+    function refreshPage() {
+        window.location.href = '@Url.Action("MovieDetails", "Movie", Model.Movie)';
+    }
+    </script>
+}

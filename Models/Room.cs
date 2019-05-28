@@ -20,7 +20,7 @@ namespace Models
             SeatCount = seatCount;
             SeatsPerRow = seatsPerRow;
 
-            for (int x = 0; x < SeatCount; x++)
+            for (var x = 0; x < SeatCount; x++)
             {
                 Seats.Add(new Seat
                 {

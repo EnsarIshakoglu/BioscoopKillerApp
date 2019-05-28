@@ -30,28 +30,24 @@ namespace DAL
                     airingMovie.Room.Seats.First(s => s.SeatNumber == (int)reader["SeatNumber"]).IsOccupied =
                         true;
                 }
-
-                connection.Close();
             }
         }
 
         public void SaveReservation(Reservation reservation)
         {
-            foreach (var number in reservation.SeatNumbers)
+            foreach (var seat in reservation.Seats)
             {
                 using (var connection = new SqlConnection(_dbConnectionString))
                 {
                     connection.Open();
 
-                    SqlCommand cmd = new SqlCommand("SaveReservation", connection) { CommandType = CommandType.StoredProcedure };
+                    var cmd = new SqlCommand("SaveReservation", connection) { CommandType = CommandType.StoredProcedure };
 
-                    cmd.Parameters.AddWithValue("@SeatNumber", Convert.ToInt32(number));
-                    cmd.Parameters.AddWithValue("@AiringMovieID", Convert.ToInt32(reservation.AiringMovieId));
+                    cmd.Parameters.AddWithValue("@SeatNumber", seat.SeatNumber);
+                    cmd.Parameters.AddWithValue("@AiringMovieID", reservation.AiringMovie.Id);
                     cmd.Parameters.AddWithValue("@Email", reservation.MailAddress);
 
                     cmd.ExecuteNonQuery();
-
-                    connection.Close();
                 }
             }
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using BioscoopKillerApp.Models;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +14,7 @@ namespace BioscoopKillerApp.Controllers
     {
         private readonly MovieLogic _movieLogic = new MovieLogic();
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
         public IActionResult Index()
         {
@@ -25,10 +28,11 @@ namespace BioscoopKillerApp.Controllers
 
         public IActionResult MovieDetails(Movie movie)
         {
-            MovieDetailViewModel movieDetails = new MovieDetailViewModel
+            var movieDetails = new MovieDetailViewModel
             {
                 AiringMovies = _airingMovieLogic.GetAiringMoviesFromMovie(movie),
-                Movie = movie
+                Movie = _movieLogic.GetMovieById(movie.Id.GetValueOrDefault()),
+                Reviews = _reviewLogic.GetAllReviewsFromMovie(movie)
             };
 
             foreach (var airingMovie in movieDetails.AiringMovies)
@@ -39,6 +43,7 @@ namespace BioscoopKillerApp.Controllers
             return View(movieDetails);
 
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddMovie()
@@ -73,7 +78,7 @@ namespace BioscoopKillerApp.Controllers
 
             }
 
-            return RedirectToAction("AddMovie");
+            return View("AddPage", new Movie());
         }
         
         [HttpPost]
@@ -89,10 +94,11 @@ namespace BioscoopKillerApp.Controllers
                 var addedAiringMovies = 0;
                 for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
-                    var a = _airingMovieLogic.AddAiringMovieSuccessful(movie, date, addAiringMovieViewModel.SelectedRoomType);
-                    if (a) addedAiringMovies++;
+                    var successful = _airingMovieLogic.TryToAddAiring(movie, date, addAiringMovieViewModel.SelectedRoomType);
+                    if (successful) addedAiringMovies++;
                 }
-                returnMessage = $"Added {addedAiringMovies} airings for {movie.Title}!"; //add airing movie
+
+                returnMessage = $"Added {addedAiringMovies} airings for {movie.Title}!";
             }
 
             return new JsonResult(new {message = returnMessage});

@@ -38,8 +38,6 @@ namespace DAL
                         Price = (decimal)reader["Price"]
                     });
                 }
-
-                connection.Close();
             }
 
             return airingMovies;
@@ -69,8 +67,6 @@ namespace DAL
                         Price = (decimal)reader["Price"]
                     };
                 }
-
-                connection.Close();
             }
 
             return airingMovie;
@@ -106,8 +102,6 @@ namespace DAL
                     });
                     
                 }
-
-                connection.Close();
             }
 
             return airingMovies;
@@ -126,8 +120,6 @@ namespace DAL
                 cmd.Parameters.Add(new SqlParameter("@MovieId", airingMovie.Movie.Id));
 
                 cmd.ExecuteNonQuery();
-
-                connection.Close();
             }
         }
 
@@ -163,8 +155,6 @@ namespace DAL
                         }
                     });
                 }
-
-                connection.Close();
             }
 
             return airingMovies;
@@ -203,8 +193,6 @@ namespace DAL
                         }
                     });
                 }
-
-                connection.Close();
             }
 
             return airingMovies;

@@ -24,15 +24,8 @@ namespace Logic
         {
             return _repo.GetAiringMovieById(id);
         }
-
-        public bool AddAiringMovieSuccessful(Movie movie, DateTime date, string roomType)
+        public bool TryToAddAiring(Movie movie, DateTime date, string roomType)
         {
-            /*
-             * Hier hebben we zalen nodig die bv 3d uitzenden -> GetAvailableRoom
-             * Kijken of een zaal plek heeft om onze film toe te voegen OF kijken of er uberhaupt een film is
-             * Film toevoegen
-             */
-
             var airing = GetRoomWithPlaceForAiring(movie, date, roomType);
 
             if (airing != null)
@@ -43,7 +36,6 @@ namespace Logic
 
             return false;
         }
-
         private AiringMovie GetRoomWithPlaceForAiring(Movie movie, DateTime date, string roomType)
         {
             var rooms = _roomLogic.GetRoomsByRoomType(roomType);

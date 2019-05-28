@@ -40,8 +40,6 @@ namespace DAL
 
                     movies.Add(movie);
                 }
-
-                connection.Close();
             }
 
             foreach (var movie in movies)
@@ -77,8 +75,6 @@ namespace DAL
                         PublishedYear = (int)reader["PublishedYear"]
                     };
                 }
-
-                connection.Close();
             }
 
             _apiHelper.AddApiDataToMovie(movie).Wait();
@@ -98,8 +94,6 @@ namespace DAL
                 sqlCommand.Parameters.AddWithValue("@PublishedYear", movie.PublishedYear);
                 sqlCommand.Parameters.AddWithValue("@MoviePrice", movie.MoviePrice);
                 sqlCommand.ExecuteNonQuery();
-
-                connection.Close();
             }
         }
 

@@ -28,8 +28,6 @@ namespace DAL
                 {
                     roomTypes.Add(reader["Name"]?.ToString());
                 }
-
-                connection.Close();
             }
 
             return roomTypes;
@@ -56,8 +54,6 @@ namespace DAL
                         Number = (int)reader["ID"]
                     });
                 }
-
-                connection.Close();
             }
 
             return rooms;
@@ -94,8 +90,6 @@ namespace DAL
                         }
                     });
                 }
-
-                connection.Close();
             }
 
             return airingMovies;

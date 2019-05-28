@@ -21,7 +21,8 @@ namespace BioscoopKillerApp.Controllers
     public class UserController : Controller
     {
         private readonly UserLogic _userLogic = new UserLogic();
-        private PasswordHasher<User> _hasher = new PasswordHasher<User>();
+        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
+        private readonly PasswordHasher<User> _hasher = new PasswordHasher<User>();
 
         public IActionResult LogIn()
         {
@@ -51,7 +52,7 @@ namespace BioscoopKillerApp.Controllers
             }
 
             InitUser(user);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Movie");
         }
         [Authorize]
         public IActionResult LogOut()
@@ -89,6 +90,16 @@ namespace BioscoopKillerApp.Controllers
 
             return View("LogIn", user);
         }
+        [Authorize]
+        [HttpPost]
+        public IActionResult PostReview([FromBody]Review review)
+        {
+            if (!ModelState.IsValid) return new JsonResult(new { validationMessage = $"Error creating review, please note that review subject (min 6 and max 100 chars long) and review text (min 6 and max 2000 chars long) are required to post a review." });
+
+            _reviewLogic.SaveReview(review);
+
+            return new JsonResult(new { message = $"Saved review!" });
+        }
 
         private async void InitUser(User user)
         {
@@ -96,7 +107,8 @@ namespace BioscoopKillerApp.Controllers
 
             var claims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())).ToList();
 
-            claims.Add(new Claim("userId", user.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Name, user.Name));
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
             var authProp = new AuthenticationProperties();

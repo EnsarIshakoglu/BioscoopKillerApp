@@ -30,14 +30,18 @@
     </div>
 </div>
 
-@if (null != TempData["alertMessage"])
-{
-    <script type="text/javascript">
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    @if (null != TempData["alertMessage"])
+    {
+        <script type="text/javascript">
 
-        var div = document.createElement('div');
-        div.innerHTML = '@TempData["alertMessage"]';
-        console.log(div.innerHTML);
+            var div = document.createElement('div');
+            div.innerHTML = '@TempData["alertMessage"]';
+            console.log(div.innerHTML);
 
-        document.getElementById('errorTextAddMovie').appendChild(div);
-    </script>
+            document.getElementById('errorTextAddMovie').appendChild(div);
+        </script>
+    }
 }

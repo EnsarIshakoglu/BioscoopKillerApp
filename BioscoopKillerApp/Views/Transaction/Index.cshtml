@@ -164,9 +164,23 @@
 
             var verificationToken = $("input[name='__RequestVerificationToken']").val();
 
+            var seats = [];
+            for (var x = 0; x < ids.length; x++) {
+                var seat = {
+                    "SeatNumber": ids[x],
+                    "IsOccupied": @Json.Serialize(true)
+                };
+
+                seats.push(seat);
+            }
+
+            var airingMovie = {
+                "Id" : @Model.Id
+            }
+
             var reservation = {
-                "SeatNumbers": ids,
-                "AiringMovieId": @Model.Id,
+                "Seats": seats,
+                "AiringMovie": airingMovie,
                 "MailAddress": mailAddress
             }
             if (confirm('Are you sure your e-mail address is ' +

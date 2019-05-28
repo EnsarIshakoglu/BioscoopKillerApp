@@ -10,5 +10,6 @@ namespace BioscoopKillerApp.Models
     {
         public Movie Movie { get; set; }
         public IEnumerable<AiringMovie> AiringMovies { get; set; }
+        public IEnumerable<Review> Reviews { get; set; }
     }
 }

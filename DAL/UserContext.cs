@@ -33,13 +33,10 @@ namespace DAL
                 {
                     loginSuccessful = true;
                 }
-
-                connection.Close();
             }
 
             return loginSuccessful;
         }
-
         public IEnumerable<string> GetUserRoles(User user)
         {
             var roles = new List<string>();
@@ -58,8 +55,6 @@ namespace DAL
                 {
                     roles.Add(reader["RoleName"].ToString());
                 }
-
-                connection.Close();
             }
 
             return roles;
@@ -82,8 +77,6 @@ namespace DAL
                 cmd.Parameters.AddWithValue("@Surname", user.SurName);
 
                 updated = cmd.ExecuteNonQuery();
-
-                connection.Close();
             }
 
             if (updated != 0)
@@ -113,8 +106,6 @@ namespace DAL
                 {
                     emailInUse = true;
                 }
-
-                connection.Close();
             }
 
             return emailInUse;
@@ -145,8 +136,6 @@ namespace DAL
                         Email = email
                     };
                 }
-
-                connection.Close();
             }
 
             return user;
@@ -164,8 +153,6 @@ namespace DAL
                 cmd.Parameters.AddWithValue("@RoleName", roleName);
 
                 cmd.ExecuteNonQuery();
-
-                connection.Close();
             }
         }
     }
