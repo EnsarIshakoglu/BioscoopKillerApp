@@ -125,7 +125,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <h4>AVAILABLE TIMES:</h4>
                             @foreach (var airingMovie in @Model.AiringMovies)
                             {
-                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.Value.Date.ToShortDateString() @airingMovie.AiringTime.Value.ToShortTimeString() </button></p>
+                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.GetValueOrDefault().Date.ToShortDateString() @airingMovie.AiringTime.GetValueOrDefault().ToShortTimeString() </button></p>
                             }
 
                         </div>
@@ -147,7 +147,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </div>
                         </div>
                         <!-- comments-section-ends -->
-                        @*IF USER IS AUTHORIZED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*@
                         @if (User.Identity.IsAuthenticated)
                         {
                             var sid = User.Claims.First(c => c.Type.Equals(ClaimTypes.Sid)).Value;
@@ -162,8 +161,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <div class="blog-form">
                                     <form>
                                         <input type="text" class="text" value="@User.Identity.Name" disabled="disabled">
-                                        <input type="text" class="text" id="reviewTitle" placeholder="Subject">
-                                        <textarea id="reviewText" placeholder="Review"></textarea>
+                                        <input type="text" class="text" id="reviewTitle" maxlength="100" placeholder="Subject">
+                                        <textarea id="reviewText" placeholder="Review" maxlength="2000" ></textarea>
                                         <input type="button" id="postReview" value="POST">
                                     </form>
                                 </div>
@@ -246,7 +245,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             success: function(result) {
                 console.log("Success");
 
-                if (result.validationMessage !== "") {
+                if (result.validationMessage != null) {
                     alert(result.validationMessage);
                 }
 

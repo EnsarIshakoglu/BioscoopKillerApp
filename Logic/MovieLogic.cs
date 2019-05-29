@@ -10,7 +10,10 @@ namespace Logic
     public class MovieLogic
     {
         private readonly MovieRepo _movieRepo = new MovieRepo(new MovieContext());
+
         private readonly RoomLogic _roomLogic = new RoomLogic();
+        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
         public IEnumerable<Movie> GetAllMovies()
         {
@@ -52,6 +55,21 @@ namespace Logic
         public bool CheckIfMovieExists(Movie movie)
         {
             return _movieRepo.CheckIfMovieExists(movie);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
+        {
+            return _airingMovieLogic.GetAiringMoviesFromMovie(movie);
+        }
+
+        public IEnumerable<Review> GetAllReviewsFromMovie(Movie movie)
+        {
+            return _reviewLogic.GetAllReviewsFromMovie(movie);
+        }
+
+        public bool TryToAddAiring(Movie movie, DateTime date, string selectedRoomType)
+        {
+            return _airingMovieLogic.TryToAddAiring(movie, date, selectedRoomType);
         }
     }
 }

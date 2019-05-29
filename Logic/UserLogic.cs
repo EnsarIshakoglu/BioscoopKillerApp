@@ -11,6 +11,7 @@ namespace Logic
     public class UserLogic
     {
         private readonly UserRepo _userRepo = new UserRepo(new UserContext());
+        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
         public bool Login(User user)
         {
@@ -51,6 +52,11 @@ namespace Logic
             }
 
             return user;
+        }
+
+        public void SaveReview(Review review)
+        {
+            _reviewLogic.SaveReview(review);
         }
     }
 }

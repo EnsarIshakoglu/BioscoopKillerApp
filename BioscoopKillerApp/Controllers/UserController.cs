@@ -21,7 +21,6 @@ namespace BioscoopKillerApp.Controllers
     public class UserController : Controller
     {
         private readonly UserLogic _userLogic = new UserLogic();
-        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
         private readonly PasswordHasher<User> _hasher = new PasswordHasher<User>();
 
         public IActionResult LogIn()
@@ -94,9 +93,12 @@ namespace BioscoopKillerApp.Controllers
         [HttpPost]
         public IActionResult PostReview([FromBody]Review review)
         {
-            if (!ModelState.IsValid) return new JsonResult(new { validationMessage = $"Error creating review, please note that review subject (min 6 and max 100 chars long) and review text (min 6 and max 2000 chars long) are required to post a review." });
+            if (!(review.ReviewText.Length >= 6 && review.ReviewTitle.Length >= 6))
+            {
+                return new JsonResult(new { validationMessage = $"Error creating review, please note that review subject (min 6 and max 100 chars long) and review text (min 6 and max 2000 chars long) are required to post a review." });
+            }
 
-            _reviewLogic.SaveReview(review);
+            _userLogic.SaveReview(review);
 
             return new JsonResult(new { message = $"Saved review!" });
         }

@@ -13,8 +13,6 @@ namespace BioscoopKillerApp.Controllers
     public class MovieController : Controller
     {
         private readonly MovieLogic _movieLogic = new MovieLogic();
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
-        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
         public IActionResult Index()
         {
@@ -30,9 +28,9 @@ namespace BioscoopKillerApp.Controllers
         {
             var movieDetails = new MovieDetailViewModel
             {
-                AiringMovies = _airingMovieLogic.GetAiringMoviesFromMovie(movie),
+                AiringMovies = _movieLogic.GetAiringMoviesFromMovie(movie),
                 Movie = _movieLogic.GetMovieById(movie.Id.GetValueOrDefault()),
-                Reviews = _reviewLogic.GetAllReviewsFromMovie(movie)
+                Reviews = _movieLogic.GetAllReviewsFromMovie(movie)
             };
 
             foreach (var airingMovie in movieDetails.AiringMovies)
@@ -94,7 +92,7 @@ namespace BioscoopKillerApp.Controllers
                 var addedAiringMovies = 0;
                 for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
-                    var successful = _airingMovieLogic.TryToAddAiring(movie, date, addAiringMovieViewModel.SelectedRoomType);
+                    var successful = _movieLogic.TryToAddAiring(movie, date, addAiringMovieViewModel.SelectedRoomType);
                     if (successful) addedAiringMovies++;
                 }
 
