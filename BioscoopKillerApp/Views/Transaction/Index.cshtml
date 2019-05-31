@@ -206,7 +206,7 @@
 
                         alert(result.message);
 
-                        refreshPage();
+                        window.location = result.url;
                     },
                     error: function () {
                         console.log("Error");
@@ -222,21 +222,11 @@
         }
 
         function refreshPage() {
-            var airingId = @Model.Id;
-            var movieId = @Model.Movie.Id;
-
-            var airing = {
-                Id: airingId,
-                Movie: {
-                    Id: movieId
-                }
-            };
             @{
-                var movieIdFromModel = Model.Movie.Id;
                 var airingMovieIdFromModel = Model.Id;
             }
-            console.log(airing);
-            window.location.href = '@Url.Action("Index", "Transaction", new { airingMovieId = airingMovieIdFromModel, movieId = movieIdFromModel })';
+
+            window.location.href = '@Url.Action("Index", "Transaction", new { airingMovie = airingMovieIdFromModel})';
         }
 
         function createseating(htmlCode) {

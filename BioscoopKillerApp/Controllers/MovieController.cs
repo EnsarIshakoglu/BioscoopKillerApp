@@ -22,8 +22,14 @@ namespace BioscoopKillerApp.Controllers
         }
         public IActionResult AllMovies()
         {
-            return View(_movieLogic.GetAllMovies());
+            var model = new AllMoviesViewModel
+            {
+                Movies = _movieLogic.GetAllMovies(),
+                Genres = _movieLogic.GetAllGenres()
+            };
 
+
+            return View(model);
         }
 
         public IActionResult MovieDetails(Movie movie)
@@ -50,6 +56,7 @@ namespace BioscoopKillerApp.Controllers
         {
             return View("AddPage", new Movie());
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddAiringMovie()
@@ -103,6 +110,15 @@ namespace BioscoopKillerApp.Controllers
 
             return new JsonResult(new {message = returnMessage});
         }
+
+        [HttpPost]
+        public IActionResult GetMoviesByGenre([FromBody]Movie movie)
+        {
+            var movies = _movieLogic.GetMoviesByGenre(movie.Genre);
+
+            return PartialView("ShowMovies", movies);
+        }
+
         [HttpPost]
         public IActionResult GetAiringsFromMovieByDate([FromBody] FilterAiringsViewModel model)
         {
@@ -110,15 +126,7 @@ namespace BioscoopKillerApp.Controllers
 
             var airings = _movieLogic.GetAiringsFromMovieByDate(model.Movie, date);
 
-            return Json(airings);
-        }
-
-        [HttpPost]
-        public IActionResult GetAiringButtonPartialView([FromBody] AiringMovie model)
-        {
-            var airing = _movieLogic.GetAiringById(model);
-
-            return PartialView("AiringButton", airing);
+            return PartialView("AiringButtons", airings);
         }
     }
 }

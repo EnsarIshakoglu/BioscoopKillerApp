@@ -26,7 +26,7 @@ namespace BioscoopKillerApp.Controllers
         {
             _transactionLogic.SaveReservation(reservation);
 
-            return new JsonResult(new { message = $"Created a reservation for {reservation.Seats.Length} seat(s) with the e-mail address {reservation.MailAddress}!"});
+            return new JsonResult(new { message = $"Created a reservation for {reservation.Seats.Length} seat(s) with the e-mail address {reservation.MailAddress}!", url = Url.Action("Index", "Transaction", reservation.AiringMovie) });
         }
 
         public IActionResult Index(AiringMovie model)

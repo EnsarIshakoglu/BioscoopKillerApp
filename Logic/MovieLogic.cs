@@ -9,7 +9,7 @@ namespace Logic
 {
     public class MovieLogic
     {
-        private readonly MovieRepo _movieRepo = new MovieRepo(new MovieContext());
+        private readonly MovieRepo _repo = new MovieRepo(new MovieContext());
 
         private readonly RoomLogic _roomLogic = new RoomLogic();
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
@@ -17,7 +17,7 @@ namespace Logic
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            List<Movie> movies = _movieRepo.GetAllMovies().ToList();
+            List<Movie> movies = _repo.GetAllMovies().ToList();
 
             return movies;
         }
@@ -44,17 +44,17 @@ namespace Logic
 
         public Movie GetMovieById(int movieId)
         {
-            return _movieRepo.GetMovieById(movieId);
+            return _repo.GetMovieById(movieId);
         }
 
         public void AddMovie(Movie movie)
         {
-            _movieRepo.AddMovie(movie);
+            _repo.AddMovie(movie);
         }
 
         public bool CheckIfMovieExists(Movie movie)
         {
-            return _movieRepo.CheckIfMovieExists(movie);
+            return _repo.CheckIfMovieExists(movie);
         }
 
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
@@ -93,6 +93,16 @@ namespace Logic
         public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
         {
             return _airingMovieLogic.GetAiringsFromMovieStartingFromDate(movie, date);
+        }
+
+        public IEnumerable<Movie> GetMoviesByGenre(string category)
+        {
+            return _repo.GetMoviesByGenre(category);
+        }
+
+        public IEnumerable<string> GetAllGenres()
+        {
+            return _repo.GetAllGenres();
         }
     }
 }

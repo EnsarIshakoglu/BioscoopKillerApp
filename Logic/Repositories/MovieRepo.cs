@@ -33,5 +33,15 @@ namespace Logic.Repositories
         {
             return _movieContext.CheckIfMovieExists(movie);
         }
+
+        public IEnumerable<Movie> GetMoviesByGenre(string category)
+        {
+            return _movieContext.GetMoviesByGenre(category);
+        }
+
+        public IEnumerable<string> GetAllGenres()
+        {
+            return _movieContext.GetAllGenres();
+        }
     }
 }

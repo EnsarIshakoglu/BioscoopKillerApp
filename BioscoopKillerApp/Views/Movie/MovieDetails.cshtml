@@ -44,135 +44,130 @@
 <body style="">
 
     <!-- header-section-starts -->
-    <div class="full">
+<div class="full">
 
-        <div class="main">
-            <div class="single-content">
+    <div class="main">
+        <div class="single-content">
 
-                <div class="reviews-section">
-                    <div class="col-md-9 reviews-grids">
-                        <div class="review">
-                            <div class="movie-pic">
-                                <a><img src=@Model.Movie.Poster alt=""></a>
-                            </div>
-                            <div class="review-info">
-                                <a class="span">@Model.Movie.Title</a>
-                                <div class="clearfix"></div>
-                                <div class="clearfix"></div>
-                                <p class="info">Actors:&nbsp;@string.Join(", ", @Model.Movie.Actors)</p>
-                                <p class="info">Genre:&nbsp;@string.Join(", ", @Model.Movie.Genre)</p>
-                                <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
-                            </div>
+            <div class="reviews-section">
+                <div class="col-md-9 reviews-grids">
+                    <div class="review">
+                        <div class="movie-pic">
+                            <a><img src=@Model.Movie.Poster alt=""></a>
+                        </div>
+                        <div class="review-info">
+                            <a class="span">@Model.Movie.Title</a>
                             <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <p class="info">Actors:&nbsp;@string.Join(", ", @Model.Movie.Actors)</p>
+                            <p class="info">Genre:&nbsp;@string.Join(", ", @Model.Movie.Genre)</p>
+                            <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
                         </div>
-                        <!---728x90--->
+                        <div class="clearfix"></div>
+                    </div>
+                    <!---728x90--->
 
-                        <div class="single">
-                        </div>
+                    <div class="single">
+                    </div>
 
-                        <div class="story-review">
-                            <h4>SYNOPSIS:</h4>
-                            <p>@Model.Movie.Plot</p>
-                        </div>
-                        <div class="story-review col-xl-12" style="border-top: 0;">
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <h4>AIRINGS:</h4>
-                                </div>
-                                <div class="col-xl-6">
-                                    @if (!Model.AiringMovies.Any())
-                                    {
-                                        <p style="font-size: 15px;">Sorry! We have no available airings for this movie!</p>
-                                    }
-                                    else
-                                    {
-                                        <select id="selectedDate">
-                                            <option value="" selected disabled hidden>Select date</option>
-                                            @foreach (var date in @Model.AiringMovies.GroupBy(a => a.AiringTime.Date).Where(a => a.Key.Date >= DateTime.Today.Date))
-                                            {
-                                                <option value="@date.Key.ToShortDateString()">@date.Key.ToShortDateString()</option>
-                                            }
-
-                                        </select>
-                                    }
-                                </div>
+                    <div class="story-review">
+                        <h4>SYNOPSIS:</h4>
+                        <p>@Model.Movie.Plot</p>
+                    </div>
+                    <div class="story-review col-xl-12" style="border-top: 0;">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <h4>AIRINGS:</h4>
                             </div>
-                            <p id="selectDateText">Please select a date to view airings.</p>
-                            <div class="row" id="airingButtons">
-
-                            </div>
-
-
-
-                        </div>
-                        <!-- comments-section-starts -->
-                        <!---728x90--->
-
-                        <div class="comments-section" style="border-bottom: 3px solid #000">
-                            <div class="comments-section-head">
-                                <div class="comments-section-head-text">
-                                    <h3>Comments</h3>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="comments-section-grids">
-                                @foreach (var modelReview in Model.Reviews)
+                            <div class="col-xl-6">
+                                @if (!Model.AiringMovies.Any())
                                 {
-                                    @Html.Partial("Comment", modelReview);
+                                    <p style="font-size: 15px;">Sorry! We have no available airings for this movie!</p>
+                                }
+                                else
+                                {
+                                    <select id="selectedDate">
+                                        <option value="" selected disabled hidden>Select date</option>
+                                        @foreach (var date in @Model.AiringMovies.GroupBy(a => a.AiringTime.Date).Where(a => a.Key.Date >= DateTime.Today.Date))
+                                        {
+                                            <option value="@date.Key.ToShortDateString()">@date.Key.ToShortDateString()</option>
+                                        }
+
+                                    </select>
                                 }
                             </div>
                         </div>
-                        <!-- comments-section-ends -->
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            var sid = User.Claims.First(c => c.Type.Equals(ClaimTypes.Sid)).Value;
-                            int.TryParse(sid, out userId);
+                        <p id="selectDateText">Please select a date to view airings.</p>
+                        <div class="row" id="airingButtons">
 
-                            <div class="reply-section">
-                                <div class="reply-section-head">
-                                    <div class="reply-section-head-text">
-                                        <h3>Leave Reply</h3>
-                                    </div>
-                                </div>
-                                <div class="blog-form">
-                                    <form>
-                                        <input type="text" class="text" value="@User.Identity.Name" disabled="disabled">
-                                        <input type="text" class="text" id="reviewTitle" maxlength="100" placeholder="Subject">
-                                        <textarea id="reviewText" placeholder="Review" maxlength="2000"></textarea>
-                                        <input type="button" id="postReview" value="POST">
-                                    </form>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="reply-section">
-                                <div class="reply-section-head">
-                                    <div class="reply-section-head-text">
-                                        <a href="@Url.Action("LogIn", "User")"><i>Login to leave a reply</i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
+                        </div>
 
 
-                        <div class="clearfix"></div>
+
                     </div>
+                    <!-- comments-section-starts -->
+                    <!---728x90--->
+
+                    <div class="comments-section" style="border-bottom: 3px solid #000">
+                        <div class="comments-section-head">
+                            <div class="comments-section-head-text">
+                                <h3>Comments</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="comments-section-grids">
+                            @foreach (var modelReview in Model.Reviews)
+                            {
+                                @Html.Partial("Comment", modelReview);
+                            }
+                        </div>
+                    </div>
+                    <!-- comments-section-ends -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var sid = User.Claims.First(c => c.Type.Equals(ClaimTypes.Sid)).Value;
+                        int.TryParse(sid, out userId);
+
+                        <div class="reply-section">
+                            <div class="reply-section-head">
+                                <div class="reply-section-head-text">
+                                    <h3>Leave Reply</h3>
+                                </div>
+                            </div>
+                            <div class="blog-form">
+                                <form>
+                                    <input type="text" class="text" value="@User.Identity.Name" disabled="disabled">
+                                    <input type="text" class="text" id="reviewTitle" maxlength="100" placeholder="Subject">
+                                    <textarea id="reviewText" placeholder="Review" maxlength="2000"></textarea>
+                                    <input type="button" id="postReview" value="POST">
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="reply-section">
+                            <div class="reply-section-head">
+                                <div class="reply-section-head-text">
+                                    <a href="@Url.Action("LogIn", "User")"><i>Login to leave a reply</i></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    <div class="clearfix"></div>
                 </div>
-
-                <!---728x90--->
-
-
             </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
 
-    <div id="_vdo_ads_player_ai_"></div>
-    <script id="_vdo_ads_deps_5654_" src="https://vdo.ai/core/dependencies_bs/vdo.min.js"></script>
-    <script id="_vdo_ads_sdk_5654_" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script id="_vdo_ads_frame_5654_" src="https://vdo.ai/core/w3layouts//adframe.js?k=44">
-    </script>
+            <!---728x90--->
+
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
 </body>
 </html>
 @section Scripts {
@@ -278,48 +273,18 @@
                 dataType: "json",
                 success: function (result) {
                     console.log("Success!");
-                    ChangeAiringButtons(result);
+                    console.log(result);
+                    $("#airingButtons").html(result.responseText);
+                    $("#airingButtons").show();
 
                 },
-                error: function () {
+                error: function (result) {
                     console.log("Error");
+                    console.log(result);
+                    $("#airingButtons").html(result.responseText);
+                    $("#airingButtons").show();
                 }
             });
         });
-    </script>
-    <script>
-        function ChangeAiringButtons(airings) {
-            $("#airingButtons").html("");
-            $("#selectDateText").html("");
-            $("#airingButtons").hide();
-
-            airings.forEach(function (model) {
-                console.log(model);
-                var verificationToken = $("input[name='__RequestVerificationToken']").val();
-
-                $.ajax({
-                    url: '@Url.Action("GetAiringButtonPartialView", "Movie")',
-                    data: JSON.stringify(model),
-                    type: "POST",
-                    headers: {
-                        "RequestVerificationToken": verificationToken
-                    },
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (result) {
-                        console.log("Success!");
-                        console.log(result.responseText);
-                        $("#airingButtons").append(result.responseText);
-                    },
-                    error: function (result) {
-                        console.log("Error");
-                        console.log(result.responseText);
-                        $("#airingButtons").append(result.responseText);
-                    }
-                });
-
-            });
-            $("#airingButtons").show();
-        }
     </script>
 }

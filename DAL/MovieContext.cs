@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -95,6 +96,26 @@ namespace DAL
                 sqlCommand.Parameters.AddWithValue("@MoviePrice", movie.MoviePrice);
                 sqlCommand.ExecuteNonQuery();
             }
+
+            AddCategoriesToMovie(movie);
+        }
+
+        private void AddCategoriesToMovie(Movie movie)
+        {
+            var categories = movie.Genre.Replace(" ", string.Empty).Split(',').ToList();
+
+            foreach (var category in categories)
+            using (SqlConnection connection = new SqlConnection(DbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand = new SqlCommand($"AddCategoryToMovie", connection) { CommandType = CommandType.StoredProcedure };
+
+                sqlCommand.Parameters.AddWithValue("@MovieId", movie.Id);
+                sqlCommand.Parameters.AddWithValue("@Category", category);
+
+                sqlCommand.ExecuteNonQuery();
+            }
         }
 
         public bool CheckIfMovieExists(Movie movie)
@@ -109,6 +130,60 @@ namespace DAL
             }
 
             return movieExists;
+        }
+
+        public IEnumerable<Movie> GetMoviesByGenre(string category)
+        {
+            var movies = new List<Movie>();
+
+            using (var connection = new SqlConnection(DbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetMoviesByGenre", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@Category", category));
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    movies.Add(new Movie
+                    {
+                        Id = (int)reader["ID"],
+                        Title = reader["Name"]?.ToString(),
+                        PublishedYear = (int)reader["PublishedYear"]
+                    });
+                }
+            }
+
+            foreach (var movie in movies)
+            {
+                _apiHelper.AddApiDataToMovie(movie).Wait();
+            }
+
+            return movies;
+        }
+
+        public IEnumerable<string> GetAllGenres()
+        {
+            var genres = new List<string>();
+
+            using (var connection = new SqlConnection(DbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetAllGenres", connection) { CommandType = CommandType.StoredProcedure };
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    genres.Add(reader["Name"]?.ToString());
+                }
+            }
+
+            return genres;
         }
     }
 }
