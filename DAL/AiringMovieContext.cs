@@ -13,7 +13,7 @@ namespace DAL
     {
         private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
             var airingMovies = new List<AiringMovie>();
 
@@ -43,7 +43,7 @@ namespace DAL
             return airingMovies;
         }
 
-        public AiringMovie GetAiringMovieById(int id)
+        public AiringMovie GetAiringById(int id)
         {
             var airingMovie = new AiringMovie();
 
@@ -64,7 +64,11 @@ namespace DAL
                         Id = (int)reader["AiringID"],
                         AiringTime = (DateTime)reader["AiringTime"],
                         Room = new Room((int)reader["RoomNumber"], reader["RoomType"].ToString(), (int)reader["AvailablePlaces"], (int)reader["SeatsPerRow"]),
-                        Price = (decimal)reader["Price"]
+                        Price = (decimal)reader["Price"],
+                        Movie = new Movie
+                        {
+                            Id = (int)reader["MovieId"]
+                        }
                     };
                 }
             }
@@ -72,7 +76,7 @@ namespace DAL
             return airingMovie;
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
+        public IEnumerable<AiringMovie> GetAiringsByRoomType(string roomType)
         {
             var airingMovies = new List<AiringMovie>();
 
@@ -107,7 +111,7 @@ namespace DAL
             return airingMovies;
         }
 
-        public void AddAiringMovie(AiringMovie airingMovie)
+        public void AddAiring(AiringMovie airingMovie)
         {
             using (var connection = new SqlConnection(_dbConnectionString))
             {
@@ -123,7 +127,7 @@ namespace DAL
             }
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room)
+        public IEnumerable<AiringMovie> GetAiringsFromRoom(Room room)
         {
             var airingMovies = new List<AiringMovie>();
 
@@ -160,7 +164,7 @@ namespace DAL
             return airingMovies;
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date)
+        public IEnumerable<AiringMovie> GetAiringsFromRoomByDate(Room room, DateTime date)
         {
             var airingMovies = new List<AiringMovie>();
 
@@ -196,6 +200,82 @@ namespace DAL
             }
 
             return airingMovies;
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
+        {
+            var airings = new List<AiringMovie>();
+
+            using (var connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetAiringsFromMovieByDate", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@MovieId", movie.Id));
+                cmd.Parameters.Add(new SqlParameter("@Date", date.Date));
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    airings.Add(new AiringMovie
+                    {
+                        Id = (int)reader["AiringMovieId"],
+                        AiringTime = (DateTime)reader["AiringTime"],
+                        Movie = new Movie
+                        {
+                            Title = reader["MovieName"]?.ToString(),
+                            Id = (int)reader["MovieId"]
+                        },
+                        Room = new Room
+                        {
+                            Number = (int)reader["RoomId"],
+                            Type = reader["RoomType"].ToString()
+                        }
+                    });
+                }
+            }
+
+            return airings;
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
+        {
+            var airings = new List<AiringMovie>();
+
+            using (var connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetAiringsFromMovieStartingFromDate", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@MovieId", movie.Id));
+                cmd.Parameters.Add(new SqlParameter("@Date", date.Date));
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    airings.Add(new AiringMovie
+                    {
+                        Id = (int)reader["AiringMovieId"],
+                        AiringTime = (DateTime)reader["AiringTime"],
+                        Movie = new Movie
+                        {
+                            Title = reader["MovieName"]?.ToString(),
+                            Id = (int)reader["MovieId"]
+                        },
+                        Room = new Room
+                        {
+                            Number = (int)reader["RoomId"],
+                            Type = reader["RoomType"].ToString()
+                        }
+                    });
+                }
+            }
+
+            return airings;
         }
     }
 }

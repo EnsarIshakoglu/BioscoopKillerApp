@@ -1,0 +1,40 @@
+﻿@model Models.AiringMovie
+
+<p><button type="button" id="@Model.Id" style="margin: 5px;" onclick="goToReservationPage(@Model.Id)" class="btn btn-danger">@Model.AiringTime.Date.ToShortDateString() @Model.AiringTime.ToShortTimeString() @Model.Room.Type</button></p>
+
+<script>
+    function goToReservationPage(airingMovieId) {
+
+        var airing = {
+            "Id": airingMovieId
+        }
+
+        console.log(airing);
+
+        var controllerPath = '@Url.Action("GoToReservationPage", "Transaction")';
+
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: controllerPath,
+            data: JSON.stringify(airing),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                if (result.response === 'Redirect') {
+                    console.log(result.url);
+                    window.location = result.url;
+                }
+            },
+            error: function (result) {
+                console.log("Error");
+                console.log(result.url);
+            }
+        });
+    }
+</script>
+

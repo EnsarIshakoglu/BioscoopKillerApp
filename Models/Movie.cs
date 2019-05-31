@@ -8,7 +8,7 @@ namespace Models
     {
         [Range(5, 15, ErrorMessage = "Range should be between 5 en 15 euro's!")]
         public decimal MoviePrice { get; set; }
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Runtime { get; set; }
         public string Genre { get; set; }
         [Range(1950, 2025, ErrorMessage = "Range should be between 1950 en 2025!")]

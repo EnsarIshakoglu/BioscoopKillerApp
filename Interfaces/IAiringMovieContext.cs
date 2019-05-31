@@ -7,11 +7,13 @@ namespace Interfaces
 {
     public interface IAiringMovieContext
     {
-        IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie);
-        AiringMovie GetAiringMovieById(int id);
-        IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType);
-        void AddAiringMovie(AiringMovie airingMovie);
-        IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room);
-        IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date);
+        IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie);
+        AiringMovie GetAiringById(int id);
+        IEnumerable<AiringMovie> GetAiringsByRoomType(string roomType);
+        void AddAiring(AiringMovie airingMovie);
+        IEnumerable<AiringMovie> GetAiringsFromRoom(Room room);
+        IEnumerable<AiringMovie> GetAiringsFromRoomByDate(Room room, DateTime date);
+        IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date);
+        IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date);
     }
 }

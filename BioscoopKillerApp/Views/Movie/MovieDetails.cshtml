@@ -12,16 +12,17 @@
 
 <html>
 <head>
-    <style class="vjs-styles-defaults">
-        .vdo-js {
-            width: 300px;
-            height: 150px;
-        }
+    @*
+        <style class="vjs-styles-defaults">
+            .vdo-js {
+                width: 300px;
+                height: 150px;
+            }
 
-        .vjs-fluid {
-            padding-top: 56.25%
-        }
-    </style>
+            .vjs-fluid {
+                padding-top: 56.25%
+            }
+        </style>*@
     <title>Cinema A Entertainment Category Flat Bootstrap Responsive Website Template | Single :: w3layouts</title>
     @*<link href="~/lib/bootstrap/dist/css/MovieDetail/movie-detail-bootstrap.css" rel="stylesheet" type="text/css">*@
     <!-- Custom Theme files -->
@@ -32,8 +33,7 @@
     <!-- Custom Theme files -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="keywords" content="Cinema Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design">
+    <meta name="keywords" content="">
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!--webfont-->
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
@@ -42,53 +42,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-113932176-8"></script>
 </head>
 <body style="">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//m.servedby-buysellads.com/monetization.js" type="text/javascript"></script>
-    <script>
-        (function () {
-            if (typeof _bsa !== 'undefined' && _bsa) {
-                // format, zoneKey, segment:value, options
-                _bsa.init('flexbar', 'CKYI627U', 'placement:w3layoutscom');
-            }
-        })();
-    </script>
-    <script>
-        (function () {
-            if (typeof _bsa !== 'undefined' && _bsa) {
-                // format, zoneKey, segment:value, options
-                _bsa.init('fancybar', 'CKYDL2JN', 'placement:demo');
-            }
-        })();
-    </script>
-    <script>
-        (function () {
-            if (typeof _bsa !== 'undefined' && _bsa) {
-                // format, zoneKey, segment:value, options
-                _bsa.init('stickybox', 'CKYI653J', 'placement:w3layoutscom');
-            }
-        })();
-    </script>
-    <script>
-        (function (v, d, o, ai) { ai = d.createElement("script"); ai.defer = true; ai.async = true; ai.src = v.location.protocol + o; d.head.appendChild(ai); })(window, document, "//vdo.ai/core/w3layouts/vdo.ai.js");
-    </script><!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-125810435-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-125810435-1');
-    </script>
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date(); a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-        ga('create', 'UA-30027142-1', 'w3layouts.com');
-        ga('send', 'pageview');
-    </script>
 
     <!-- header-section-starts -->
     <div class="full">
@@ -121,12 +74,35 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <h4>SYNOPSIS:</h4>
                             <p>@Model.Movie.Plot</p>
                         </div>
-                        <div class="story-review" style="border-top: 0;">
-                            <h4>AVAILABLE TIMES:</h4>
-                            @foreach (var airingMovie in @Model.AiringMovies)
-                            {
-                                <p><button type="button" style="margin: 5px;" onclick="location.href='@Url.Action("Index","Transaction", new {airingMovieId = airingMovie.Id, movieId = Model.Movie.Id})'" class="btn btn-danger">@airingMovie.AiringTime.GetValueOrDefault().Date.ToShortDateString() @airingMovie.AiringTime.GetValueOrDefault().ToShortTimeString() </button></p>
-                            }
+                        <div class="story-review col-xl-12" style="border-top: 0;">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <h4>AIRINGS:</h4>
+                                </div>
+                                <div class="col-xl-6">
+                                    @if (!Model.AiringMovies.Any())
+                                    {
+                                        <p style="font-size: 15px;">Sorry! We have no available airings for this movie!</p>
+                                    }
+                                    else
+                                    {
+                                        <select id="selectedDate">
+                                            <option value="" selected disabled hidden>Select date</option>
+                                            @foreach (var date in @Model.AiringMovies.GroupBy(a => a.AiringTime.Date).Where(a => a.Key.Date >= DateTime.Today.Date))
+                                            {
+                                                <option value="@date.Key.ToShortDateString()">@date.Key.ToShortDateString()</option>
+                                            }
+
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <p id="selectDateText">Please select a date to view airings.</p>
+                            <div class="row" id="airingButtons">
+
+                            </div>
+
+
 
                         </div>
                         <!-- comments-section-starts -->
@@ -162,7 +138,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     <form>
                                         <input type="text" class="text" value="@User.Identity.Name" disabled="disabled">
                                         <input type="text" class="text" id="reviewTitle" maxlength="100" placeholder="Subject">
-                                        <textarea id="reviewText" placeholder="Review" maxlength="2000" ></textarea>
+                                        <textarea id="reviewText" placeholder="Review" maxlength="2000"></textarea>
                                         <input type="button" id="postReview" value="POST">
                                     </form>
                                 </div>
@@ -201,6 +177,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </html>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+     <script>
+         $( document ).ready(function() {
+             @if (!Model.AiringMovies.Any())
+             {
+                 <text>  
+                     $("#selectDateText").hide();
+                 </text>
+             }
+         });
+     </script>
     <script>
         $(function () {
             $('#postReview').on('click', postReview);
@@ -208,61 +194,132 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </script>
 
     <script>
-    function postReview() {
-        var reviewText = document.getElementById('reviewText').value;
-        var reviewTitle = document.getElementById('reviewTitle').value;
+        function postReview() {
+            var reviewText = document.getElementById('reviewText').value;
+            var reviewTitle = document.getElementById('reviewTitle').value;
 
-        console.log(reviewText);
+            console.log(reviewText);
 
-        var controllerPath = '@Url.Action("PostReview", "User")';
+            var controllerPath = '@Url.Action("PostReview", "User")';
 
-        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
 
-        var user = {
-            'Id': @userId
-        };
+            var user = {
+                'Id': @userId
+            };
 
-        var movie = {
-            'Id' : @Model.Movie.Id
-        }
-
-        var review = {
-            'ReviewText': reviewText,
-            'ReviewTitle' : reviewTitle,
-            'Movie': movie,
-            'User' : user
-        };
-
-        $.ajax({
-            url: controllerPath,
-            data: JSON.stringify(review),
-            type: "POST",
-            headers: {
-                "RequestVerificationToken": verificationToken
-            },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(result) {
-                console.log("Success");
-
-                if (result.validationMessage != null) {
-                    alert(result.validationMessage);
-                }
-
-                refreshPage();
-            },
-            error: function () {
-                console.log("Error");
-
-                alert('Error creating review, please try again!');
+            var movie = {
+                'Id' : @Model.Movie.Id
             }
-        });
-    }
+
+            var review = {
+                'ReviewText': reviewText,
+                'ReviewTitle' : reviewTitle,
+                'Movie': movie,
+                'User' : user
+            };
+
+            $.ajax({
+                url: controllerPath,
+                data: JSON.stringify(review),
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": verificationToken
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result) {
+                    console.log("Success");
+
+                    if (result.validationMessage != null) {
+                        alert(result.validationMessage);
+                    }
+
+                    refreshPage();
+                },
+                error: function () {
+                    console.log("Error");
+
+                    alert('Error creating review, please try again!');
+                }
+            });
+        }
     </script>
 
     <script>
-    function refreshPage() {
-        window.location.href = '@Url.Action("MovieDetails", "Movie", Model.Movie)';
-    }
+        function refreshPage() {
+            window.location.href = '@Url.Action("MovieDetails", "Movie", Model.Movie)';
+        }
+    </script>
+
+    <script>
+        $('#selectedDate').change(function () {
+            $("#selectDateText").hide();
+
+            var selectedDate = $("#selectedDate option:selected").val();
+            console.log(selectedDate);
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+            var model = {
+                "Movie" : {
+                    "Id" : @Model.Movie.Id
+                },
+                "DateString" : selectedDate
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetAiringsFromMovieByDate", "Movie")',
+                data: JSON.stringify(model),
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": verificationToken
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    console.log("Success!");
+                    ChangeAiringButtons(result);
+
+                },
+                error: function () {
+                    console.log("Error");
+                }
+            });
+        });
+    </script>
+    <script>
+        function ChangeAiringButtons(airings) {
+            $("#airingButtons").html("");
+            $("#selectDateText").html("");
+            $("#airingButtons").hide();
+
+            airings.forEach(function (model) {
+                console.log(model);
+                var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetAiringButtonPartialView", "Movie")',
+                    data: JSON.stringify(model),
+                    type: "POST",
+                    headers: {
+                        "RequestVerificationToken": verificationToken
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        console.log("Success!");
+                        console.log(result.responseText);
+                        $("#airingButtons").append(result.responseText);
+                    },
+                    error: function (result) {
+                        console.log("Error");
+                        console.log(result.responseText);
+                        $("#airingButtons").append(result.responseText);
+                    }
+                });
+
+            });
+            $("#airingButtons").show();
+        }
     </script>
 }

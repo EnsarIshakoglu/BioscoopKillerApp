@@ -15,13 +15,10 @@ namespace BioscoopKillerApp.Controllers
     {
         private readonly TransactionLogic _transactionLogic = new TransactionLogic();
 
-        [Route("/Transaction/Index/{airingMovieId}/{movieId}")]
-        public IActionResult Index(int airingMovieId, int movieId)
+        [HttpPost]
+        public IActionResult GoToReservationPage([FromBody] AiringMovie airing)
         {
-            var airingMovie = _transactionLogic.GetAiringMovieById(airingMovieId);
-            airingMovie.Movie = _transactionLogic.GetMovieById(movieId);
-
-            return View(airingMovie);
+            return new JsonResult(new { response = "Redirect", url = Url.Action("Index", "Transaction", airing)});
         }
 
         [HttpPost]
@@ -30,6 +27,13 @@ namespace BioscoopKillerApp.Controllers
             _transactionLogic.SaveReservation(reservation);
 
             return new JsonResult(new { message = $"Created a reservation for {reservation.Seats.Length} seat(s) with the e-mail address {reservation.MailAddress}!"});
+        }
+
+        public IActionResult Index(AiringMovie model)
+        {
+            var airing = _transactionLogic.GetAiringMovieById(model.Id);
+
+            return View("Index", airing);
         }
 
         public bool CheckIfValidEmail(string email)

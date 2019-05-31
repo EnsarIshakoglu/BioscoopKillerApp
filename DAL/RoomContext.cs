@@ -76,16 +76,16 @@ namespace DAL
                 {
                     airingMovies.Add(new AiringMovie
                     {
-                        AiringTime = reader["AiringTime"] as DateTime?,
-                        Id = reader["AiringMovieId"] as int?,
+                        AiringTime = (reader["AiringTime"] as DateTime?).GetValueOrDefault(),
+                        Id = (reader["AiringMovieId"] as int?).GetValueOrDefault(),
                         Movie = new Movie
                         {
                             Title = reader["MovieName"]?.ToString(),
-                            Id = reader["MovieId"] as int?
+                            Id = (reader["MovieId"] as int?).GetValueOrDefault()
                         },
                         Room = new Room
                         {
-                            Number = reader["RoomId"] as int?,
+                            Number = (reader["RoomId"] as int?).GetValueOrDefault(),
                             Type = reader["RoomType"]?.ToString()
                         }
                     });

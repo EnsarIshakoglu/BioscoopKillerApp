@@ -57,7 +57,7 @@ namespace Logic
             return _movieRepo.CheckIfMovieExists(movie);
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
             return _airingMovieLogic.GetAiringMoviesFromMovie(movie);
         }
@@ -70,6 +70,29 @@ namespace Logic
         public bool TryToAddAiring(Movie movie, DateTime date, string selectedRoomType)
         {
             return _airingMovieLogic.TryToAddAiring(movie, date, selectedRoomType);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
+        {
+            return _airingMovieLogic.GetAiringsFromMovieByDate(movie, date);
+        }
+
+        public AiringMovie GetAiringById(AiringMovie airing)
+        {
+            var toReturnAiring = _airingMovieLogic.GetAiringMovieById(airing.Id);
+            toReturnAiring.Movie = GetMovieById(airing.Movie.Id);
+
+            return toReturnAiring;
+        }
+        /// <summary>
+        /// Returns airings for given movie starting from given date.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
+        {
+            return _airingMovieLogic.GetAiringsFromMovieStartingFromDate(movie, date);
         }
     }
 }

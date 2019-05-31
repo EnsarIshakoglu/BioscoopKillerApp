@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using BioscoopKillerApp.Models;
+using BioscoopKillerApp.ViewModels;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +30,8 @@ namespace BioscoopKillerApp.Controllers
         {
             var movieDetails = new MovieDetailViewModel
             {
-                AiringMovies = _movieLogic.GetAiringMoviesFromMovie(movie),
-                Movie = _movieLogic.GetMovieById(movie.Id.GetValueOrDefault()),
+                AiringMovies = _movieLogic.GetAiringsFromMovieStartingFromDate(movie, DateTime.Today),
+                Movie = _movieLogic.GetMovieById(movie.Id),
                 Reviews = _movieLogic.GetAllReviewsFromMovie(movie)
             };
 
@@ -100,6 +102,23 @@ namespace BioscoopKillerApp.Controllers
             }
 
             return new JsonResult(new {message = returnMessage});
+        }
+        [HttpPost]
+        public IActionResult GetAiringsFromMovieByDate([FromBody] FilterAiringsViewModel model)
+        {
+            DateTime.TryParse(model.DateString, out var date);
+
+            var airings = _movieLogic.GetAiringsFromMovieByDate(model.Movie, date);
+
+            return Json(airings);
+        }
+
+        [HttpPost]
+        public IActionResult GetAiringButtonPartialView([FromBody] AiringMovie model)
+        {
+            var airing = _movieLogic.GetAiringById(model);
+
+            return PartialView("AiringButton", airing);
         }
     }
 }

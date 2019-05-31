@@ -16,33 +16,43 @@ namespace Logic.Repositories
             _context = context;
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
-            return _context.GetAiringMoviesFromMovie(movie);
+            return _context.GetAiringsFromMovie(movie);
         }
 
-        public AiringMovie GetAiringMovieById(int id)
+        public AiringMovie GetAiringById(int id)
         {
-            return _context.GetAiringMovieById(id);
+            return _context.GetAiringById(id);
         }
-        public IEnumerable<AiringMovie> GetAiringMoviesByRoomType(string roomType)
+        public IEnumerable<AiringMovie> GetAiringsByRoomType(string roomType)
         {
-            return _context.GetAiringMoviesByRoomType(roomType);
-        }
-
-        public void AddAiringMovie(AiringMovie airingMovie)
-        {
-            _context.AddAiringMovie(airingMovie);
+            return _context.GetAiringsByRoomType(roomType);
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromRoom(Room room)
+        public void AddAiring(AiringMovie airingMovie)
         {
-            return _context.GetAiringMoviesFromRoom(room);
+            _context.AddAiring(airingMovie);
         }
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromRoomByDate(Room room, DateTime date)
+        public IEnumerable<AiringMovie> GetAiringsFromRoom(Room room)
         {
-            return _context.GetAiringMoviesFromRoomByDate(room, date);
+            return _context.GetAiringsFromRoom(room);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromRoomByDate(Room room, DateTime date)
+        {
+            return _context.GetAiringsFromRoomByDate(room, date);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
+        {
+            return _context.GetAiringsFromMovieByDate(movie, date);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
+        {
+            return _context.GetAiringsFromMovieStartingFromDate(movie, date);
         }
     }
 }
