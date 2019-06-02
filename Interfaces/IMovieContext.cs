@@ -13,5 +13,6 @@ namespace Interfaces
         bool CheckIfMovieExists(Movie movie);
         IEnumerable<Movie> GetMoviesByGenre(string category);
         IEnumerable<string> GetAllGenres();
+        IEnumerable<Movie> GetMoviesBySearchParam(string searchParam);
     }
 }

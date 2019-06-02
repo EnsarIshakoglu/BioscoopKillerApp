@@ -43,5 +43,10 @@ namespace Logic.Repositories
         {
             return _movieContext.GetAllGenres();
         }
+
+        public IEnumerable<Movie> GetMoviesBySearchParam(string searchParam)
+        {
+            return _movieContext.GetMoviesBySearchParam(searchParam);
+        }
     }
 }

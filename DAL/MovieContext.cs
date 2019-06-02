@@ -43,10 +43,7 @@ namespace DAL
                 }
             }
 
-            foreach (var movie in movies)
-            {
-                _apiHelper.AddApiDataToMovie(movie).Wait();
-            }
+            AddApiData(movies);
 
             return movies;
         }
@@ -78,7 +75,7 @@ namespace DAL
                 }
             }
 
-            _apiHelper.AddApiDataToMovie(movie).Wait();
+            AddApiData(movie);
 
             return movie;
         }
@@ -157,10 +154,7 @@ namespace DAL
                 }
             }
 
-            foreach (var movie in movies)
-            {
-                _apiHelper.AddApiDataToMovie(movie).Wait();
-            }
+            AddApiData(movies);
 
             return movies;
         }
@@ -184,6 +178,49 @@ namespace DAL
             }
 
             return genres;
+        }
+
+        public IEnumerable<Movie> GetMoviesBySearchParam(string searchParam)
+        {
+            var movies = new List<Movie>();
+
+            using (var connection = new SqlConnection(DbConnectionString))
+            {
+                connection.Open();
+
+                var cmd = new SqlCommand("GetMoviesBySearchParam", connection) { CommandType = CommandType.StoredProcedure };
+
+                cmd.Parameters.Add(new SqlParameter("@SearchParam", searchParam));
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    movies.Add(new Movie
+                    {
+                        Id = (int)reader["ID"],
+                        Title = reader["Name"]?.ToString(),
+                        PublishedYear = (int)reader["PublishedYear"]
+                    });
+                }
+            }
+
+            AddApiData(movies);
+
+            return movies;
+        }
+
+        private void AddApiData(IEnumerable<Movie> movies)
+        {
+            foreach (var movie in movies)
+            {
+                _apiHelper.AddApiDataToMovie(movie).Wait();
+            }
+        }
+
+        private void AddApiData(Movie movie)
+        {
+            _apiHelper.AddApiDataToMovie(movie).Wait();
         }
     }
 }

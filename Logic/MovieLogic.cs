@@ -77,6 +77,11 @@ namespace Logic
             return _airingMovieLogic.GetAiringsFromMovieByDate(movie, date);
         }
 
+        public IEnumerable<Movie> GetMoviesBySearchParam(string searchParam)
+        {
+            return _repo.GetMoviesBySearchParam(searchParam);
+        }
+
         public AiringMovie GetAiringById(AiringMovie airing)
         {
             var toReturnAiring = _airingMovieLogic.GetAiringMovieById(airing.Id);

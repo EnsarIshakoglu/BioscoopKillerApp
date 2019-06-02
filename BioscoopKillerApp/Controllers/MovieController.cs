@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading;
 using BioscoopKillerApp.Models;
 using BioscoopKillerApp.ViewModels;
@@ -9,6 +10,7 @@ using Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json;
 
 namespace BioscoopKillerApp.Controllers
 {
@@ -112,9 +114,9 @@ namespace BioscoopKillerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetMoviesByGenre([FromBody]Movie movie)
+        public IActionResult GetMoviesByGenre([FromBody]string selectedGenre)
         {
-            var movies = _movieLogic.GetMoviesByGenre(movie.Genre);
+            var movies = _movieLogic.GetMoviesByGenre(selectedGenre);
 
             return PartialView("ShowMovies", movies);
         }
@@ -127,6 +129,19 @@ namespace BioscoopKillerApp.Controllers
             var airings = _movieLogic.GetAiringsFromMovieByDate(model.Movie, date);
 
             return PartialView("AiringButtons", airings);
+        }
+
+
+        public IActionResult ShowMoviesBySearchParam(string valueToSearchBy)
+        {
+            var filteredMovies = _movieLogic.GetMoviesBySearchParam(valueToSearchBy);
+
+            var model = new AllMoviesViewModel
+            {
+                Movies = filteredMovies
+            };
+
+            return View("AllMovies", model);
         }
     }
 }
