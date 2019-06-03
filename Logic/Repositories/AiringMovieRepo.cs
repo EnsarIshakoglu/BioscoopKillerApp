@@ -16,6 +16,11 @@ namespace Logic.Repositories
             _context = context;
         }
 
+        public void DeleteAiring(AiringMovie airing)
+        {
+            _context.DeleteAiring(airing);
+        }
+
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
             return _context.GetAiringsFromMovie(movie);

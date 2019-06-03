@@ -36,7 +36,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" style="float: right;">
-                    <div class="form-inline" style="width: 70%;">
+                    <div class="form-inline" style="width: 80%;">
 
                         <div id="searchArea">
                             <div class="input-group ">
@@ -57,7 +57,7 @@
                                 <button class="btn btn-danger" style="margin-left: 10%" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
                             }
                         </form>
-</div>
+                    </div>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AllMovies">Movies</a>
@@ -67,8 +67,19 @@
                             <li class="nav-item myDropdown">
                                 <a class="nav-link text-dark myDropBtn">Add</a>
                                 <div class="myDropdown-content">
-                                    <a asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
-                                    <a asp-area="" asp-controller="Movie" asp-action="AddAiringMovie">Add Airing</a>
+                                    <form style="margin-bottom: 0;">
+                                        <a asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
+                                        <a asp-area="" asp-controller="Movie" asp-action="AddAiringMovie">Add Airing</a>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item myDropdown">
+                                <a class="nav-link text-dark myDropBtn">Delete</a>
+                                <div class="myDropdown-content">
+                                    <form style="margin-bottom: 0;">
+                                        <a asp-area="" asp-controller="Movie" asp-action="DeleteMovieView">Delete Movie</a>
+                                        <a asp-area="" asp-controller="Movie" asp-action="DeleteAiringView">Delete Airing</a>
+                                    </form>
                                 </div>
                             </li>
                         }
@@ -134,16 +145,16 @@
         z-index: 1;
     }
 
-    .myDropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
+        .myDropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
 
-    .myDropdown-content a:hover {
-        background-color: #ddd;
-    }
+            .myDropdown-content a:hover {
+                background-color: #ddd;
+            }
 
     .myDropdown:hover .myDropdown-content {
         display: block;

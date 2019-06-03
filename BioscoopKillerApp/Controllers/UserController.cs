@@ -38,7 +38,7 @@ namespace BioscoopKillerApp.Controllers
             }
 
             var user = _userLogic.GetUserByEmail(model.Email);
-            if (user == null)
+            if (user.Id == 0)
             {
                 TempData["alertMessage"] = "Incorrect username or password, please try again!";
                 return View("LogIn");

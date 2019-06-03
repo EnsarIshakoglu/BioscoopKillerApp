@@ -19,6 +19,11 @@ namespace Logic.Repositories
             return _movieContext.GetAllMovies();
         }
 
+        public void DeleteMovie(Movie movie)
+        {
+            _movieContext.DeleteMovie(movie);
+        }
+
         public Movie GetMovieById(int movieId)
         {
             return _movieContext.GetMovieById(movieId);

@@ -15,5 +15,6 @@ namespace Interfaces
         IEnumerable<AiringMovie> GetAiringsFromRoomByDate(Room room, DateTime date);
         IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date);
         IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date);
+        void DeleteAiring(AiringMovie airing);
     }
 }

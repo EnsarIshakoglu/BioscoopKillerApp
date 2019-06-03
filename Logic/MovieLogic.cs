@@ -22,6 +22,16 @@ namespace Logic
             return movies;
         }
 
+        public void DeleteMovie(Movie movie)
+        {
+            _repo.DeleteMovie(movie);
+        }
+
+        public void DeleteAiring(AiringMovie airing)
+        {
+            _airingMovieLogic.DeleteAiring(airing);
+        }
+
         public IEnumerable<Movie> GetSortedMovies(List<string> categories)
         {
             IEnumerable<Movie> movies = GetAllMovies();
@@ -59,7 +69,7 @@ namespace Logic
 
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
-            return _airingMovieLogic.GetAiringMoviesFromMovie(movie);
+            return _airingMovieLogic.GetAiringsFromMovie(movie);
         }
 
         public IEnumerable<Review> GetAllReviewsFromMovie(Movie movie)

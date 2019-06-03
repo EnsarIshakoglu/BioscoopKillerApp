@@ -1,0 +1,166 @@
+﻿@model IEnumerable<Models.Movie>
+@Html.AntiForgeryToken()
+
+<link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery UI Datepicker - Default functionality</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<div class="row register-form">
+    <div class="col-xl-7 order-xl-2 ">
+    </div>
+    <div class="col-xl-5 order-xl-3 inputField">
+        <h3 class="register-heading">Add movie</h3>
+        <p></p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Movie: </label>
+                </div>
+                <div class="col-xl-6">
+                    <select id="movies" name="SelectedMovie">
+                        <option value="" selected disabled hidden>--- Select movie ---</option>
+                        @foreach (var movie in Model)
+                        {
+                            <option value="@movie.Id" name="@movie.Title">@movie.Title</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Airing: </label>
+                </div>
+                <div class="col-xl-6">
+                    <select id="airingSelection" name="SelectedMovie">
+                        <option value="" selected disabled hidden>--- Select airing ---</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="errorTextAddAiring">
+
+        </div>
+        <div id="deletedAiringText"></div>
+        <button id="deleteMovie" class="btn btn-secondary" style="margin: 5px;">Delete!</button>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#deleteMovie').on('click', deleteAiring);
+    });
+
+    function deleteAiring() {
+
+        var selectedMovieId = $("#movies option:selected").val();
+        var selectedMovieTitle = $("#movies option:selected").attr("name");
+
+        var selectedAiringId = $("#airingSelection option:selected").val();
+        var airingTime = $("#airingSelection option:selected").attr("name");
+
+        var airing = {
+            "Movie": {
+                "Id" : selectedMovieId,
+                "Title" : selectedMovieTitle
+            },
+            "Id": selectedAiringId,
+            "AiringTime" : airingTime
+        }
+
+        var controllerPath = "@Url.Action("DeleteAiring", "Movie")";
+
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+        console.log('date wordt gepriont');
+
+        console.log(JSON.stringify(airing));
+
+        if (confirm('Are you sure you want to delete this airing?')) {
+        $.ajax({
+            url: controllerPath,
+            data: JSON.stringify(airing),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                console.log("Success");
+                document.getElementById('deletedAiringText').innerHTML = result.message;
+            },
+            error: function () {
+                console.log("Error");
+            }
+            });
+            }
+
+    }
+</script>
+
+<script>
+    $('#movies').change(function() {
+        $('#airingSelection').empty();
+
+        var selectedMovieId = $("#movies option:selected").val();
+        console.log(selectedMovieId);
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+        var url = '@Url.Action("GetAiringsFromMovie", "Movie")';
+
+        var movie = {
+            "Id" : selectedMovieId
+        }
+
+        console.log(url);
+
+        $.ajax({
+            url: url,
+            data: JSON.stringify(movie),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                console.log("Success");
+                console.log(result);
+                updateDropdown(result);
+            },
+            error: function () {
+                console.log("Error");
+            }
+        });
+    });
+</script>
+<script>
+    function updateDropdown(data) {
+        console.log('joo');
+        $('#airingSelection').append($('<option value="" selected disabled hidden>--- Select airing ---</option>'));
+
+        if (data.length < 1) {
+            $('#airingSelection').append($('<option value="" selected disabled hidden>No airings for this movie!</option>'));
+        }
+
+        data.forEach(function (airing) {
+            console.log(airing);
+            console.log(airing.airingTime);
+            var timeAiring = airing.airingTime.replace("T", " ");
+            console.log(timeAiring);
+            $('#airingSelection').append($("<option></option>")
+                .attr({
+                    value: airing.id,
+                    name: timeAiring
+                })
+                .text(timeAiring + ' ' + airing.room.type));
+        });
+    }
+</script>
+

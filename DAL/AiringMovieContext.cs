@@ -76,6 +76,20 @@ namespace DAL
             return airingMovie;
         }
 
+        public void DeleteAiring(AiringMovie airing)
+        {
+            using (var connection = new SqlConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var sqlCommand = new SqlCommand($"DeleteAiring", connection) { CommandType = CommandType.StoredProcedure };
+
+                sqlCommand.Parameters.AddWithValue("@AiringId", airing.Id);
+
+                sqlCommand.ExecuteNonQuery();
+            }
+        }
+
         public IEnumerable<AiringMovie> GetAiringsByRoomType(string roomType)
         {
             var airingMovies = new List<AiringMovie>();

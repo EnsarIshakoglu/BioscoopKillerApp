@@ -14,5 +14,6 @@ namespace Interfaces
         IEnumerable<Movie> GetMoviesByGenre(string category);
         IEnumerable<string> GetAllGenres();
         IEnumerable<Movie> GetMoviesBySearchParam(string searchParam);
+        void DeleteMovie(Movie movie);
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model Models.Movie
 
 <link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
 
 <div class="row register-form">
     <div class="col-xl-7 order-xl-2 ">
@@ -32,7 +33,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
+
     @if (null != TempData["alertMessage"])
     {
         <script type="text/javascript">

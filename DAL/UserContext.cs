@@ -82,7 +82,6 @@ namespace DAL
             if (updated != 0)
             {
                 isAccountCreationSuccessful = true;
-                AddRoleToUser(user, Roles.AccountHolder.ToString());
             }
 
             return isAccountCreationSuccessful;
@@ -139,21 +138,6 @@ namespace DAL
             }
 
             return user;
-        }
-
-        private void AddRoleToUser(User user, string roleName)
-        {
-            using (var connection = new SqlConnection(_dbConnectionString))
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand("AddRoleToUser", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.AddWithValue("@Email", user.Email);
-                cmd.Parameters.AddWithValue("@RoleName", roleName);
-
-                cmd.ExecuteNonQuery();
-            }
         }
     }
 }

@@ -56,7 +56,7 @@ namespace BioscoopKillerApp.Controllers
         [HttpGet]
         public IActionResult AddMovie()
         {
-            return View("AddPage", new Movie());
+            return View("AddMovie");
         }
 
         [Authorize(Roles = "Admin")]
@@ -68,7 +68,7 @@ namespace BioscoopKillerApp.Controllers
 
             var returnModel = new AddAiringMovieViewModel(movies, roomTypes);
 
-            return View("AddPage", returnModel);
+            return View("AddAiringMovie", returnModel);
         }
         
         [HttpPost]
@@ -87,7 +87,7 @@ namespace BioscoopKillerApp.Controllers
 
             }
 
-            return View("AddPage", new Movie());
+            return View("AddMovie", new Movie());
         }
         
         [HttpPost]
@@ -142,6 +142,43 @@ namespace BioscoopKillerApp.Controllers
             };
 
             return View("AllMovies", model);
+        }
+
+        public IActionResult DeleteMovieView()
+        {
+            var movies = _movieLogic.GetAllMovies();
+
+            return View("DeleteMovie", movies);
+        }
+
+        public IActionResult DeleteAiringView()
+        {
+            var movies = _movieLogic.GetAllMovies();
+
+            return View("DeleteAiring",movies);
+        }
+        [HttpPost]
+        public IActionResult GetAiringsFromMovie([FromBody]Movie movie)
+        {
+            var airings = _movieLogic.GetAiringsFromMovieStartingFromDate(movie, DateTime.Today);
+
+            return new JsonResult(airings);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteMovie([FromBody]Movie movie)
+        {
+            _movieLogic.DeleteMovie(movie);
+
+            return new JsonResult(new {message = $"Deleted {movie.Title}"});
+        }
+
+        [HttpPost]
+        public IActionResult DeleteAiring([FromBody]AiringMovie airing)
+        {
+            _movieLogic.DeleteAiring(airing);
+
+            return new JsonResult(new{message = $"Deleted airing {airing.AiringTime} for {airing.Movie.Title}"});
         }
     }
 }

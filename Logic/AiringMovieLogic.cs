@@ -13,16 +13,22 @@ namespace Logic
     public class AiringMovieLogic
     {
         private readonly AiringMovieRepo _repo = new AiringMovieRepo(new AiringMovieContext());
+
         private readonly RoomLogic _roomLogic = new RoomLogic();
         //private readonly MovieLogic _movieLogic = new MovieLogic();
 
-        public IEnumerable<AiringMovie> GetAiringMoviesFromMovie(Movie movie)
+        public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
             return _repo.GetAiringsFromMovie(movie);
         }
         public AiringMovie GetAiringMovieById(int id)
         {
             return _repo.GetAiringById(id);
+        }
+
+        public void DeleteAiring(AiringMovie airing)
+        {
+            _repo.DeleteAiring(airing);
         }
 
         public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
