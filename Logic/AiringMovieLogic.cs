@@ -52,7 +52,7 @@ namespace Logic
         private AiringMovie GetRoomWithPlaceForAiring(Movie movie, DateTime date, string roomType)
         {
             var rooms = _roomLogic.GetRoomsByRoomType(roomType);
-            var roomDoesNotHavePlace = new DateTime(1990,12,12,12,12,12);
+            var roomDoesNotHavePlace = new DateTime(1990, 12, 12, 12, 12, 12);
 
             foreach (var room in rooms)
             {
@@ -77,7 +77,7 @@ namespace Logic
                     return FirstAiringOfTheDay(movie, date, room);
                 }
             }
-            
+
             return null;
         }
 
@@ -123,7 +123,7 @@ namespace Logic
         {
             var sortedAirings = OrderAiringsByAiringTime(airingsInRoom).ToList();
             var lastAiringMovieIndex = sortedAirings.Count - 1;
-            
+
             var lastPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
             var runTimeToAddAiring = GetRunTimeFromMovie(movie);
 
@@ -151,12 +151,9 @@ namespace Logic
                         return new DateTime(date.Year, date.Month, date.Day, timeCurrentAiringDone.Hour, timeCurrentAiringDone.Minute, timeCurrentAiringDone.Second);
                     }
                 }
-                else
+                else if (timeToAddAiringDone <= lastPossibleAiringTime)
                 {
-                    if (timeToAddAiringDone <= lastPossibleAiringTime)
-                    {
-                        return new DateTime(date.Year, date.Month, date.Day, timeCurrentAiringDone.Hour, timeCurrentAiringDone.Minute, timeCurrentAiringDone.Second);
-                    }
+                    return new DateTime(date.Year, date.Month, date.Day, timeCurrentAiringDone.Hour, timeCurrentAiringDone.Minute, timeCurrentAiringDone.Second);
                 }
             }
 
