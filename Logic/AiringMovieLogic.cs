@@ -15,7 +15,6 @@ namespace Logic
         private readonly AiringMovieRepo _repo = new AiringMovieRepo(new AiringMovieContext());
 
         private readonly RoomLogic _roomLogic = new RoomLogic();
-        //private readonly MovieLogic _movieLogic = new MovieLogic();
 
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
@@ -25,16 +24,19 @@ namespace Logic
         {
             return _repo.GetAiringById(id);
         }
-
         public void DeleteAiring(AiringMovie airing)
         {
             _repo.DeleteAiring(airing);
         }
-
         public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
         {
             return _repo.GetAiringsFromMovieStartingFromDate(movie, date);
         }
+        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
+        {
+            return _repo.GetAiringsFromMovieByDate(movie, date);
+        }
+
         public bool TryToAddAiring(Movie movie, DateTime date, string roomType)
         {
             var airing = GetRoomWithPlaceForAiring(movie, date, roomType);
@@ -121,10 +123,17 @@ namespace Logic
         {
             var sortedAirings = OrderAiringsByAiringTime(airingsInRoom).ToList();
             var lastAiringMovieIndex = sortedAirings.Count - 1;
-            const int timeForCleaningInMinutes = 60;
-
+            
             var lastPossibleAiringTime = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
             var runTimeToAddAiring = GetRunTimeFromMovie(movie);
+
+            return TryToGetAvailableTime(sortedAirings, runTimeToAddAiring, lastAiringMovieIndex, lastPossibleAiringTime, date);
+        }
+
+        private DateTime TryToGetAvailableTime(List<AiringMovie> sortedAirings, double runTimeToAddAiring, int lastAiringMovieIndex, DateTime lastPossibleAiringTime, DateTime date)
+        {
+            const int timeForCleaningInMinutes = 60;
+            var noTimeAvailable = new DateTime(1990, 12, 12, 12, 12, 12);
 
             for (var x = 0; x < sortedAirings.Count; x++)
             {
@@ -151,7 +160,7 @@ namespace Logic
                 }
             }
 
-            return new DateTime(1990, 12, 12, 12, 12, 12);
+            return noTimeAvailable;
         }
 
         private void AddAiringMovie(AiringMovie airingMovie, DateTime date)
@@ -162,7 +171,7 @@ namespace Logic
             _repo.AddAiring(airingMovie);
         }
 
-        private static double GetRunTimeFromMovie(Movie movie)
+        private double GetRunTimeFromMovie(Movie movie)
         {
             var runTime = new DateTime(2019, 5, 11);
 
@@ -174,11 +183,6 @@ namespace Logic
             }
 
             return runTime.TimeOfDay.TotalMinutes;
-        }
-
-        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
-        {
-            return _repo.GetAiringsFromMovieByDate(movie, date);
         }
     }
 }
