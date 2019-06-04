@@ -17,9 +17,7 @@ namespace Logic
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            List<Movie> movies = _repo.GetAllMovies().ToList();
-
-            return movies;
+            return _repo.GetAllMovies().ToList();
         }
 
         public void DeleteMovie(Movie movie)
@@ -30,21 +28,6 @@ namespace Logic
         public void DeleteAiring(AiringMovie airing)
         {
             _airingMovieLogic.DeleteAiring(airing);
-        }
-
-        public IEnumerable<Movie> GetSortedMovies(List<string> categories)
-        {
-            IEnumerable<Movie> movies = GetAllMovies();
-
-            List<Movie> sortedMovies = new List<Movie>();
-
-            /*foreach (Movie movie in movies)
-            {
-                if (movie.Genre.Intersect(categories).Count() == categories.Count())
-                    sortedMovies.Add(movie);
-            }*/
-
-            return sortedMovies;
         }
 
         public IEnumerable<string> GetAllRoomTypes()
@@ -67,11 +50,6 @@ namespace Logic
             return _repo.CheckIfMovieExists(movie);
         }
 
-        public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
-        {
-            return _airingMovieLogic.GetAiringsFromMovie(movie);
-        }
-
         public IEnumerable<Review> GetAllReviewsFromMovie(Movie movie)
         {
             return _reviewLogic.GetAllReviewsFromMovie(movie);
@@ -92,13 +70,6 @@ namespace Logic
             return _repo.GetMoviesBySearchParam(searchParam);
         }
 
-        public AiringMovie GetAiringById(AiringMovie airing)
-        {
-            var toReturnAiring = _airingMovieLogic.GetAiringMovieById(airing.Id);
-            toReturnAiring.Movie = GetMovieById(airing.Movie.Id);
-
-            return toReturnAiring;
-        }
         /// <summary>
         /// Returns airings for given movie starting from given date.
         /// </summary>
