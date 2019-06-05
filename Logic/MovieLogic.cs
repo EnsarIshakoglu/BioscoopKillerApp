@@ -12,7 +12,7 @@ namespace Logic
         private readonly MovieRepo _repo = new MovieRepo(new MovieContext());
 
         private readonly RoomLogic _roomLogic = new RoomLogic();
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
         private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
         public IEnumerable<Movie> GetAllMovies()

@@ -10,7 +10,7 @@ namespace Logic
     public class TransactionLogic
     {
         private readonly TransactionRepo _transactionRepo = new TransactionRepo(new TransactionContext());
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
         private readonly MovieLogic _movieLogic = new MovieLogic();
 
         public AiringMovie GetAiringMovieById(int id)

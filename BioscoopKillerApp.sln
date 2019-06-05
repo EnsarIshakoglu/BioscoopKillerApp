@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic", "Logic\Logic.csproj", "{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{10B0C73E-093F-47F3-B1C2-8D68264A312A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
