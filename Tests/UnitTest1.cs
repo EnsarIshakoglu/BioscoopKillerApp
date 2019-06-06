@@ -41,9 +41,9 @@ namespace Tests
             };
 
             var runtime = _logic.GetRunTimeFromMovie2(movie);
-            var expectedOutcome = 130;
+            var expectedOutcome = 0;
 
-            Assert.AreNotEqual(expectedOutcome, runtime);
+            Assert.AreEqual(expectedOutcome, runtime);
         }
 
         [Test]
@@ -55,9 +55,9 @@ namespace Tests
             };
 
             var runtime = _logic.GetRunTimeFromMovie2(movie);
-            var expectedOutcome = 130;
+            var expectedOutcome = 0;
 
-            Assert.AreNotEqual(expectedOutcome, runtime);
+            Assert.AreEqual(expectedOutcome, runtime);
         }
 
         [Test]
