@@ -15,11 +15,6 @@ namespace Logic.Repositories
             _context = context;
         }
 
-        public bool Login(User user)
-        {
-            return _context.CheckLogin(user);
-        }
-
         public IEnumerable<string> GetUserRoles(User user)
         {
             return _context.GetUserRoles(user);
@@ -30,9 +25,9 @@ namespace Logic.Repositories
             return _context.CreateAccount(user);
         }
 
-        public bool IsEmailInUse(User user)
+        public bool IsEmailInUse(string email)
         {
-            return _context.IsEmailInUse(user);
+            return _context.IsEmailInUse(email);
         }
 
         public User GetUserByEmail(string email)

@@ -13,30 +13,6 @@ namespace DAL
     public class UserContext : IUserContext
     {
         private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
-
-        public bool CheckLogin(User user)
-        {
-            var loginSuccessful = false;
-
-            using (var connection = new SqlConnection(_dbConnectionString))
-            {
-                connection.Open();
-
-                var cmd = new SqlCommand("CheckLogin", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
-                cmd.Parameters.Add(new SqlParameter("@Password", user.Password));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    loginSuccessful = true;
-                }
-            }
-
-            return loginSuccessful;
-        }
         public IEnumerable<string> GetUserRoles(User user)
         {
             var roles = new List<string>();
@@ -87,7 +63,7 @@ namespace DAL
             return isAccountCreationSuccessful;
         }
 
-        public bool IsEmailInUse(User user)
+        public bool IsEmailInUse(string email)
         {
             var emailInUse = false;
 
@@ -97,7 +73,7 @@ namespace DAL
 
                 var cmd = new SqlCommand("IsEmailInUse", connection) { CommandType = CommandType.StoredProcedure };
 
-                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+                cmd.Parameters.Add(new SqlParameter("@Email", email));
 
                 var reader = cmd.ExecuteReader();
 

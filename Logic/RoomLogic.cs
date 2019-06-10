@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.MockContexts;
+using Interfaces;
 using Logic.Repositories;
 using Models;
 
@@ -9,7 +11,11 @@ namespace Logic
 {
     public class RoomLogic
     {
-        private readonly RoomRepo _repo = new RoomRepo(new RoomContext());
+        public RoomLogic(IRoomContext context)
+        {
+            _repo = new RoomRepo(context);
+        }
+        private readonly RoomRepo _repo;
 
         public IEnumerable<string> GetAllRoomTypes()
         {

@@ -22,10 +22,10 @@ namespace DAL.MockContexts
                 },
                 Room = new Room
                 {
-                    Number = 10,
+                    Number = 4,
                     Type = "IMAX 2D"
                 },
-                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 0, 0)
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 22, 0, 0)
             },
             new AiringMovie
             {
@@ -38,10 +38,10 @@ namespace DAL.MockContexts
                 },
                 Room = new Room
                 {
-                    Number = 11,
+                    Number = 3,
                     Type = "2D"
                 },
-                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 0, 0)
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 0, 0)
             },
             new AiringMovie
             {
@@ -54,10 +54,10 @@ namespace DAL.MockContexts
                 },
                 Room = new Room
                 {
-                    Number = 14,
+                    Number = 2,
                     Type = "IMAX 3D"
                 },
-                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 10, 0)
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 0, 0)
             },
             new AiringMovie
             {
@@ -70,10 +70,10 @@ namespace DAL.MockContexts
                 },
                 Room = new Room
                 {
-                    Number = 14,
+                    Number = 2,
                     Type = "IMAX 3D"
                 },
-                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 21, 10, 0)
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 14, 0, 0)
             },
             new AiringMovie
             {
@@ -86,11 +86,75 @@ namespace DAL.MockContexts
                 },
                 Room = new Room
                 {
-                    Number = 12,
+                    Number = 1,
                     Type = "3D"
                 },
-                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 00, 0)
-            }
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 0, 0)
+            },
+            new AiringMovie
+            {
+            Id = 1,
+            Movie = new Movie
+            {
+                Id = 1,
+                Title = "Finding Nemo",
+                Runtime = "120 min"
+            },
+            Room = new Room
+            {
+                Number = 3,
+                Type = "2D"
+            },
+            AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 22, 0, 0)
+            },
+            new AiringMovie
+            {
+                Id = 1,
+                Movie = new Movie
+                {
+                    Id = 1,
+                    Title = "Finding Nemo",
+                    Runtime = "120 min"
+                },
+                Room = new Room
+                {
+                    Number = 8,
+                    Type = "2D"
+                },
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 22, 0, 0)
+            },
+            new AiringMovie
+            {
+                Id = 1,
+                Movie = new Movie
+                {
+                    Id = 1,
+                    Title = "Finding Nemo",
+                    Runtime = "120 min"
+                },
+                Room = new Room
+                {
+                    Number = 13,
+                    Type = "2D"
+                },
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 22, 0, 0)
+            },
+            new AiringMovie
+            {
+                Id = 1,
+                Movie = new Movie
+                {
+                    Id = 1,
+                    Title = "Finding Nemo",
+                    Runtime = "120 min"
+                },
+                Room = new Room
+                {
+                    Number = 18,
+                    Type = "2D"
+                },
+                AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 22, 0, 0)
+            },
         };
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
@@ -107,12 +171,12 @@ namespace DAL.MockContexts
             return _airings.Where(a => a.Room.Type.Equals(roomType));
         }
         /// <summary>
-        /// DO NUT USE! NOT IMPLEMENTED!
+        /// DOES NOTHING!
         /// </summary>
         /// <param name="airingMovie"></param>
         public void AddAiring(AiringMovie airingMovie)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public IEnumerable<AiringMovie> GetAiringsFromRoom(Room room)

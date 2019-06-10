@@ -6,6 +6,8 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using BioscoopKillerApp.Models;
 using BioscoopKillerApp.ViewModels;
+using DAL;
+using Interfaces;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +18,8 @@ namespace BioscoopKillerApp.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly MovieLogic _movieLogic = new MovieLogic();
-
+        private readonly MovieLogic _movieLogic = new MovieLogic(new MovieContext());
+        
         public IActionResult Index()
         {
             return View(_movieLogic.GetAllMovies());

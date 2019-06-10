@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using DAL;
+using DAL.MockContexts;
 using Interfaces;
 using Logic.Repositories;
 using Models;
@@ -15,12 +16,13 @@ namespace Logic
     {
         public AiringMovieLogic(IAiringMovieContext context)
         {
-           _repo = new AiringMovieRepo(context);
+            _repo = new AiringMovieRepo(context);
+            _roomLogic = context.GetType() == typeof(MockAiringMovieContext) ? new RoomLogic(new MockRoomContext()) : new RoomLogic(new RoomContext());
         }
 
         private readonly AiringMovieRepo _repo;
 
-        private readonly RoomLogic _roomLogic = new RoomLogic();
+        private readonly RoomLogic _roomLogic;
 
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {
@@ -117,7 +119,7 @@ namespace Logic
             var movieId = airingMovie.Movie.Id;
             if (movieId == -1) return;
 
-            var movieLogic = new MovieLogic();
+            var movieLogic = new MovieLogic(new MovieContext());
             airingMovie.Movie = movieLogic.GetMovieById(movieId);
         }
         private IEnumerable<AiringMovie> OrderAiringsByAiringTime(IEnumerable<AiringMovie> airingMovies)
@@ -202,6 +204,10 @@ namespace Logic
         public void AddMovieDetailsToAiringMovie2(AiringMovie airingMovie)
         {
             AddMovieDetailsToAiringMovie(airingMovie);
+        }
+        private IEnumerable<AiringMovie> GetAiringsFromRoomByDate2(Room room, DateTime date)
+        {
+            return GetAiringsFromRoomByDate(room, date);
         }
 
     }

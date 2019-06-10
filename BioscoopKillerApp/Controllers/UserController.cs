@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DAL;
 using Logic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,7 +21,7 @@ namespace BioscoopKillerApp.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserLogic _userLogic = new UserLogic();
+        private readonly UserLogic _userLogic = new UserLogic(new UserContext());
         private readonly PasswordHasher<User> _hasher = new PasswordHasher<User>();
 
         public IActionResult LogIn()
@@ -64,19 +65,19 @@ namespace BioscoopKillerApp.Controllers
         [HttpPost]
         public IActionResult CreateAccount([Bind("Password, Name, SurName, Email")] User user)
         {
-            user.Password = _hasher.HashPassword(user, user.Password);
-
             if (!ModelState.IsValid)
             {
                 TempData["alertMessageRegister"] = "Please fill in all the fields!";
                 return View("LogIn");
             }
-            if (_userLogic.IsEmailInUse(user))
+            if (_userLogic.IsEmailInUse(user.Email))
             {
                 TempData["alertMessageRegister"] = "Email is already in use, please choose another one.";
             }
             else
             {
+                user.Password = _hasher.HashPassword(user, user.Password);
+
                 if (_userLogic.CreateAccount(user))
                 {
                     TempData["alertMessageRegister"] = "Account has been created! You can log in now.";

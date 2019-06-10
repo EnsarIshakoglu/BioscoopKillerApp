@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
+using DAL.MockContexts;
+using Interfaces;
 using Logic.Repositories;
 using Models;
 
@@ -9,9 +11,16 @@ namespace Logic
 {
     public class MovieLogic
     {
-        private readonly MovieRepo _repo = new MovieRepo(new MovieContext());
+        public MovieLogic(IMovieContext context)
+        {
+            _repo = new MovieRepo(context);
 
-        private readonly RoomLogic _roomLogic = new RoomLogic();
+            _roomLogic = context.GetType() == typeof(MockMovieContext) ? new RoomLogic(new MockRoomContext()) : new RoomLogic(new RoomContext());
+        }
+
+        private readonly MovieRepo _repo;
+
+        private readonly RoomLogic _roomLogic;
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
         private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 

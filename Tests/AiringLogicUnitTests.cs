@@ -33,7 +33,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetRunTimeFromMovieTestOnlyText()
+        public void GetRunTimeFromMovieTestWrongOnlyText()
         {
             var movie = new Movie
             {
@@ -103,30 +103,6 @@ namespace Tests
                 {
                     Movie = new Movie
                     {
-                        Runtime = "120 min"
-                    },
-                    AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 12, 0, 0)
-                },
-                new AiringMovie
-                {
-                    Movie = new Movie
-                    {
-                        Runtime = "130 min"
-                    },
-                    AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 15, 0, 0)
-                },
-                new AiringMovie
-                {
-                    Movie = new Movie
-                    {
-                        Runtime = "120 min"
-                    },
-                    AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 10, 0)
-                },
-                new AiringMovie
-                {
-                    Movie = new Movie
-                    {
                         Runtime = "130 min"
                     },
                     AiringTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 21, 20, 0)
@@ -142,6 +118,59 @@ namespace Tests
             var noTimeAvailable = new DateTime(1990, 12, 12, 12, 12, 12);
 
             Assert.AreEqual(noTimeAvailable, outputAlgorithm);
+        }
+
+        [Test]
+        public void TryToAddAiringTestSuccessfulSameRoom()
+        {
+            var toAddMovie = new Movie
+            {
+                Id = 101,
+                Title = "Pokémon: Detective Pikachu",
+                MoviePrice = 10,
+                Runtime = "120 min"
+            };
+            var date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+            var roomType = "IMAX 3D";
+
+            var outcome = _logic.TryToAddAiring(toAddMovie, date, roomType);
+
+            Assert.AreEqual(true, outcome);
+        }
+
+        [Test]
+        public void TryToAddAiringTestSuccessfulFindNewRoom()
+        {
+            var toAddMovie = new Movie
+            {
+                Id = 101,
+                Title = "Pokémon: Detective Pikachu",
+                MoviePrice = 10,
+                Runtime = "120 min"
+            };
+            var date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+            var roomType = "IMAX 2D";
+
+            var outcome = _logic.TryToAddAiring(toAddMovie, date, roomType);
+
+            Assert.AreEqual(true, outcome);
+        }
+        [Test]
+        public void TryToAddAiringTestUnSuccessfulNoPlaceForAiring()
+        {
+            var toAddMovie = new Movie
+            {
+                Id = 101,
+                Title = "Pokémon: Detective Pikachu",
+                MoviePrice = 10,
+                Runtime = "120 min"
+            };
+            var date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+            var roomType = "2D";
+
+            var outcome = _logic.TryToAddAiring(toAddMovie, date, roomType);
+
+            Assert.AreEqual(true, outcome);
         }
     }
 }

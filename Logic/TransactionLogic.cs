@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.MockContexts;
+using Interfaces;
 using Logic.Repositories;
 using Models;
 
@@ -9,9 +11,9 @@ namespace Logic
 {
     public class TransactionLogic
     {
-        private readonly TransactionRepo _transactionRepo = new TransactionRepo(new TransactionContext());
+        private readonly TransactionRepo _transactionRepo =  new TransactionRepo(new TransactionContext());
         private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
-        private readonly MovieLogic _movieLogic = new MovieLogic();
+        private readonly MovieLogic _movieLogic = new MovieLogic(new MovieContext());
 
         public AiringMovie GetAiringMovieById(int id)
         {
