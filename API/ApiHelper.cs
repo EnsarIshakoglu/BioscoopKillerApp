@@ -17,21 +17,26 @@ namespace API
             string url = $"http://www.omdbapi.com/?apikey={ ApiKey}&t={ movieTitleForApi}&y={ movie.PublishedYear}";
 
             HttpClient client = new HttpClient();
-
-            using (HttpResponseMessage response = await client.GetAsync(url))
+            try
             {
-                if (response.IsSuccessStatusCode)
+                using (HttpResponseMessage response = await client.GetAsync(url))
                 {
-                    Movie apiDataMovie = await response.Content.ReadAsAsync<Movie>();
-                    movie.Poster = apiDataMovie.Poster;
-                    movie.Plot = apiDataMovie.Plot;
-                    movie.Title = apiDataMovie.Title;
-                    movie.Runtime = apiDataMovie.Runtime;
-                    movie.Actors = apiDataMovie.Actors;
-                    movie.Genre = apiDataMovie.Genre;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Movie apiDataMovie = await response.Content.ReadAsAsync<Movie>();
+                        movie.Poster = apiDataMovie.Poster;
+                        movie.Plot = apiDataMovie.Plot;
+                        movie.Title = apiDataMovie.Title;
+                        movie.Runtime = apiDataMovie.Runtime;
+                        movie.Actors = apiDataMovie.Actors;
+                        movie.Genre = apiDataMovie.Genre;
+                    }
                 }
             }
-
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
+            }
         }
     }
 }

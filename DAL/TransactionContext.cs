@@ -15,21 +15,28 @@ namespace DAL
 
         public void GetOccupiedSeats(AiringMovie airingMovie)
         {
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetOccupiedSeats", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@AiringMovieId", airingMovie.Id));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    airingMovie.Room.Seats.First(s => s.SeatNumber == (int)reader["SeatNumber"]).IsOccupied =
-                        true;
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetOccupiedSeats", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@AiringMovieId", airingMovie.Id));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        airingMovie.Room.Seats.First(s => s.SeatNumber == (int)reader["SeatNumber"]).IsOccupied =
+                            true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
         }
 
@@ -37,17 +44,24 @@ namespace DAL
         {
             foreach (var seat in reservation.Seats)
             {
-                using (var connection = new SqlConnection(_dbConnectionString))
+                try
                 {
-                    connection.Open();
+                    using (var connection = new SqlConnection(_dbConnectionString))
+                    {
+                        connection.Open();
 
-                    var cmd = new SqlCommand("SaveReservation", connection) { CommandType = CommandType.StoredProcedure };
+                        var cmd = new SqlCommand("SaveReservation", connection) { CommandType = CommandType.StoredProcedure };
 
-                    cmd.Parameters.AddWithValue("@SeatNumber", seat.SeatNumber);
-                    cmd.Parameters.AddWithValue("@AiringMovieID", reservation.AiringMovie.Id);
-                    cmd.Parameters.AddWithValue("@Email", reservation.MailAddress);
+                        cmd.Parameters.AddWithValue("@SeatNumber", seat.SeatNumber);
+                        cmd.Parameters.AddWithValue("@AiringMovieID", reservation.AiringMovie.Id);
+                        cmd.Parameters.AddWithValue("@Email", reservation.MailAddress);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //File.AppendAllText(, message);
                 }
             }
         }

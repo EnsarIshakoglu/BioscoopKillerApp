@@ -16,18 +16,25 @@ namespace DAL
         {
             var roomTypes = new List<string>();
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetAllRoomTypes", connection) { CommandType = CommandType.StoredProcedure };
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    roomTypes.Add(reader["Name"]?.ToString());
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetAllRoomTypes", connection) { CommandType = CommandType.StoredProcedure };
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        roomTypes.Add(reader["Name"]?.ToString());
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return roomTypes;
@@ -37,23 +44,30 @@ namespace DAL
         {
             var rooms = new List<Room>();
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetRoomsByRoomType", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    rooms.Add(new Room
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetRoomsByRoomType", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Number = (int)reader["ID"]
-                    });
+                        rooms.Add(new Room
+                        {
+                            Number = (int)reader["ID"]
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return rooms;
@@ -62,34 +76,41 @@ namespace DAL
         {
             var airingMovies = new List<AiringMovie>();
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetAiringsByRoomType2", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    airingMovies.Add(new AiringMovie
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetAiringsByRoomType2", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@RoomType", roomType));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        AiringTime = (reader["AiringTime"] as DateTime?).GetValueOrDefault(),
-                        Id = (reader["AiringMovieId"] as int?).GetValueOrDefault(),
-                        Movie = new Movie
+                        airingMovies.Add(new AiringMovie
                         {
-                            Title = reader["MovieName"]?.ToString(),
-                            Id = (reader["MovieId"] as int?).GetValueOrDefault()
-                        },
-                        Room = new Room
-                        {
-                            Number = (reader["RoomId"] as int?).GetValueOrDefault(),
-                            Type = reader["RoomType"]?.ToString()
-                        }
-                    });
+                            AiringTime = (reader["AiringTime"] as DateTime?).GetValueOrDefault(),
+                            Id = (reader["AiringMovieId"] as int?).GetValueOrDefault(),
+                            Movie = new Movie
+                            {
+                                Title = reader["MovieName"]?.ToString(),
+                                Id = (reader["MovieId"] as int?).GetValueOrDefault()
+                            },
+                            Room = new Room
+                            {
+                                Number = (reader["RoomId"] as int?).GetValueOrDefault(),
+                                Type = reader["RoomType"]?.ToString()
+                            }
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return airingMovies;

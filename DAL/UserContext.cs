@@ -17,20 +17,27 @@ namespace DAL
         {
             var roles = new List<string>();
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetUserRolesFromUser", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    roles.Add(reader["RoleName"].ToString());
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetUserRolesFromUser", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@Email", user.Email));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        roles.Add(reader["RoleName"].ToString());
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return roles;
@@ -41,18 +48,25 @@ namespace DAL
             var isAccountCreationSuccessful = false;
             var updated = 0;
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
+                using (var connection = new SqlConnection(_dbConnectionString))
+                {
+                    connection.Open();
 
-                SqlCommand cmd = new SqlCommand("CreateAccount", connection) { CommandType = CommandType.StoredProcedure };
+                    SqlCommand cmd = new SqlCommand("CreateAccount", connection) { CommandType = CommandType.StoredProcedure };
 
-                cmd.Parameters.AddWithValue("@Email", user.Email);
-                cmd.Parameters.AddWithValue("@Password", user.Password);
-                cmd.Parameters.AddWithValue("@Name", user.Name);
-                cmd.Parameters.AddWithValue("@Surname", user.SurName);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@Password", user.Password);
+                    cmd.Parameters.AddWithValue("@Name", user.Name);
+                    cmd.Parameters.AddWithValue("@Surname", user.SurName);
 
-                updated = cmd.ExecuteNonQuery();
+                    updated = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             if (updated != 0)
@@ -67,20 +81,27 @@ namespace DAL
         {
             var emailInUse = false;
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("IsEmailInUse", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@Email", email));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    emailInUse = true;
+                    connection.Open();
+
+                    var cmd = new SqlCommand("IsEmailInUse", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@Email", email));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        emailInUse = true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return emailInUse;
@@ -90,27 +111,34 @@ namespace DAL
         {
             User user = new User();
 
-            using (var connection = new SqlConnection(_dbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetUserByEmail", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@Email", email));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(_dbConnectionString))
                 {
-                    user = new User
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetUserByEmail", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@Email", email));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = (int) reader["Id"],
-                        Password = reader["Password"].ToString(),
-                        Name = reader["Name"].ToString(),
-                        SurName = reader["Surname"].ToString(),
-                        Email = email
-                    };
+                        user = new User
+                        {
+                            Id = (int)reader["Id"],
+                            Password = reader["Password"].ToString(),
+                            Name = reader["Name"].ToString(),
+                            SurName = reader["Surname"].ToString(),
+                            Email = email
+                        };
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return user;

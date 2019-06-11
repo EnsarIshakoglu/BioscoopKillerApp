@@ -22,25 +22,32 @@ namespace DAL
         {
             var movies = new List<Movie>();
 
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetAllMovies", connection) { CommandType = CommandType.StoredProcedure };
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(DbConnectionString))
                 {
-                    var movie = new Movie
-                    {
-                        Id = (int)reader["ID"],
-                        Title = reader["Name"]?.ToString(),
-                        PublishedYear = (int)reader["PublishedYear"]
-                    };
+                    connection.Open();
 
-                    movies.Add(movie);
+                    var cmd = new SqlCommand("GetAllMovies", connection) { CommandType = CommandType.StoredProcedure };
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        var movie = new Movie
+                        {
+                            Id = (int)reader["ID"],
+                            Title = reader["Name"]?.ToString(),
+                            PublishedYear = (int)reader["PublishedYear"]
+                        };
+
+                        movies.Add(movie);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             AddApiData(movies);
@@ -54,25 +61,32 @@ namespace DAL
         {
             Movie movie = new Movie();
 
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetMovieById", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@MovieId", movieId));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(DbConnectionString))
                 {
-                    movie = new Movie
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetMovieById", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@MovieId", movieId));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = (int)reader["ID"],
-                        Title = reader["Name"]?.ToString(),
-                        PublishedYear = (int)reader["PublishedYear"]
-                    };
+                        movie = new Movie
+                        {
+                            Id = (int)reader["ID"],
+                            Title = reader["Name"]?.ToString(),
+                            PublishedYear = (int)reader["PublishedYear"]
+                        };
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             AddApiData(movie);
@@ -82,18 +96,25 @@ namespace DAL
 
         public void AddMovie(Movie movie)
         {
-            using (SqlConnection connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
+                using (SqlConnection connection = new SqlConnection(DbConnectionString))
+                {
+                    connection.Open();
 
-                var sqlCommand = new SqlCommand($"AddMovie", connection) { CommandType = CommandType.StoredProcedure };
+                    var sqlCommand = new SqlCommand($"AddMovie", connection) { CommandType = CommandType.StoredProcedure };
 
-                sqlCommand.Parameters.AddWithValue("@Name", movie.Title);
-                sqlCommand.Parameters.AddWithValue("@PublishedYear", movie.PublishedYear);
-                sqlCommand.Parameters.AddWithValue("@MoviePrice", movie.MoviePrice);
-                sqlCommand.ExecuteNonQuery();
+                    sqlCommand.Parameters.AddWithValue("@Name", movie.Title);
+                    sqlCommand.Parameters.AddWithValue("@PublishedYear", movie.PublishedYear);
+                    sqlCommand.Parameters.AddWithValue("@MoviePrice", movie.MoviePrice);
+                    sqlCommand.ExecuteNonQuery();
 
-                connection.Close();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             AddCategoriesToMovie(movie);
@@ -104,17 +125,26 @@ namespace DAL
             var categories = movie.Genre.Replace(" ", string.Empty).Split(',').ToList();
 
             foreach (var category in categories)
-                using (SqlConnection connection = new SqlConnection(DbConnectionString))
+            {
+                try
                 {
-                    connection.Open();
+                    using (SqlConnection connection = new SqlConnection(DbConnectionString))
+                    {
+                        connection.Open();
 
-                    var sqlCommand = new SqlCommand($"AddCategoryToMovie", connection) { CommandType = CommandType.StoredProcedure };
+                        var sqlCommand = new SqlCommand($"AddCategoryToMovie", connection) { CommandType = CommandType.StoredProcedure };
 
-                    sqlCommand.Parameters.AddWithValue("@MovieTitle", movie.Title);
-                    sqlCommand.Parameters.AddWithValue("@Category", category);
+                        sqlCommand.Parameters.AddWithValue("@MovieTitle", movie.Title);
+                        sqlCommand.Parameters.AddWithValue("@Category", category);
 
-                    sqlCommand.ExecuteNonQuery();
+                        sqlCommand.ExecuteNonQuery();
+                    }
                 }
+                catch (Exception ex)
+                {
+                    //File.AppendAllText(, message);
+                }
+            }
         }
 
         public bool CheckIfMovieExists(Movie movie)
@@ -135,25 +165,32 @@ namespace DAL
         {
             var movies = new List<Movie>();
 
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetMoviesByGenre", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@Category", category));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(DbConnectionString))
                 {
-                    movies.Add(new Movie
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetMoviesByGenre", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@Category", category));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = (int)reader["ID"],
-                        Title = reader["Name"]?.ToString(),
-                        PublishedYear = (int)reader["PublishedYear"]
-                    });
+                        movies.Add(new Movie
+                        {
+                            Id = (int)reader["ID"],
+                            Title = reader["Name"]?.ToString(),
+                            PublishedYear = (int)reader["PublishedYear"]
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             AddApiData(movies);
@@ -165,18 +202,25 @@ namespace DAL
         {
             var genres = new List<string>();
 
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetAllGenres", connection) { CommandType = CommandType.StoredProcedure };
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(DbConnectionString))
                 {
-                    genres.Add(reader["Name"]?.ToString());
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetAllGenres", connection) { CommandType = CommandType.StoredProcedure };
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        genres.Add(reader["Name"]?.ToString());
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             return genres;
@@ -186,25 +230,32 @@ namespace DAL
         {
             var movies = new List<Movie>();
 
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
-
-                var cmd = new SqlCommand("GetMoviesBySearchParam", connection) { CommandType = CommandType.StoredProcedure };
-
-                cmd.Parameters.Add(new SqlParameter("@SearchParam", searchParam));
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (var connection = new SqlConnection(DbConnectionString))
                 {
-                    movies.Add(new Movie
+                    connection.Open();
+
+                    var cmd = new SqlCommand("GetMoviesBySearchParam", connection) { CommandType = CommandType.StoredProcedure };
+
+                    cmd.Parameters.Add(new SqlParameter("@SearchParam", searchParam));
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = (int)reader["ID"],
-                        Title = reader["Name"]?.ToString(),
-                        PublishedYear = (int)reader["PublishedYear"]
-                    });
+                        movies.Add(new Movie
+                        {
+                            Id = (int)reader["ID"],
+                            Title = reader["Name"]?.ToString(),
+                            PublishedYear = (int)reader["PublishedYear"]
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
 
             AddApiData(movies);
@@ -214,15 +265,22 @@ namespace DAL
 
         public void DeleteMovie(Movie movie)
         {
-            using (var connection = new SqlConnection(DbConnectionString))
+            try
             {
-                connection.Open();
+                using (var connection = new SqlConnection(DbConnectionString))
+                {
+                    connection.Open();
 
-                var sqlCommand = new SqlCommand($"DeleteMovie", connection) { CommandType = CommandType.StoredProcedure };
+                    var sqlCommand = new SqlCommand($"DeleteMovie", connection) { CommandType = CommandType.StoredProcedure };
 
-                sqlCommand.Parameters.AddWithValue("@MovieId", movie.Id);
+                    sqlCommand.Parameters.AddWithValue("@MovieId", movie.Id);
 
-                sqlCommand.ExecuteNonQuery();
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                //File.AppendAllText(, message);
             }
         }
 
