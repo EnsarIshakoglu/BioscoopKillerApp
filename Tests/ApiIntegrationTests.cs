@@ -19,7 +19,7 @@ namespace Tests
         };
         private readonly Movie _nonExistingMovie = new Movie
         {
-            Title = "Aquaaaaaa1man",
+            Title = "sefsdf234234esedfsd",
             PublishedYear = 2018
         };
 
@@ -43,7 +43,7 @@ namespace Tests
         {
             _apiHelper.AddApiDataToMovie(_nonExistingMovie).Wait();
 
-            Assert.AreEqual(null, _existingMovie.Genre);
+            Assert.AreEqual(null, _nonExistingMovie.Genre);
         }
     }
 }
