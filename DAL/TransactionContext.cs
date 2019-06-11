@@ -11,7 +11,7 @@ namespace DAL
 {
     public class TransactionContext : ITransactionContext
     {
-        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
+        private readonly string _dbConnectionString = "Server=mssql.fhict.local;Database=dbi419479;User Id=dbi419479;Password=Ensar123;";
 
         public void GetOccupiedSeats(AiringMovie airingMovie)
         {

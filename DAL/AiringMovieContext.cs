@@ -11,7 +11,7 @@ namespace DAL
 {
     public class AiringMovieContext : IAiringMovieContext
     {
-        private readonly string _dbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog = CinemaDB_2; Integrated Security = True";
+        private readonly string _dbConnectionString = "Server=mssql.fhict.local;Database=dbi419479;User Id=dbi419479;Password=Ensar123;";
 
         public IEnumerable<AiringMovie> GetAiringsFromMovie(Movie movie)
         {

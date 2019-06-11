@@ -15,7 +15,7 @@ namespace DAL
 {
     public class MovieContext : IMovieContext
     {
-        private const string DbConnectionString = "Data Source=(LocalDb)\\DBMVCKillerAppTest;Initial Catalog=CinemaDB_2;Integrated Security=True";
+        private const string DbConnectionString = "Server=mssql.fhict.local;Database=dbi419479;User Id=dbi419479;Password=Ensar123;";
         private readonly ApiHelper _apiHelper = new ApiHelper();
 
         public IEnumerable<Movie> GetAllMovies()
