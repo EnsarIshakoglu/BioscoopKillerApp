@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using API;
+using DAL;
 using Logic;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -13,7 +15,7 @@ namespace BioscoopKillerApp.Controllers
 {
     public class TransactionController : Controller
     {
-        private readonly TransactionLogic _transactionLogic = new TransactionLogic();
+        private readonly TransactionLogic _transactionLogic = new TransactionLogic(new TransactionContext(), new AiringMovieContext(), new MovieContext(), new RoomContext(), new ApiHelper());
 
         [HttpPost]
         public IActionResult GoToReservationPage([FromBody] AiringMovie airing)

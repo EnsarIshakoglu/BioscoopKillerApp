@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using API;
 using DAL;
 using DAL.MockContexts;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Logic.Repositories;
 using Models;
 using Models.Enums;
@@ -14,10 +16,10 @@ namespace Logic
 {
     public class AiringMovieLogic
     {
-        public AiringMovieLogic(IAiringMovieContext context)
+        public AiringMovieLogic(IAiringMovieContext context, IRoomContext roomContext)
         {
             _repo = new AiringMovieRepo(context);
-            _roomLogic = context.GetType() == typeof(MockAiringMovieContext) ? new RoomLogic(new MockRoomContext()) : new RoomLogic(new RoomContext());
+            _roomLogic = new RoomLogic(roomContext);
         }
 
         private readonly AiringMovieRepo _repo;
@@ -119,7 +121,7 @@ namespace Logic
             var movieId = airingMovie.Movie.Id;
             if (movieId == -1) return;
 
-            var movieLogic = new MovieLogic(new MovieContext());
+            var movieLogic = new MovieLogic(new MovieContext(), new RoomContext(), new ApiHelper(), new AiringMovieContext());
             airingMovie.Movie = movieLogic.GetMovieById(movieId);
         }
         private IEnumerable<AiringMovie> OrderAiringsByAiringTime(IEnumerable<AiringMovie> airingMovies)

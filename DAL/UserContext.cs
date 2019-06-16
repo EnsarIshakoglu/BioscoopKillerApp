@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.IO.Pipes;
 using System.Text;
+using System.Web;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.Enums;
@@ -139,6 +143,12 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                var location = $"{Path.GetTempPath()}\\LogFile\\LogFile.txt";
+                FileStream objFilestream = new FileStream(location, FileMode.Append, FileAccess.Write);
+                StreamWriter objStreamWriter = new StreamWriter((Stream)objFilestream);
+                objStreamWriter.WriteLine(ex.ToString());
+                objStreamWriter.Close();
+                objFilestream.Close();
             }
 
             return user;

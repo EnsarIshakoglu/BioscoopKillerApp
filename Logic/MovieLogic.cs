@@ -4,6 +4,7 @@ using System.Linq;
 using DAL;
 using DAL.MockContexts;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Logic.Repositories;
 using Models;
 
@@ -11,18 +12,19 @@ namespace Logic
 {
     public class MovieLogic
     {
-        public MovieLogic(IMovieContext context)
+        public MovieLogic(IMovieContext context, IRoomContext roomContext, IApiHelper apiHelper, IAiringMovieContext airingMovieContext)
         {
-            _repo = new MovieRepo(context);
-
-            _roomLogic = context.GetType() == typeof(MockMovieContext) ? new RoomLogic(new MockRoomContext()) : new RoomLogic(new RoomContext());
+            _repo = new MovieRepo(context, apiHelper);
+            _roomLogic = new RoomLogic(roomContext);
+            _airingMovieLogic = new AiringMovieLogic(airingMovieContext, roomContext);
+            _reviewLogic = new ReviewLogic();
         }
 
         private readonly MovieRepo _repo;
 
         private readonly RoomLogic _roomLogic;
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
-        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
+        private readonly AiringMovieLogic _airingMovieLogic;
+        private readonly ReviewLogic _reviewLogic;
 
         public IEnumerable<Movie> GetAllMovies()
         {
@@ -52,11 +54,6 @@ namespace Logic
         public void AddMovie(Movie movie)
         {
             _repo.AddMovie(movie);
-        }
-
-        public bool CheckIfMovieExists(Movie movie)
-        {
-            return _repo.CheckIfMovieExists(movie);
         }
 
         public IEnumerable<Review> GetAllReviewsFromMovie(Movie movie)
@@ -98,6 +95,20 @@ namespace Logic
         public IEnumerable<string> GetAllGenres()
         {
             return _repo.GetAllGenres();
+        }
+
+        public bool CheckIfMovieExists(Movie movie)
+        {
+            var movieExists = false;
+
+            _repo.AddApiData(movie);
+
+            if (movie.Poster != null)
+            {
+                movieExists = true;
+            }
+
+            return movieExists;
         }
     }
 }

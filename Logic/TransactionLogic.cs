@@ -4,6 +4,7 @@ using System.Text;
 using DAL;
 using DAL.MockContexts;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Logic.Repositories;
 using Models;
 
@@ -11,9 +12,16 @@ namespace Logic
 {
     public class TransactionLogic
     {
-        private readonly TransactionRepo _transactionRepo =  new TransactionRepo(new TransactionContext());
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic(new AiringMovieContext());
-        private readonly MovieLogic _movieLogic = new MovieLogic(new MovieContext());
+        public TransactionLogic(ITransactionContext context, IAiringMovieContext airingMovieContext, IMovieContext movieContext, IRoomContext roomContext, IApiHelper apiHelper)
+        {
+            _transactionRepo = new TransactionRepo(context);
+            _airingMovieLogic = new AiringMovieLogic(airingMovieContext, roomContext);
+            _movieLogic = new MovieLogic(movieContext, roomContext, apiHelper, airingMovieContext);
+        }
+
+        private readonly TransactionRepo _transactionRepo;
+        private readonly AiringMovieLogic _airingMovieLogic;
+        private readonly MovieLogic _movieLogic;
 
         public AiringMovie GetAiringMovieById(int id)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using API;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Models;
 
 namespace DAL
@@ -16,7 +18,6 @@ namespace DAL
     public class MovieContext : IMovieContext
     {
         private const string DbConnectionString = "Server=mssql.fhict.local;Database=dbi419479;User Id=dbi419479;Password=Ensar123;";
-        private readonly ApiHelper _apiHelper = new ApiHelper();
 
         public IEnumerable<Movie> GetAllMovies()
         {
@@ -47,10 +48,12 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                //File.AppendAllText(, message);
+                /*FileStream objFilestream = new FileStream(location, FileMode.Append, FileAccess.Write);
+                StreamWriter objStreamWriter = new StreamWriter((Stream)objFilestream);
+                objStreamWriter.WriteLine(ex.ToString());
+                objStreamWriter.Close();
+                objFilestream.Close();*/
             }
-
-            AddApiData(movies);
 
             return movies;
         }
@@ -88,8 +91,6 @@ namespace DAL
             {
                 //File.AppendAllText(, message);
             }
-
-            AddApiData(movie);
 
             return movie;
         }
@@ -147,20 +148,6 @@ namespace DAL
             }
         }
 
-        public bool CheckIfMovieExists(Movie movie)
-        {
-            var movieExists = false;
-
-            _apiHelper.AddApiDataToMovie(movie).Wait();
-
-            if (movie.Poster != null)
-            {
-                movieExists = true;
-            }
-
-            return movieExists;
-        }
-
         public IEnumerable<Movie> GetMoviesByGenre(string category)
         {
             var movies = new List<Movie>();
@@ -192,8 +179,6 @@ namespace DAL
             {
                 //File.AppendAllText(, message);
             }
-
-            AddApiData(movies);
 
             return movies;
         }
@@ -257,9 +242,7 @@ namespace DAL
             {
                 //File.AppendAllText(, message);
             }
-
-            AddApiData(movies);
-
+            
             return movies;
         }
 
@@ -282,19 +265,6 @@ namespace DAL
             {
                 //File.AppendAllText(, message);
             }
-        }
-
-        private void AddApiData(IEnumerable<Movie> movies)
-        {
-            foreach (var movie in movies)
-            {
-                _apiHelper.AddApiDataToMovie(movie).Wait();
-            }
-        }
-
-        private void AddApiData(Movie movie)
-        {
-            _apiHelper.AddApiDataToMovie(movie).Wait();
         }
     }
 }

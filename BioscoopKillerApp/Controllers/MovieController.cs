@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading;
+using API;
 using BioscoopKillerApp.Models;
 using BioscoopKillerApp.ViewModels;
 using DAL;
@@ -11,6 +12,7 @@ using Interfaces;
 using Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Models;
 using Newtonsoft.Json;
 
@@ -18,7 +20,7 @@ namespace BioscoopKillerApp.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly MovieLogic _movieLogic = new MovieLogic(new MovieContext());
+        private readonly MovieLogic _movieLogic = new MovieLogic(new MovieContext(), new RoomContext(), new ApiHelper(), new AiringMovieContext());
         
         public IActionResult Index()
         {
@@ -31,8 +33,7 @@ namespace BioscoopKillerApp.Controllers
                 Movies = _movieLogic.GetAllMovies(),
                 Genres = _movieLogic.GetAllGenres()
             };
-
-
+            
             return View(model);
         }
 
@@ -115,7 +116,7 @@ namespace BioscoopKillerApp.Controllers
             return new JsonResult(new {message = returnMessage});
         }
 
-        [HttpPost]
+        /*[HttpPost]*/
         public IActionResult GetMoviesByGenre([FromBody]string selectedGenre)
         {
             var movies = _movieLogic.GetMoviesByGenre(selectedGenre);

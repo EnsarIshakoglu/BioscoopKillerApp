@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace Interfaces
+namespace Interfaces.ContextInterfaces
 {
     public interface ITransactionContext
     {

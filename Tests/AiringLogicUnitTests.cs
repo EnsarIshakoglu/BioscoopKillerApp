@@ -15,7 +15,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            _logic= new AiringMovieLogic(new MockAiringMovieContext());
+            _logic= new AiringMovieLogic(new MockAiringMovieContext(), new MockRoomContext());
         }
 
         [Test]

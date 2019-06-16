@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Interfaces;
+using Interfaces.ContextInterfaces;
 using Models;
 
 namespace Logic.Repositories
@@ -8,15 +9,20 @@ namespace Logic.Repositories
     public class MovieRepo
     {
         private readonly IMovieContext _movieContext;
+        private readonly IApiHelper _apiHelper;
 
-        public MovieRepo(IMovieContext context)
+        public MovieRepo(IMovieContext context, IApiHelper apiHelper)
         {
             _movieContext = context;
+            _apiHelper = apiHelper;
         }
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            return _movieContext.GetAllMovies();
+            var movies = _movieContext.GetAllMovies();
+            AddApiData(movies);
+
+            return movies;
         }
 
         public void DeleteMovie(Movie movie)
@@ -26,7 +32,10 @@ namespace Logic.Repositories
 
         public Movie GetMovieById(int movieId)
         {
-            return _movieContext.GetMovieById(movieId);
+            var movie = _movieContext.GetMovieById(movieId);
+            AddApiData(movie);
+
+            return movie;
         }
 
         public void AddMovie(Movie movie)
@@ -34,14 +43,12 @@ namespace Logic.Repositories
             _movieContext.AddMovie(movie);
         }
 
-        public bool CheckIfMovieExists(Movie movie)
-        {
-            return _movieContext.CheckIfMovieExists(movie);
-        }
-
         public IEnumerable<Movie> GetMoviesByGenre(string category)
         {
-            return _movieContext.GetMoviesByGenre(category);
+            var movies = _movieContext.GetMoviesByGenre(category);
+            AddApiData(movies);
+
+            return movies;
         }
 
         public IEnumerable<string> GetAllGenres()
@@ -51,7 +58,25 @@ namespace Logic.Repositories
 
         public IEnumerable<Movie> GetMoviesBySearchParam(string searchParam)
         {
-            return _movieContext.GetMoviesBySearchParam(searchParam);
+            var movies = _movieContext.GetMoviesBySearchParam(searchParam);
+            AddApiData(movies);
+
+            return movies;
         }
+
+        public void AddApiData(IEnumerable<Movie> movies)
+        {
+            foreach (var movie in movies)
+            {
+                _apiHelper.AddApiDataToMovie(movie).Wait();
+            }
+        }
+
+        public void AddApiData(Movie movie)
+        {
+            _apiHelper.AddApiDataToMovie(movie).Wait();
+        }
+
+
     }
 }

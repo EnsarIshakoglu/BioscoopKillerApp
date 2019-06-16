@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Interfaces;
 using Models;
 
 namespace API
 {
-    public class ApiHelper
+    public class ApiHelper : IApiHelper
     {
         private const string ApiKey = "883e4889";
 

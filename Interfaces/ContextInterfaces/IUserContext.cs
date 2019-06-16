@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Models;
 
-namespace Interfaces
+namespace Interfaces.ContextInterfaces
 {
     public interface IUserContext
     {

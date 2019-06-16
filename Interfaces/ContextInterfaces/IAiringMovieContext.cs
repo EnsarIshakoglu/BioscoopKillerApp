@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models;
 using Models.Enums;
 
-namespace Interfaces
+namespace Interfaces.ContextInterfaces
 {
     public interface IAiringMovieContext
     {
