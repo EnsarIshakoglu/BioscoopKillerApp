@@ -36,6 +36,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return roomTypes;
@@ -69,6 +70,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return rooms;
@@ -112,6 +114,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovies;

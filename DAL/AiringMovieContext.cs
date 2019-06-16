@@ -46,6 +46,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovies;
@@ -85,6 +86,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovie;
@@ -109,6 +111,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -148,6 +151,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovies;
@@ -173,6 +177,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
         }
@@ -216,6 +221,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovies;
@@ -261,6 +267,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airingMovies;
@@ -306,6 +313,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airings;
@@ -351,6 +359,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return airings;

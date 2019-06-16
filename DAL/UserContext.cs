@@ -8,7 +8,6 @@ using System.Text;
 using System.Web;
 using Interfaces;
 using Interfaces.ContextInterfaces;
-using Microsoft.AspNetCore.Identity;
 using Models;
 using Models.Enums;
 
@@ -42,6 +41,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return roles;
@@ -71,6 +71,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             if (updated != 0)
@@ -106,6 +107,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return emailInUse;
@@ -142,13 +144,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                //File.AppendAllText(, message);
-                var location = $"{Path.GetTempPath()}\\LogFile\\LogFile.txt";
-                FileStream objFilestream = new FileStream(location, FileMode.Append, FileAccess.Write);
-                StreamWriter objStreamWriter = new StreamWriter((Stream)objFilestream);
-                objStreamWriter.WriteLine(ex.ToString());
-                objStreamWriter.Close();
-                objFilestream.Close();
+                Console.WriteLine(ex.ToString());
             }
 
             return user;

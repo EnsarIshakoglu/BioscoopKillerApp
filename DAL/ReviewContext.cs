@@ -52,6 +52,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return reviews;
@@ -77,6 +78,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
         }
     }

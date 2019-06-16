@@ -38,6 +38,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -63,6 +64,7 @@ namespace DAL
                 catch (Exception ex)
                 {
                     //File.AppendAllText(, message);
+                    Console.WriteLine(ex.ToString());
                 }
             }
         }

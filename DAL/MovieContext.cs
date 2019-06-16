@@ -48,11 +48,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                /*FileStream objFilestream = new FileStream(location, FileMode.Append, FileAccess.Write);
-                StreamWriter objStreamWriter = new StreamWriter((Stream)objFilestream);
-                objStreamWriter.WriteLine(ex.ToString());
-                objStreamWriter.Close();
-                objFilestream.Close();*/
+                Console.WriteLine(ex.ToString());
             }
 
             return movies;
@@ -90,6 +86,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return movie;
@@ -116,6 +113,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             AddCategoriesToMovie(movie);
@@ -144,6 +142,7 @@ namespace DAL
                 catch (Exception ex)
                 {
                     //File.AppendAllText(, message);
+                    Console.WriteLine(ex.ToString());
                 }
             }
         }
@@ -178,6 +177,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return movies;
@@ -206,6 +206,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
 
             return genres;
@@ -241,6 +242,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
             
             return movies;
@@ -264,6 +266,7 @@ namespace DAL
             catch (Exception ex)
             {
                 //File.AppendAllText(, message);
+                Console.WriteLine(ex.ToString());
             }
         }
     }
