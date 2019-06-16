@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Models.Movie>
+@Html.AntiForgeryToken()
+
+<link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
+
+
+<div class="row register-form">
+    <div class="col-xl-7 order-xl-2 ">
+    </div>
+    <div class="col-xl-5 order-xl-3 inputField">
+            <h3 class="register-heading">Add movie</h3>
+            <p></p>
+            <select id="movieSelection">
+                <option value="">--- Select movie ---</option>
+                @foreach (var movie in Model)
+                {
+                    <option value="@movie.Id" name="@movie.Title">@movie.Title</option>
+                }
+            </select>
+            <div id="deletedMovieText"></div>
+            <input type="submit" id="deleteMovie" class="col-md-7 btn btn-secondary" value="Delete" style="float: left; margin: 5px;" />
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @if (null != TempData["alertMessage"])
+    {
+        <script type="text/javascript">
+
+            var div = document.createElement('div');
+            div.innerHTML = '@TempData["alertMessage"]';
+            console.log(div.innerHTML);
+
+            document.getElementById('errorTextAddMovie').appendChild(div);
+        </script>
+    }
+
+    <script>
+        $(function() {
+            $('#deleteMovie').on('click', deleteMovie);
+        });
+
+        function deleteMovie() {
+
+            var selectedMovieId = $("#movieSelection option:selected").val();
+            var selectedMovieTitle = $("#movieSelection option:selected").attr("name");
+
+            var movie = {
+                "Id": selectedMovieId,
+                "Title": selectedMovieTitle
+            }
+
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+            console.log(JSON.stringify(movie));
+            console.log(selectedMovieId);
+            if (confirm('Are you sure you want to delete this airing?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteMovie", "Movie")',
+            data: JSON.stringify(movie),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                console.log("Success");
+
+                var div = document.createElement('div');
+                div.innerHTML = result.message;
+                console.log(div.innerHTML);
+
+                document.getElementById('deletedMovieText').appendChild(div);
+            },
+            error: function (result) {
+                console.log("Error");
+                console.log(result);
+            }
+            });
+            }
+
+    }
+    </script>
+}

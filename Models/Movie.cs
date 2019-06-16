@@ -12,7 +12,7 @@ namespace Models
         public string Runtime { get; set; }
         public string Genre { get; set; }
         [Range(1950, 2025, ErrorMessage = "Range should be between 1950 en 2025!")]
-        public int PublishedYear { get; set; }
+        public int? PublishedYear { get; set; }
         [Required(ErrorMessage = "Title is required!")]
         public string Title { get; set; }
         public string Actors { get; set; }

@@ -2,9 +2,12 @@
 @using System.Runtime.Serialization.Formatters.Binary
 @using Microsoft.AspNetCore.Http
 @using Models.Enums
+@Html.AntiForgeryToken()
+
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,13 +17,14 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        <link rel="stylesheet"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <header>
@@ -31,36 +35,56 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <form class="form-inline my-2 my-lg-0">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogOut">Log Out</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-danger my-2 my-sm-0" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
-                        }
-                    </form>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" style="float: right;">
+                    <div class="form-inline" style="width: 80%;">
+
+                        <div id="searchArea">
+                            <div class="input-group ">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <button type="submit" id="searchButton" onclick="showSearchResults()" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <form style="margin-bottom: 0; width: 40%;">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <button class="btn btn-danger" style="margin-left: 10%;" type="submit" asp-controller="User" asp-action="LogOut">Log Out</button>
+                                <a class="nav-item" style="margin-left: 10%;">Welcome, @User.Identity.Name</a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-danger" style="margin-left: 10%" type="submit" asp-controller="User" asp-action="LogIn">Log In</button>
+                            }
+                        </form>
+                    </div>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AllMovies">Movies</a>
                         </li>
                         @if (User.IsInRole(Roles.Admin.ToString()))
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="AddPage">Add</a>
-                        </li>
-                        }
-                        @if (User.IsInRole(Roles.AccountHolder.ToString()))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Index">AccountHolder</a>
+                            <li class="nav-item myDropdown">
+                                <a class="nav-link text-dark myDropBtn">Add</a>
+                                <div class="myDropdown-content">
+                                    <form style="margin-bottom: 0;">
+                                        <a asp-area="" asp-controller="Movie" asp-action="AddMovie">Add Movie</a>
+                                        <a asp-area="" asp-controller="Movie" asp-action="AddAiringMovie">Add Airing</a>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item myDropdown">
+                                <a class="nav-link text-dark myDropBtn">Delete</a>
+                                <div class="myDropdown-content">
+                                    <form style="margin-bottom: 0;">
+                                        <a asp-area="" asp-controller="Movie" asp-action="DeleteMovieView">Delete Movie</a>
+                                        <a asp-area="" asp-controller="Movie" asp-action="DeleteAiringView">Delete Airing</a>
+                                    </form>
+                                </div>
                             </li>
                         }
-
                     </ul>
-                    
+
                 </div>
             </div>
         </nav>
@@ -73,7 +97,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-            &copy; 2019 - BioscoopKillerApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2019 - BioscoopKillerApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </footer>
 
     <environment include="Development">
@@ -99,3 +123,60 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    .myDropBtn {
+        color: white;
+        font-size: 16px;
+        border: none;
+    }
+
+    .myDropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .myDropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .myDropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            .myDropdown-content a:hover {
+                background-color: #ddd;
+            }
+
+    .myDropdown:hover .myDropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+    }
+</style>
+
+<script>
+    function showSearchResults() {
+        var searchParam = $("#searchInput").val();
+
+        if (searchParam.length < 3) {
+            alert("Search needs to be at least 3 characters!");
+        } else {
+            var url = '@Url.Action("ShowMoviesBySearchParam", "Movie", new{valueToSearchBy = "__a__"})';
+            var urlWithParam = url.replace("__a__", searchParam);
+
+            console.log(urlWithParam);
+
+            window.location = urlWithParam;
+        }
+    }
+</script>

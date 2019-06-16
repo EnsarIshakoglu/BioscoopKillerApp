@@ -5,10 +5,13 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DAL;
 using Logic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Session;
 using Models;
@@ -18,7 +21,8 @@ namespace BioscoopKillerApp.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserLogic _userLogic = new UserLogic();
+        private readonly UserLogic _userLogic = new UserLogic(new UserContext());
+        private readonly PasswordHasher<User> _hasher = new PasswordHasher<User>();
 
         public IActionResult LogIn()
         {
@@ -26,29 +30,35 @@ namespace BioscoopKillerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn([Bind("Password, Email")] User user)
+        public IActionResult LogIn([Bind("Password, Email")] User model)
         {
-            if (!ModelState.ContainsKey("Password") && !ModelState.ContainsKey("Username"))
+            if (model.Password == null || model.Email == null)
             {
                 TempData["alertMessage"] = "Please fill in all the fields!";
                 return View("LogIn");
             }
-            if (_userLogic.Login(user))
-            {
-                InitUser(user);
-                return RedirectToAction("Index", "Movie");
-            }
-            else
+
+            var user = _userLogic.GetUserByEmail(model.Email);
+            if (user.Id == 0)
             {
                 TempData["alertMessage"] = "Incorrect username or password, please try again!";
                 return View("LogIn");
             }
-        }
 
+            if (_hasher.VerifyHashedPassword(user, user.Password, model.Password) == PasswordVerificationResult.Failed)
+            {
+                TempData["alertMessage"] = "Incorrect username or password, please try again!";
+                return View("LogIn");
+            }
+
+            InitUser(user);
+            return RedirectToAction("Index", "Movie");
+        }
+        [Authorize]
         public IActionResult LogOut()
         {
             RemoveCookies();
-            
+
             return RedirectToAction("Index", "Movie");
         }
 
@@ -57,15 +67,17 @@ namespace BioscoopKillerApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["alertMessage"] = "Please fill in all the fields!";
+                TempData["alertMessageRegister"] = "Please fill in all the fields!";
                 return View("LogIn");
             }
-            if (_userLogic.IsEmailInUse(user))
+            if (_userLogic.IsEmailInUse(user.Email))
             {
                 TempData["alertMessageRegister"] = "Email is already in use, please choose another one.";
             }
             else
             {
+                user.Password = _hasher.HashPassword(user, user.Password);
+
                 if (_userLogic.CreateAccount(user))
                 {
                     TempData["alertMessageRegister"] = "Account has been created! You can log in now.";
@@ -78,17 +90,30 @@ namespace BioscoopKillerApp.Controllers
 
             return View("LogIn", user);
         }
+        [Authorize]
+        [HttpPost]
+        public IActionResult PostReview([FromBody]Review review)
+        {
+            if (!(review.ReviewText.Length >= 6 && review.ReviewTitle.Length >= 6))
+            {
+                return new JsonResult(new { validationMessage = $"Error creating review, please note that review subject (min 6 and max 100 chars long) and review text (min 6 and max 2000 chars long) are required to post a review." });
+            }
+
+            _userLogic.SaveReview(review);
+
+            return new JsonResult(new { message = $"Saved review!" });
+        }
 
         private async void InitUser(User user)
         {
-            var userId = _userLogic.GetUserId(user);
-            var roles = _userLogic.GetUserRoles(user);
+            user = _userLogic.InitUser(user);
 
-            var claims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+            var claims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())).ToList();
 
-            claims.Add(new Claim("userId", userId.ToString()));
+            claims.Add(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Name, user.Name));
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
             var authProp = new AuthenticationProperties();
 
             await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProp);

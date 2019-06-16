@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioscoopKillerApp", "BioscoopKillerApp\BioscoopKillerApp.csproj", "{F6E0B777-DC9A-44E6-B6E5-EAB261051985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BioscoopKillerApp", "BioscoopKillerApp\BioscoopKillerApp.csproj", "{F6E0B777-DC9A-44E6-B6E5-EAB261051985}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{662AEDA0-88D4-41A7-B60A-716548AE3A96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{662AEDA0-88D4-41A7-B60A-716548AE3A96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{5268CE1A-BADB-4E6B-97A9-8766C6936C08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{5268CE1A-BADB-4E6B-97A9-8766C6936C08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic", "Logic\Logic.csproj", "{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{10B0C73E-093F-47F3-B1C2-8D68264A312A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FAF262B-2488-4F0A-BC67-9BBE9FB15C57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D1EDCF-8F1E-47FC-98FC-881B83590C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB6529A-07A2-47B3-83ED-96BB6A5E36C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B0C73E-093F-47F3-B1C2-8D68264A312A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

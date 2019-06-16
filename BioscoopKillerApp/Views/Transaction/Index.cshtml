@@ -1,8 +1,7 @@
-﻿@using Microsoft.EntityFrameworkCore
-@model Models.AiringMovie
+﻿@model Models.AiringMovie
+@Html.AntiForgeryToken()
 
 @{
-
 }
 
 <html lang="en">
@@ -40,23 +39,34 @@
                     <a class="span">@Model.Movie.Title</a>
                     <div class="clearfix"></div>
                     <div class="clearfix"></div>
-                    <p class="info">Actors:&nbsp;@string.Join(", ", @Model.Movie.Actors)</p>
-                    <p class="info">Genre:&nbsp;@string.Join(", ", @Model.Movie.Genre)</p>
-                    <p class="info">DURATION:&nbsp; @Model.Movie.Runtime</p>
+                    <div class="row">
+                        <b>Actors:</b>
+                        <a>@Model.Movie.Actors</a>
+                    </div>
+                    <div class="row">
+                        <b>Genre:</b>
+                        <a>@Model.Movie.Genre</a>
+                    </div>
+                    <div class="row">
+                        <b>Duration:</b>
+                        <a>@Model.Movie.Runtime</a>
+                    </div>
                 </div>
             </div>
             <div class="col-md-9 order-md-1">
-                @*plaats kiezen*@
                 <body>
-                <div id="messagePanel" class="messagePanel">
+                    <div id="messagePanel" class="messagePanel">
 
-                </div>
-                <div>
-                    <label>Email Address:</label>
-                    <input id="EmailAddress" />
-                    <p id="validationText" style="color: red">Invalid email address</p>
-                </div>
-                    <button id="saveSelection" onclick="location.href = '@Url.Action("Index", "Movie")'" style="margin: 5px;">Pay!</button>
+                    </div>
+                    <div>
+                        <label>Email Address:</label>
+                        <input id="EmailAddress" />
+                        <p id="validationText" style="color: red">Invalid email address</p>
+                    </div>
+                    <button id="saveSelection" style="margin: 5px;">Pay!</button>
+                    <div id="saveReservationText">
+
+                    </div>
                 </body>
             </div>
         </div>
@@ -147,6 +157,7 @@
 
         function getAllSelectedSeats() {
             var selectedSeats = document.getElementsByClassName("seat selected");
+            var mailAddress = document.getElementById("EmailAddress").value;
             var ids = [];
             console.log(selectedSeats[0]);
 
@@ -157,9 +168,26 @@
             console.log(JSON.stringify(ids));
             var controllerPath = '@Url.Action("SaveReservation", "Transaction")';
 
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+            var seats = [];
+            for (var x = 0; x < ids.length; x++) {
+                var seat = {
+                    "SeatNumber": ids[x],
+                    "IsOccupied": @Json.Serialize(true)
+                };
+
+                seats.push(seat);
+            }
+
+            var airingMovie = {
+                "Id" : @Model.Id
+            }
+
             var reservation = {
-                "SeatNumbers": ids,
-                "AiringMovieId": @Model.Id
+                "Seats": seats,
+                "AiringMovie": airingMovie,
+                "MailAddress": mailAddress
             }
             if (confirm('Are you sure your e-mail address is ' +
                 document.getElementById("EmailAddress").value +
@@ -168,22 +196,44 @@
                     url: controllerPath,
                     data: JSON.stringify(reservation),
                     type: "POST",
+                    headers: {
+                        "RequestVerificationToken": verificationToken
+                    },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    success: function() {
-                        console.log('Succes!');
+                    success: function(result) {
+                        console.log("Success");
+
+                        alert(result.message);
+
+                        window.location = result.url;
                     },
-                    error: function() {
-                        console.log('Error');
+                    error: function () {
+                        console.log("Error");
+                        var div = document.createElement('div');
+                        div.innerHTML = "Error creating reservation, please try again!";
+                        console.log(div.innerHTML);
+
+                        document.getElementById('saveReservationText').appendChild(div);
                     }
                 });
             }
 
         }
 
+        function refreshPage() {
+            @{
+                var airingMovieIdFromModel = Model.Id;
+            }
+
+            window.location.href = '@Url.Action("Index", "Transaction", new { airingMovie = airingMovieIdFromModel})';
+        }
+
         function createseating(htmlCode) {
 
-            $('#messagePanel').html(htmlCode);
+            var screenHtml = '<div class="alert alert-dark" role="alert" style="text-align: center;" > SCREEN </div>';
+
+            $('#messagePanel').html(screenHtml + htmlCode);
 
             $(function () {
                 $('.seat').on('click', function () {

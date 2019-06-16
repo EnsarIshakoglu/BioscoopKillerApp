@@ -11,7 +11,7 @@ namespace Models
     {
         [EmailAddress(ErrorMessage = "Invalid Email address.")]
         public string MailAddress { get; set; }
-        public string[] SeatNumbers { get; set; }
-        public int AiringMovieId { get; set; }
+        public Seat[] Seats { get; set; }
+        public AiringMovie AiringMovie { get; set; }
     }
 }

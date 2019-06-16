@@ -1,43 +1,145 @@
-﻿@model Models.AiringMovie
+﻿@model AddAiringMovieViewModel
+@Html.AntiForgeryToken()
 
-<h3 class="register-heading">Add airing movie</h3>
+<link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery UI Datepicker - Default functionality</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 <div class="row register-form">
-    <div class="col-md-6">
-        <div class="form-group">
-            <select class="form-control">
-                <option class="hidden" selected disabled>Please select a movie</option>
-                <option>What is your Birthdate?</option>
-                <option>What is Your old Phone Number</option>
-                <option>What is your Pet Name?</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <select class="form-control">
-                <option class="hidden" selected disabled>Please select a room</option>
-                <option>What is your Birthdate?</option>
-                <option>What is Your old Phone Number</option>
-                <option>What is your Pet Name?</option>
-            </select>
-        </div>
+    <div class="col-xl-7 order-xl-2 ">
     </div>
-    <div class="col-md-6">
+    <div class="col-xl-5 order-xl-3 inputField">
+        <h3 class="register-heading">Add movie</h3>
+        <p></p>
         <div class="form-group">
-            <input type="email" class="form-control" placeholder="Your Email *" value="" />
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Movie: </label>
+                </div>
+                <div class="col-xl-6">
+                    <select id="SelectedMovie" name="SelectedMovie" asp-for="SelectedMovie">
+                        <option value="">--- Select movie ---</option>
+                        @foreach (var movie in Model.Movies)
+                        {
+                            <option>@movie.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control" placeholder="Your Phone *" value="" />
+        <div class="form-group ">
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Type:</label>
+                </div>
+                <div class="col-xl-6">
+                    <select id="SelectedRoomType" name="SelectedRoomType" asp-for="SelectedRoomType">
+                        <option value="">--- Select room type ---</option>
+                        @foreach (var roomType in Model.RoomTypes)
+                        {
+                            <option>@roomType.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <select class="form-control">
-                <option class="hidden" selected disabled>Please select your Sequrity Question</option>
-                <option>What is your Birthdate?</option>
-                <option>What is Your old Phone Number</option>
-                <option>What is your Pet Name?</option>
-            </select>
+        <div class="form-group ">
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Amount of times:</label>
+                </div>
+                <div class="col-xl-6">
+                    <input id="AmountOfTimes" type="number" min="0" asp-for="AmountOfTimes" name="Title" class="form-control" value="" />
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Enter Your Answer *" value="" />
+        <div class="form-group ">
+            <div class="row">
+                <div class="col-xl-2">
+                    <label>Date:</label>
+                </div>
+                <div class="col-xl-6">
+                    <input id="SelectedDate" asp-for="SelectedDate" type="date" name="bday">
+                </div>
+            </div>
         </div>
-        <input type="submit" class="btnRegister" value="Add" />
+        <div id="errorTextAddAiring">
+
+        </div>
+        <button id="saveAiringMovie" class="btn btn-secondary" style="margin: 5px;">Add!</button>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('#saveAiringMovie').on('click', saveAiring);
+    });
+
+    function saveAiring() {
+        console.log("Hallo");
+        var movieSelection = document.getElementById("SelectedMovie");
+        var movieSelectionText = movieSelection.options[movieSelection.selectedIndex].text;
+
+        var roomTypeSelection = document.getElementById("SelectedRoomType");
+        var roomTypeSelectionText = roomTypeSelection.options[roomTypeSelection.selectedIndex].text;
+
+        var date = new Date($('#SelectedDate').val());
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        var dateSelectionText = [day, month, year].join('/');
+
+        console.log(dateSelectionText);
+
+        var amountOfTimesSelection = document.getElementById("AmountOfTimes");
+        var amountOfTimesSelectionValue = amountOfTimesSelection.value;
+
+        var controllerPath = "@Url.Action("AddAiringMovie", "Movie")";
+
+        var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+        var airingMovieViewModel = {
+            "SelectedMovie": movieSelectionText,
+            "SelectedRoomType": roomTypeSelectionText,
+            "SelectedDate": dateSelectionText,
+            "AmountOfTimes": amountOfTimesSelectionValue
+        };
+
+        console.log(JSON.stringify(airingMovieViewModel));
+        $.ajax({
+            url: controllerPath,
+            data: JSON.stringify(airingMovieViewModel),
+            type: "POST",
+            headers: {
+                "RequestVerificationToken": verificationToken
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(result) {
+                console.log("Success");
+                var div = document.createElement('div');
+                div.innerHTML = result.message;
+                console.log(div.innerHTML);
+
+                document.getElementById('errorTextAddAiring').appendChild(div);
+            },
+            error: function () {
+                console.log("Error");
+                var div = document.createElement('div');
+                div.innerHTML = "Error creating airing, please try again!";
+                console.log(div.innerHTML);
+
+                document.getElementById('errorTextAddAiring').appendChild(div);
+            }
+        });
+
+    }
+</script>
+

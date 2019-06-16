@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using Interfaces;
+using Interfaces.ContextInterfaces;
+using Logic.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Models;
+using Models.Enums;
 
 namespace Logic
 {
     public class UserLogic
     {
-        private readonly UserRepo _userRepo = new UserRepo();
+        private readonly UserRepo _userRepo;
+        private readonly ReviewLogic _reviewLogic = new ReviewLogic();
 
-        public bool Login(User user)
+        public UserLogic(IUserContext context)
         {
-            return _userRepo.Login(user);
+            _userRepo = new UserRepo(context);
         }
 
         public IEnumerable<string> GetUserRoles(User user)
@@ -25,14 +31,35 @@ namespace Logic
             return _userRepo.CreateAccount(user);
         }
 
-        public bool IsEmailInUse(User user)
+        public bool IsEmailInUse(string email)
         {
-            return _userRepo.IsEmailInUse(user);
+            return _userRepo.IsEmailInUse(email);
         }
 
-        public int GetUserId(User user)
+        public User GetUserByEmail(string email)
         {
-            return _userRepo.GetUserId(user);
+            return _userRepo.GetUserByEmail(email);
+        }
+
+        public User InitUser(User user)
+        {
+            var email = user.Email;
+            user = GetUserByEmail(email);
+
+            var roles = GetUserRoles(user);
+
+            foreach (var role in roles)
+            {
+                Enum.TryParse(role, out Roles enumRole);
+                user.Roles.Add(enumRole);
+            }
+
+            return user;
+        }
+
+        public void SaveReview(Review review)
+        {
+            _reviewLogic.SaveReview(review);
         }
     }
 }

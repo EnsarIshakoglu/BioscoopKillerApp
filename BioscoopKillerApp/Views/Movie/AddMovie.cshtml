@@ -1,6 +1,7 @@
 ﻿@model Models.Movie
 
 <link href="~/lib/bootstrap/dist/css/AddPage/AddMovie-bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/AddPage/AddPage-bootstrap.css" rel="stylesheet" />
 
 <div class="row register-form">
     <div class="col-xl-7 order-xl-2 ">
@@ -30,14 +31,18 @@
     </div>
 </div>
 
-@if (null != TempData["alertMessage"])
-{
-    <script type="text/javascript">
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-        var div = document.createElement('div');
-        div.innerHTML = '@TempData["alertMessage"]';
-        console.log(div.innerHTML);
+    @if (null != TempData["alertMessage"])
+    {
+        <script type="text/javascript">
 
-        document.getElementById('errorTextAddMovie').appendChild(div);
-    </script>
+            var div = document.createElement('div');
+            div.innerHTML = '@TempData["alertMessage"]';
+            console.log(div.innerHTML);
+
+            document.getElementById('errorTextAddMovie').appendChild(div);
+        </script>
+    }
 }

@@ -1,0 +1,7 @@
+﻿@using Models
+@model IEnumerable<Models.Movie>
+
+@foreach (var movie in @Model)
+{
+    @Html.Partial("MovieCanvas", movie)
+}

@@ -2,65 +2,113 @@
 using System.Collections.Generic;
 using System.Linq;
 using DAL;
+using DAL.MockContexts;
+using Interfaces;
+using Interfaces.ContextInterfaces;
+using Logic.Repositories;
 using Models;
 
 namespace Logic
 {
     public class MovieLogic
     {
-        private readonly MovieRepo _movieRepo = new MovieRepo();
+        public MovieLogic(IMovieContext context, IRoomContext roomContext, IApiHelper apiHelper, IAiringMovieContext airingMovieContext)
+        {
+            _repo = new MovieRepo(context, apiHelper);
+            _roomLogic = new RoomLogic(roomContext);
+            _airingMovieLogic = new AiringMovieLogic(airingMovieContext, roomContext);
+            _reviewLogic = new ReviewLogic();
+        }
+
+        private readonly MovieRepo _repo;
+
+        private readonly RoomLogic _roomLogic;
+        private readonly AiringMovieLogic _airingMovieLogic;
+        private readonly ReviewLogic _reviewLogic;
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            List<Movie> movies = _movieRepo.GetAllMovies().ToList();
-
-            foreach (var movie in movies)
-            {
-                int totalMinutes = Convert.ToInt32(movie.Runtime.Substring(0, movie.Runtime.IndexOf(" ", StringComparison.Ordinal)));
-                int hours = totalMinutes / 60;
-                int minutes = totalMinutes % 60;
-
-                movie.Runtime = $"{hours} h {minutes} m";
-            }
-
-            return movies;
+            return _repo.GetAllMovies().ToList();
         }
 
-        public IEnumerable<Movie> GetSortedMovies(List<string> categories)
+        public void DeleteMovie(Movie movie)
         {
-            IEnumerable<Movie> movies = GetAllMovies();
-
-            List<Movie> sortedMovies = new List<Movie>();
-
-            /*foreach (Movie movie in movies)
-            {
-                if (movie.Genre.Intersect(categories).Count() == categories.Count())
-                    sortedMovies.Add(movie);
-            }*/
-
-            return sortedMovies;
+            _repo.DeleteMovie(movie);
         }
 
-        public IEnumerable<AiringMovie> GetAiringMovies(Movie movie)
+        public void DeleteAiring(AiringMovie airing)
         {
-            AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
+            _airingMovieLogic.DeleteAiring(airing);
+        }
 
-            return _airingMovieLogic.GetAiringMovies(movie);
+        public IEnumerable<string> GetAllRoomTypes()
+        {
+            return _roomLogic.GetAllRoomTypes();
         }
 
         public Movie GetMovieById(int movieId)
         {
-            return _movieRepo.GetMovieById(movieId);
+            return _repo.GetMovieById(movieId);
         }
 
         public void AddMovie(Movie movie)
         {
-            _movieRepo.AddMovie(movie);
+            _repo.AddMovie(movie);
+        }
+
+        public IEnumerable<Review> GetAllReviewsFromMovie(Movie movie)
+        {
+            return _reviewLogic.GetAllReviewsFromMovie(movie);
+        }
+
+        public bool TryToAddAiring(Movie movie, DateTime date, string selectedRoomType)
+        {
+            return _airingMovieLogic.TryToAddAiring(movie, date, selectedRoomType);
+        }
+
+        public IEnumerable<AiringMovie> GetAiringsFromMovieByDate(Movie movie, DateTime date)
+        {
+            return _airingMovieLogic.GetAiringsFromMovieByDate(movie, date);
+        }
+
+        public IEnumerable<Movie> GetMoviesBySearchParam(string searchParam)
+        {
+            return _repo.GetMoviesBySearchParam(searchParam);
+        }
+
+        /// <summary>
+        /// Returns airings for given movie starting from given date.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public IEnumerable<AiringMovie> GetAiringsFromMovieStartingFromDate(Movie movie, DateTime date)
+        {
+            return _airingMovieLogic.GetAiringsFromMovieStartingFromDate(movie, date);
+        }
+
+        public IEnumerable<Movie> GetMoviesByGenre(string category)
+        {
+            return _repo.GetMoviesByGenre(category);
+        }
+
+        public IEnumerable<string> GetAllGenres()
+        {
+            return _repo.GetAllGenres();
         }
 
         public bool CheckIfMovieExists(Movie movie)
         {
-            return _movieRepo.CheckIfMovieExists(movie);
+            var movieExists = false;
+
+            _repo.AddApiData(movie);
+
+            if (movie.Poster != null)
+            {
+                movieExists = true;
+            }
+
+            return movieExists;
         }
     }
 }

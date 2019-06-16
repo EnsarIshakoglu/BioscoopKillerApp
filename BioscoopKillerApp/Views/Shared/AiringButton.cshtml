@@ -1,0 +1,4 @@
+﻿@model Models.AiringMovie
+
+<p><button type="button" id="@Model.Id" style="margin: 5px; width: 204px;" onclick="goToReservationPage(@Model.Id)" class="btn btn-danger">@Model.AiringTime.Date.ToShortDateString() @Model.AiringTime.ToShortTimeString() @Model.Room.Type</button></p>
+

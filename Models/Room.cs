@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Models.Enums;
 
 namespace Models
 {
@@ -10,29 +11,27 @@ namespace Models
         {
             
         }
-        public Room(int roomNumber, string roomType, int seatCount, int seatsPerRow)
+        public Room(int number, string type, int seatCount, int seatsPerRow)
         {
             Seats = new List<Seat>();
             
-            RoomNumber = roomNumber;
-            RoomType = roomType;
+            Number = number;
+            Type = type;
             SeatCount = seatCount;
             SeatsPerRow = seatsPerRow;
 
-            for (int x = 0; x < SeatCount; x++)
+            for (var x = 0; x < SeatCount; x++)
             {
                 Seats.Add(new Seat
                 {
                     SeatNumber = x+1
                 });
             }
-
-            int a = 5;
         }
 
         public List<Seat> Seats { get; set; }
-        public int RoomNumber { get; set; }
-        public string RoomType { get; set; }
+        public int Number { get; set; }
+        public string Type { get; set; }
         public int SeatCount { get; set; }
         public int SeatsPerRow { get; set; }
     }

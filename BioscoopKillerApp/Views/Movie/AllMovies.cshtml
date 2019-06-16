@@ -1,5 +1,6 @@
 ﻿@using Models
-@model IEnumerable<Models.Movie>
+@model BioscoopKillerApp.ViewModels.AllMoviesViewModel
+@Html.AntiForgeryToken()
 
 @{
     ViewData["Title"] = "Index";
@@ -23,41 +24,87 @@
     <!-- Custom styles for this template -->
     <link href="css/shop-homepage.css" rel="stylesheet">
 
+    <script src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+
 </head>
 
 <body>
-    <h1 style="padding-bottom: 10px;" >All Movies</h1>
-    <!-- Navigation -->
-    <!-- Page Content -->
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-10">
+                <h1 style="padding-bottom: 10px;">All Movies</h1>
+            </div>
+            <div class="col-xl-2">
+                @if (Model.Genres.Any())
+                {
+                    <select id="chosenGenre">
+                        <option value="" selected disabled hidden>Select date</option>
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <option value="@genre">@genre</option>
+                        }
+
+                    </select>
+                }
+            </div>
+        </div>
+    </div>
+
     <div class="container">
 
         <div class="row">
-            <!-- /.col-lg-3 -->
 
             <div class="col-lg-12">
-                <div class="row">
-                    @foreach (Movie movie in @Model)
-                    {
-                        @Html.Partial("MovieCanvas", movie)
-                    }
-
+                <div class="row" id="allMovies">
+                    @Html.Partial("ShowMovies", Model.Movies)
                 </div>
-                @*@Html.Partial("MovieCanvas", Model.First(movie=>movie.Title.Equals("Jaws")))*@
-                <!-- /.row -->
 
             </div>
-            <!-- /.col-lg-9 -->
 
         </div>
-        <!-- /.row -->
 
     </div>
-    <!-- /.container -->
-    <!-- Footer -->
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
+
 
 </body>
 
 </html>
+@section Scripts {
+    <script>
+        $('#chosenGenre').change(function() {
+            $("#allMovies").hide();
+
+            var selectedGenre = $("#chosenGenre option:selected").val();
+            console.log(selectedGenre);
+            var verificationToken = $("input[name='__RequestVerificationToken']").val();
+
+            var url = '@Url.Action("GetMoviesByGenre", "Movie")';
+
+            console.log(url);
+
+            $.ajax({
+                url: '@Url.Action("GetMoviesByGenre", "Movie")',
+                data: JSON.stringify(selectedGenre),
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": verificationToken
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(result) {
+                    console.log("Success");
+
+                    $('#allMovies').html(result.responseText);
+                    $('#allMovies').show();
+                },
+                error: function (result) {
+                    console.log("Error");
+
+                    $('#allMovies').html(result.responseText);
+                    $('#allMovies').show();
+                }
+            });
+        });
+    </script>
+}

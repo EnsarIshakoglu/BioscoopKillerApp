@@ -1,9 +1,9 @@
-﻿
-<div class="comments-section-grid comments-section-middle-grid">
+﻿@model Models.Review
+<div class="comments-section-grid comments-section-middle-grid userComment">
     <div class="col-md-10 comments-section-grid-text">
-        <h4><a>MARWA ELGENDY</a></h4>
-        <label>5/4/2014 at 22:00   </label>
-        <p>But I must explain to you how all this idea denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound but because those who do not know how to pursue pleasure rationally encounter consequences.</p>
+        <h4><a>@Model.ReviewTitle</a></h4>
+        <label>@Model.User.Name at @Model.PostedDate.Date.ToShortDateString() </label>
+        <p>@Model.ReviewText</p>
         </div>
     <div class="clearfix"></div>
 </div>

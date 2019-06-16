@@ -2,22 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 using DAL;
+using DAL.MockContexts;
+using Interfaces;
+using Interfaces.ContextInterfaces;
+using Logic.Repositories;
 using Models;
 
 namespace Logic
 {
     public class TransactionLogic
     {
-        private readonly TransactionRepo _transactionRepo = new TransactionRepo();
-        private readonly AiringMovieLogic _airingMovieLogic = new AiringMovieLogic();
-        private readonly MovieLogic _movieLogic = new MovieLogic();
+        public TransactionLogic(ITransactionContext context, IAiringMovieContext airingMovieContext, IMovieContext movieContext, IRoomContext roomContext, IApiHelper apiHelper)
+        {
+            _transactionRepo = new TransactionRepo(context);
+            _airingMovieLogic = new AiringMovieLogic(airingMovieContext, roomContext);
+            _movieLogic = new MovieLogic(movieContext, roomContext, apiHelper, airingMovieContext);
+        }
+
+        private readonly TransactionRepo _transactionRepo;
+        private readonly AiringMovieLogic _airingMovieLogic;
+        private readonly MovieLogic _movieLogic;
 
         public AiringMovie GetAiringMovieById(int id)
         {
-            var airingMovie = _airingMovieLogic.GetAiringMovieById(id);
-            _transactionRepo.AddOccupiedSeats(airingMovie);
+            var airing = _airingMovieLogic.GetAiringMovieById(id);
+            _transactionRepo.AddOccupiedSeats(airing);
+            airing.Movie = _movieLogic.GetMovieById(airing.Movie.Id);
 
-            return airingMovie;
+            return airing;
         }
 
         public Movie GetMovieById(int movieId)

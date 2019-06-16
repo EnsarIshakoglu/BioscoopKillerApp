@@ -10,6 +10,6 @@ namespace Models
         public Movie Movie { get; set; }
         public Room Room { get; set; }
         public DateTime AiringTime { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
     }
 }
