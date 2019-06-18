@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -99,7 +100,8 @@ namespace BioscoopKillerApp.Controllers
             var movie = _movieLogic.GetAllMovies().First(m => m.Title.Equals(addAiringMovieViewModel.SelectedMovie));
             var returnMessage = "";
 
-            DateTime.TryParse(addAiringMovieViewModel.SelectedDate, out var date);
+            DateTime.TryParseExact(addAiringMovieViewModel.SelectedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal, out var date);
 
             if (ModelState.IsValid)
             {
@@ -107,6 +109,7 @@ namespace BioscoopKillerApp.Controllers
                 for (var x = 0; x < Convert.ToInt32(addAiringMovieViewModel.AmountOfTimes); x++)
                 {
                     var successful = _movieLogic.TryToAddAiring(movie, date, addAiringMovieViewModel.SelectedRoomType);
+                    
                     if (successful) addedAiringMovies++;
                 }
 

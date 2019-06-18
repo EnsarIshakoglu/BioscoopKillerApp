@@ -5,10 +5,6 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="LogFile\LogFile.txt" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -25,6 +21,11 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Thumbnails\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\LogFile.txt" />
   </ItemGroup>
 
 </Project>

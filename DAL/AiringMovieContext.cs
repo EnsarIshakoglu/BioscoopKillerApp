@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Interfaces;
@@ -314,6 +315,7 @@ namespace DAL
             {
                 //File.AppendAllText(, message);
                 Console.WriteLine(ex.ToString());
+                throw ex;
             }
 
             return airings;
